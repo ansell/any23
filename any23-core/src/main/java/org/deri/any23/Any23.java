@@ -29,6 +29,7 @@ import org.deri.any23.http.HTTPClient;
 import org.deri.any23.mime.MIMEType;
 import org.deri.any23.mime.MIMETypeDetector;
 import org.deri.any23.mime.TikaMIMETypeDetector;
+import org.deri.any23.mime.purifier.WhiteSpacesPurifier;
 import org.deri.any23.source.DocumentSource;
 import org.deri.any23.source.FileDocumentSource;
 import org.deri.any23.source.HTTPDocumentSource;
@@ -57,11 +58,11 @@ import java.util.Collection;
 public class Any23 {
 
     // NOTE: there's also a version string in pom.xml, they should match.
-    public static final String VERSION = "0.5.0-SNAPSHOT";
+    public static final String VERSION = Configuration.instance().getPropertyOrFail("any23.core.version");
 
     private final ExtractorGroup factories;
     private LocalCopyFactory streamCache;
-    private MIMETypeDetector mimeTypeDetector = new TikaMIMETypeDetector(); // Can be overridden by setter.
+    private MIMETypeDetector mimeTypeDetector = new TikaMIMETypeDetector(new WhiteSpacesPurifier());
     private String userAgent = null;
     private HTTPClient httpClient = new DefaultHTTPClient();
     private boolean httpClientInitialized = false;
@@ -76,13 +77,27 @@ public class Any23 {
     /**
      * Constructor that allows the specification of a list of extractors.
      *
+     * @param extractorGroup the group of extractors to be applied.
+     */
+    public Any23(ExtractorGroup extractorGroup) {
+        factories = (extractorGroup == null)
+                ? ExtractorRegistry.getInstance().getExtractorGroup()
+                : extractorGroup;
+        setCacheFactory(new MemCopyFactory());
+    }
+
+    /**
+     * Constructor that allows the specification of a list of extractor names.
+     *
      * @param extractorNames list of extractor's names.
      */
     public Any23(String... extractorNames) {
-        factories = (extractorNames == null)
-                ? ExtractorRegistry.getInstance().getExtractorGroup()
-                : ExtractorRegistry.getInstance().getExtractorGroup(Arrays.asList(extractorNames));
-        setCacheFactory(new MemCopyFactory());
+        this(
+                extractorNames == null
+                        ?
+                null
+                        :
+                ExtractorRegistry.getInstance().getExtractorGroup( Arrays.asList(extractorNames)) );
     }
 
     /**

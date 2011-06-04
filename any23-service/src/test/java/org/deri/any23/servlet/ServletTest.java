@@ -296,13 +296,6 @@ public class ServletTest {
     }
 
     @Test
-    public void testNoExtractableTriples() throws Exception {
-        HttpTester response = doPostRequest("/n3", "<html><body>asdf</body></html>", "text/html");
-        Assert.assertEquals(204, response.getStatus());
-        Assert.assertNull(response.getContent());
-    }
-
-    @Test
     public void testContentNegotiationDefaultsToTurtle() throws Exception {
         content = "<html><body><div class=\"vcard fn\">Joe</div></body></html>";
         HttpTester response = doGetRequest("/best/http://foo.com");
@@ -379,9 +372,31 @@ public class ServletTest {
         HttpTester response = doGetRequest("/best/http://foo.com?fix=on&report=on");
         Assert.assertEquals(200, response.getStatus());
         final String content = response.getContent();
-        assertContains("<response>", content);
-        assertContains("<report>"  , content);
-        assertContains("<data>"    , content);
+        assertContainsTag("response"        , content);
+        assertContainsTag("extractors"      , content);
+        assertContainsTag("report"          , content);
+        assertContainsTag("message"         , content);
+        assertContainsTag("error"           , content);
+        assertContainsTag("validationReport", content);
+        assertContainsTag("errors"          , content);
+        assertContainsTag("issues"          , content);
+        assertContainsTag("ruleActivations" , content);
+        assertContainsTag("data"            , content);
+    }
+
+    @Test
+    public void testJSONResponseFormat() throws Exception {
+        String body = "<http://sub/1> <http://pred/1> \"123\"^^<http://datatype> <http://graph/1>.";
+        HttpTester response = doPostRequest("/json", body, "text/n-quads");
+        Assert.assertEquals(200, response.getStatus());
+        final String EXPECTED_JSON =
+                "[" +
+                "{ \"type\" : \"uri\", \"value\" : \"http://sub/1\"}, " +
+                "\"http://pred/1\", " +
+                "{\"type\" : \"literal\", \"value\" : \"123\", \"lang\" : null, \"datatype\" : \"http://datatype\"}, " +
+                "\"http://graph/1\"" +
+                "]";
+        assertContains(EXPECTED_JSON, response.getContent());
     }
 
     private HttpTester doGetRequest(String path) throws Exception {
@@ -420,10 +435,15 @@ public class ServletTest {
         return response;
     }
 
-    private void assertContains(String expected, String actual) {
-        if (actual.contains(expected))
+    private void assertContains(String expected, String container) {
+        if (container.contains(expected))
             return;
-        Assert.fail("expected <" + expected + "> to be contained in <" + actual + ">");
+        Assert.fail("expected '" + expected + "' to be contained in '" + container + "'");
+    }
+
+    private void assertContainsTag(String tag, String container) {
+        assertContains("<" + tag + ">", container);
+        assertContains("</" + tag + ">", container);
     }
 
     /**

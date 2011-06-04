@@ -37,15 +37,18 @@
 
     <body>
         <menu name="${project.name}">
-	        <item name="Introduction"     href="index.html"/>
-			<item name="Install"          href="install.html"/>
-            <item name="Getting started"  href="getting-started.html"/>
-            <item name="Developers guide" href="developers.html"/>
-            <item name="Extraction notes" href="extraction.html"/>
-            <item name="Ill-formed RDFa"  href="ill-formed-rdfa.html"/>
+	        <item name="Introduction"      href="index.html"/>
+			<item name="Install"           href="install.html"/>
+            <item name="Getting Started"   href="getting-started.html"/>
+            <item name="Supported Formats" href="supported-formats.html"/>
+            <item name="Configuration"     href="configuration.html"/>
+            <item name="REST Service"      href="service.html"/>
+            <item name="Plugins"           href="plugins.html"/>
+            <item name="Developers Guide"  href="developers.html"/>
         </menu>
 
-        <menu ref="modules"/>
+        <!--<menu ref="modules"/>-->
+        <menu ref="reports"/>
 
         <menu name="External links">
 			<item name="Any23.org"       href="http://any23.org"/>
