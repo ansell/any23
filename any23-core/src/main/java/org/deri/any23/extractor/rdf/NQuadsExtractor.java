@@ -44,6 +44,7 @@ public class NQuadsExtractor implements Extractor.ContentExtractor {
                 "rdf-nq",
                 null,
                 Arrays.asList(
+                        "text/rdf+nq;q=0.1",
                         "text/nq;q=0.1",
                         "text/nquads;q=0.1",
                         "text/n-quads;q=0.1"
@@ -89,7 +90,7 @@ public class NQuadsExtractor implements Extractor.ContentExtractor {
         } catch (RDFHandlerException ex) {
             throw new RuntimeException("Should not happen, RDFHandlerAdapter does not throw this", ex);
         } catch (RDFParseException ex) {
-            throw new ExtractionException("Error while parsing RDF document.", ex, out.getExtractionContext());
+            throw new ExtractionException("Error while parsing RDF document.", ex, out);
         }
     }
 

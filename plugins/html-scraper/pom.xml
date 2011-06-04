@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Copyright 2008-2010 Digital Enterprise Research Institute (DERI)
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+    author: Michele Mostarda (michele.mostarda@gmail.com)
+    version: $Id$
+ -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <parent>
+        <groupId>org.deri.any23</groupId>
+        <artifactId>any23-parent</artifactId>
+        <version>0.5.0</version>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.deri.any23.plugin</groupId>
+    <artifactId>html-scraper</artifactId>
+    <version>0.5.0</version>
+    <packaging>jar</packaging>
+    <name>HTML Scraper Plugin Module</name>
+    <description>Any23 plugin for scraping HTML code.</description>
+    <url>http://developers.any23.org</url>
+
+    <dependencies>
+        <!-- BEGIN: logger -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.5.6</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-jdk14</artifactId>
+            <version>1.5.6</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jcl-over-slf4j</artifactId>
+            <version>1.5.6</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- END: logger -->
+
+        <!-- Simple Plugin Framework -->
+        <dependency>
+            <groupId>net.xeoh</groupId>
+            <artifactId>jspf</artifactId>
+            <version>0.9.0</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Sesame. -->
+        <dependency>
+            <groupId>org.openrdf.sesame</groupId>
+            <artifactId>sesame-model</artifactId>
+            <version>2.3.2</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Any23 Core. -->
+        <dependency>
+            <groupId>org.deri.any23</groupId>
+            <artifactId>any23-core</artifactId>
+            <version>0.5.0</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- BEGIN: BoilerPipe -->
+        <dependency>
+            <groupId>net.sourceforge.nekohtml</groupId>
+            <artifactId>nekohtml</artifactId>
+            <version>1.9.14</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>xerces</groupId>
+            <artifactId>xercesImpl</artifactId>
+            <version>2.9.1</version>
+            <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>xml-apis</groupId>
+                    <artifactId>xml-apis</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>de.l3s.boilerpipe</groupId>
+            <artifactId>boilerpipe</artifactId>
+            <version>1.1.0</version>
+        </dependency>
+        <!-- END: BoilerPipe -->
+
+        <!-- BEGIN: Test Dependencies -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.5</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>1.8.5</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- END: Test Dependencies -->
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- Generates a self-contained JAR. -->
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <finalName>${project.artifactId}-${project.version}-extractor-plugin</finalName>
+                    <appendAssemblyId>false</appendAssemblyId>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
+

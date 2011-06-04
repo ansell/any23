@@ -6,20 +6,32 @@
     xmlns:rdf  ="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
 
 
-<!-- Version 0.21 by Fabien.Gandon@sophia.inria.fr -->
-<!-- This software is distributed under either the CeCILL-C license or the GNU Lesser General Public License version 3 license. -->
-<!-- This program is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License -->
-<!-- as published by the Free Software Foundation version 3 of the License or under the terms of the CeCILL-C license. -->
-<!-- This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied -->
-<!-- warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. -->
-<!-- See the GNU Lesser General Public License version 3 at http://www.gnu.org/licenses/  -->
-<!-- and the CeCILL-C license at http://www.cecill.info/licences/Licence_CeCILL-C_V1-en.html for more details -->
+<!--
+    Version 0.21 by Fabien.Gandon@sophia.inria.fr
+    This software is distributed under either the CeCILL-C license or the GNU Lesser General Public License version 3 license.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License
+    as published by the Free Software Foundation version 3 of the License or under the terms of the CeCILL-C license.
+    This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+    warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+    See the GNU Lesser General Public License version 3 at http://www.gnu.org/licenses/
+    and the CeCILL-C license at http://www.cecill.info/licences/Licence_CeCILL-C_V1-en.html for more details
+
+    This project is hosted at http://ns.inria.fr/grddl/rdfa/
+-->
 
 
 <output indent="yes" method="xml" media-type="application/rdf+xml" encoding="UTF-8" omit-xml-declaration="yes"/>
 
 <!-- base of the current HTML doc -->
-<variable name='html_base' select="//*/h:head/h:base[position()=1]/@href"/>
+<variable name='html_base_1' select="/HTML/HEAD/BASE/@href"/>  <!-- This works for non XHTML documents. -->
+<variable name='html_base_2' select="//*/h:head/h:base[position()=1]/@href"/> <!-- This works for XHTML documents. -->
+<variable name='html_base' >
+	<choose>
+		<when test="string-length($html_base_1)>0"><value-of select="$html_base_1"/></when>
+        <when test="string-length($html_base_2)>0"><value-of select="$html_base_2"/></when>
+		<otherwise></otherwise>
+	</choose>
+</variable>
 
 <!-- default HTML vocabulary namespace -->
 <variable name='default_voc' select="'http://www.w3.org/1999/xhtml/vocab#'"/>
@@ -51,6 +63,7 @@
 <!--Start the RDF generation-->
 <template match="/">
 <rdf:RDF xmlns:rdf ="http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+  <xsl:comment>this_location: '<value-of select="$this_location" />' this_root: '<value-of select="$this_root"/>' html_base: '<value-of select="$html_base"/>'</xsl:comment>
   <apply-templates mode="rdf2rdfxml" />  <!-- the mode is used to ease integration with other XSLT templates -->
 </rdf:RDF>
 </template>

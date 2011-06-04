@@ -24,20 +24,13 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
 import org.deri.any23.Any23;
+import org.deri.any23.Configuration;
 import org.deri.any23.LogUtil;
 import org.deri.any23.extractor.ExtractionException;
 import org.deri.any23.extractor.ExtractionParameters;
 import org.deri.any23.filter.IgnoreAccidentalRDFa;
 import org.deri.any23.filter.IgnoreTitlesOfEmptyDocuments;
-import org.deri.any23.writer.BenchmarkTripleHandler;
-import org.deri.any23.writer.LoggingTripleHandler;
-import org.deri.any23.writer.NQuadsWriter;
-import org.deri.any23.writer.NTriplesWriter;
-import org.deri.any23.writer.RDFXMLWriter;
-import org.deri.any23.writer.ReportingTripleHandler;
-import org.deri.any23.writer.TripleHandler;
-import org.deri.any23.writer.TripleHandlerException;
-import org.deri.any23.writer.TurtleWriter;
+import org.deri.any23.writer.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,7 +50,7 @@ import java.net.URL;
  */
 public class Rover {
 
-    private static final String USER_AGENT_NAME = "Any23-CLI";
+    private static final String USER_AGENT_NAME = Configuration.instance().getPropertyOrFail("any23.http.user.agent.name");
 
     //output writer constants
     private static final String TURTLE = "turtle";
@@ -68,6 +61,8 @@ public class Rover {
 
     private static final String RDFXML  = "rdfxml";
 
+    private static final String URIS  = "uris";    
+
     private static final Logger logger = LoggerFactory.getLogger(Rover.class);
 
     private static Options options;
@@ -77,9 +72,9 @@ public class Rover {
         options.addOption(
                 new Option(
                         "f",
-                        "format",
+                        "Output format",
                         true,
-                        "[" + TURTLE + " (default), " + NTRIPLE + ", " + RDFXML + "," + QUAD + "]")
+                        "[" + TURTLE + " (default), " + NTRIPLE + ", " + RDFXML + ", " + QUAD + ", " + URIS + "]")
         );
         options.addOption(new Option("e", true, "comma-separated list of extractors, e.g. rdf-xml,rdf-turtle"));
         options.addOption(new Option("o", "output", true, "ouput file (defaults to stdout)"));
@@ -124,14 +119,17 @@ public class Rover {
         if (cmd.hasOption("f")) {
             format = cmd.getOptionValue("f");
         }
-        TripleHandler outputHandler = null;
+        TripleHandler outputHandler;
         if (TURTLE.equalsIgnoreCase(format)) {
             outputHandler = new TurtleWriter(System.out);
         } else if (NTRIPLE.equalsIgnoreCase(format)) {
             outputHandler = new NTriplesWriter(System.out);
         } else if (QUAD.equalsIgnoreCase(format)) {
             outputHandler = new NQuadsWriter(System.out);
-        } else {
+        } else if (URIS.equalsIgnoreCase(format)) {
+            outputHandler = new URIListWriter(System.out);
+        }
+        else {
             outputHandler = new RDFXMLWriter(System.out);
         }
 
@@ -152,7 +150,10 @@ public class Rover {
         ReportingTripleHandler reporter = new ReportingTripleHandler(outputHandler);
         outputHandler = reporter;
         if (cmd.hasOption('t')) {
-            outputHandler = new IgnoreAccidentalRDFa(new IgnoreTitlesOfEmptyDocuments(outputHandler));
+            outputHandler = new IgnoreAccidentalRDFa(
+                    new IgnoreTitlesOfEmptyDocuments(outputHandler),
+                    true // suppress stylesheet triples.
+            );
         }
 
         final boolean nestingDisabled = !cmd.hasOption('n');
@@ -175,6 +176,7 @@ public class Rover {
         } catch (ExtractionException ex) {
             logger.debug("Exception in Any23", ex);
             System.err.println(ex.getMessage());
+            ex.printStackTrace(System.err);
             System.exit(3);
         } catch (IOException ex) {
             logger.debug("Exception in Any23", ex);
@@ -198,7 +200,7 @@ public class Rover {
 
     private static void printHelp() {
         HelpFormatter formatter = new HelpFormatter();
-        formatter.printHelp("any23 [file|url]", options, true);
+        formatter.printHelp("{<url>|<file>}", options, true);
     }
 
     private static String argumentToURI(String arg) {

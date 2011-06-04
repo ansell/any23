@@ -4,14 +4,14 @@
     xmlns="http://www.w3.org/1999/xhtml"
     xmlns:dc="http://purl.org/dc/elements/1.1/">
   <head>
-    <title>any23: Anything To Triples</title>
+    <title>Any23: Anything To Triples</title>
     <style type="text/css">
-body { padding: 1.2em 2em; }
+body { padding: 1.2em 2em; font-family:arial; font-size:12px}
 th { text-align: left; }
-h1, h2, h3 { color: #600; }
+h1, h2, h3 { color: #3b97b9; }
 h2 { font-size: 125%; }
 h3 { font-size: 100%; }
-pre { background: #ffb; padding: 0.6em 1em; }
+pre { background: #e1e1e1; padding: 0.6em 1em; }
     </style>
     <script type="application/javascript">
 function init() {
@@ -35,11 +35,44 @@ function init() {
     </script>
   </head>
   <body onLoad="init();">
+  <div align="right">
+    <a href="http://developers.any23.org" title="Any23 Dev Site" target="_blank">
+        <img
+            alt="Any23 Dev Site"
+            src="resources/images/logo-any23-254x156.png"
+            height="30"
+        />
+    </a>
+    <a href="http://sindice.com/" title="Sindice" target="_blank">
+        <img
+            alt="Sindice"
+            src="resources/images/logo-sindice-90x30.png"
+            width="90"
+            height="30"
+        />
+    </a>
+    <a href="http://www.fbk.eu/" title="Fondazione Bruno Kessler" target="_blank">
+        <img
+            alt="Fondazione Bruno Kessler"
+            src="resources/images/logo-fbk-90x30.png"
+            width="90"
+            height="30"
+        />
+    </a>
+    <a href="http://www.deri.ie/" title="Digital Enterprise Research Institute" target="_blank">
+        <img
+            alt="Digital Enterprise Research Institute"
+            src="resources/images/logo-deri-90x30.png"
+            width="90"
+            height="30"
+        />
+    </a>
+   </div>
     <h1>any23: Anything To Triples</h1>
     <p>Parses microformats, RDFa, RDF/XML, Turtle and N-Triples.</p>
     <hr />
     <h2>Convert document at URI</h2>
-    <form method="get" action="">
+    <form method="get" action="any23/">
       <p>Pick an output format and enter the URI of a web document:</p>
       <code>
         <span class="app-base-uri">http://.../</span><select name="format">
@@ -48,6 +81,7 @@ function init() {
           <option value="ntriples">ntriples</option>
           <option value="nquads">nquads</option>
           <option value="rdfxml">rdfxml</option>
+          <option value="json">json</option>
         </select>/<input type="text" size="50" name="uri" value="http://twitter.com/cygri" />
       </code>
       <input type="checkbox" name="fix">Fix<a class="sPopup" href="javascript:" rel="sPopup-fix">[?]</a></input>
@@ -57,15 +91,15 @@ function init() {
     <hr />
 
     <h2>Convert copy&amp;pasted document</h2>
-    <form method="post" action="">
+    <form method="post" action="any23/">
       <p>Input format:
         <select name="type">
           <option value="">auto-detect</option>
           <option value="text/html">HTML with RDFa or microformats (text/html)</option>
           <option value="application/xhtml+xml">XHTML with RDFa or microformats (application/xhtml+xml)</option>
           <option value="text/turtle">Turtle (text/turtle)</option>
-          <option value="text/plain">N-Triples (text/plain)</option>
-          <option value="text/plain">N-Quads (text/plain)</option>
+          <option value="text/nt">N-Triples (text/nt)</option>
+          <option value="text/nq">N-Quads (text/nq)</option>
           <option value="application/rdf+xml">RDF/XML (application/rdf+xml)</option>
         </select>
         Output format:
@@ -75,6 +109,7 @@ function init() {
           <option value="ntriples">ntriples</option>
           <option value="nquads">nquads</option>
           <option value="rdfxml">rdfxml</option>
+          <option value="json">json</option>
         </select>
         <input type="checkbox" name="fix">Fix<a class="sPopup" href="javascript:" rel="sPopup-fix">[?]</a></input>
         <input type="checkbox" name="report">Report<a class="sPopup" href="javascript:" rel="sPopup-report">[?]</a></input>
@@ -172,6 +207,7 @@ Content-Length: 174
         <a href="http://sw.deri.org/2008/07/n-quads/">N-Quads</a></li>
       <li><code>rdfxml</code>, <code>rdf</code>, <code>xml</code> for
         <a href="http://www.w3.org/TR/rdf-syntax-grammar/">RDF/XML</a></li>
+      <li><code>json</code> for <a href="http://json.org/">JSON</a></li>
     </ul>
 
     <h3>Error reporting</h3>
@@ -184,25 +220,30 @@ Content-Length: 174
       </thead>
       <tbody>
         <tr><th>200 OK</th><td>Success</td></tr>
-        <tr><th>204 No Content</th><td>Extraction from input was successful, but yielded zero triples</td></tr>
         <tr><th>400 Bad Request</th><td>Missing or malformed input parameter</td></tr>
         <tr><th>404 Not Found</th><td>Malformed request URI</td></tr>
         <tr><th>406 Not Acceptable</th><td>None of the media types specified in the <code>Accept</code> header are supported</td></tr>
         <tr><th>415 Unsupported Media Type</th><td>Document body with unsupported media type was POSTed</td></tr>
+        <tr><th>501 Not Implemented</th><td>Extraction from input was successful, but yielded zero triples</td></tr>
         <tr><th>502 Bad Gateway</th><td>Input document from a remote server could not be fetched or parsed</td></tr>
       </tbody>
     </table>
+    <h3>Report Format</h3>
+    <p>The XML report format is subjected to changes. The current content is described in section
+       <a href="http://developers.any23.org/service.html">Any23 Service</a>.
+    </p>
     <hr />
-    <p><a href="http://developers.any23.org/">any23 project homepage</a> | Hosted at <a href="http://deri.ie/">DERI, NUI Galway</a></p>
+    <p><b>Any23 v.@any23.version@</b></p>
+    <p><a href="http://developers.any23.org/">Any23 project homepage</a> | Hosted at <a href="http://deri.ie/">DERI, NUI Galway</a></p>
     <div id="sPopup-fix">
 	    <p>If the <i>Fix</i> checkbox is activated, <b>Any23</b> tries to fix some
             <a href="http://rdfa.info/wiki/Common-publishing-mistakes">common RDFa mistakes</a> before performing the extraction.
-            Fixing is performed according a set of fully customizable rules. Please refer to the <a href="http://developers.any23.org/ill-formed-rdfa.html">developer guide</a> for any further detail.
+            Fixing is performed according a set of fully customizable rules. Please refer to the <a href="http://developers.any23.org/dev-validation-fix.html">developer guide</a> for any further detail.
         </p>
     </div>
     <div id="sPopup-report">
 	    <p>If the <i>Report</i> and <i>Fix</i> checkboxes are both activated, <b>Any23</b> wraps the RDF extracted triples with an XML response providing a short report
-            on which RDFa errors have been detected and which rules have been triggered to perform the fix. Please refer to the <a href="http://developers.any23.org/ill-formed-rdfa.html">developer guide</a> for any further detail.
+            on which RDFa errors have been detected and which rules have been triggered to perform the fix. Please refer to the <a href="http://developers.any23.org/dev-validation-fix.html">developer guide</a> for any further detail.
         </p>
     </div>
   </body>

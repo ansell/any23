@@ -43,7 +43,7 @@ import java.util.regex.Pattern;
  */
 public class Servlet extends HttpServlet {
 
-    public static final String DEFAULT_BASE_URI = "http://any23.org/tmp";
+    public static final String DEFAULT_BASE_URI = "http://any23.org/tmp/";
 
     private static final long serialVersionUID = 8207685628715421336L;
 
@@ -53,56 +53,45 @@ public class Servlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-        // Show /resources/form.html for GET requests to the app's root
-        if (("/".equals(req.getPathInfo()) && req.getQueryString() == null)) {
-            getServletContext().getRequestDispatcher("/resources/form.html").forward(req, resp);
-            return;
-        }
-        // forward requests to /resources/* to the default servlet, this is
-        // where we can put static files
-        if (req.getPathInfo().startsWith("/resources/")) {
-            getServletContext().getNamedDispatcher("default").forward(req, resp);
-            return;
-        }
-        WebResponder responder = new WebResponder(this, resp);
-        String format = getFormatFromRequestOrNegotiation(req);
+        final WebResponder responder = new WebResponder(this, resp);
+        final String format = getFormatFromRequestOrNegotiation(req);
+        final boolean report = isReport(req);
         if (format == null) {
-            responder.sendError(406, "Client accept header does not include a supported output format");
+            responder.sendError(406, "Client accept header does not include a supported output format", report);
             return;
         }
-        String uri = getInputURIFromRequest(req);
+        final String uri = getInputURIFromRequest(req);
         if (uri == null) {
-            responder.sendError(404, "Missing URI in GET request. Try /format/http://example.com/myfile");
+            responder.sendError(404, "Missing URI in GET request. Try /format/http://example.com/myfile", report);
             return;
         }
         final ExtractionParameters eps = getExtractionParameters(req);
-        final boolean report = isReport(req);
-        responder.runExtraction(createHTTPDocumentSource(responder, uri), eps, format, report);
+        responder.runExtraction(createHTTPDocumentSource(responder, uri, report), eps, format, report);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        WebResponder responder = new WebResponder(this, resp);
+        final WebResponder responder = new WebResponder(this, resp);
+        final boolean report = isReport(req);
         if (req.getContentType() == null) {
-            responder.sendError(400, "Invalid POST request, no Content-Type for the message body specified");
+            responder.sendError(400, "Invalid POST request, no Content-Type for the message body specified", report);
             return;
         }
-        String uri = getInputURIFromRequest(req);
-        String format = getFormatFromRequestOrNegotiation(req);
+        final String uri = getInputURIFromRequest(req);
+        final String format = getFormatFromRequestOrNegotiation(req);
         if (format == null) {
-            responder.sendError(406, "Client accept header does not include a supported output format");
+            responder.sendError(406, "Client accept header does not include a supported output format", report);
             return;
         }
         final ExtractionParameters eps = getExtractionParameters(req);
-        final boolean report = isReport(req);
         if ("application/x-www-form-urlencoded".equals(getContentTypeHeader(req))) {
             if (uri != null) {
                 log("Attempting conversion to '" + format + "' from URI <" + uri + ">");
-                responder.runExtraction(createHTTPDocumentSource(responder, uri), eps, format, report);
+                responder.runExtraction(createHTTPDocumentSource(responder, uri, report), eps, format, report);
                 return;
             }
             if (req.getParameter("body") == null) {
-                responder.sendError(400, "Invalid POST request, parameter 'uri' or 'body' required");
+                responder.sendError(400, "Invalid POST request, parameter 'uri' or 'body' required", report);
                 return;
             }
             String type = null;
@@ -221,14 +210,15 @@ public class Servlet extends HttpServlet {
         return contentType.substring(0, index);
     }
 
-    private DocumentSource createHTTPDocumentSource(WebResponder responder, String uri) throws IOException {
+    private DocumentSource createHTTPDocumentSource(WebResponder responder, String uri, boolean report)
+    throws IOException {
         try {
             if (!isValidURI(uri)) {
                 throw new URISyntaxException(uri, "@@@");
             }
             return createHTTPDocumentSource(responder.getRunner().getHTTPClient(), uri);
         } catch (URISyntaxException ex) {
-            responder.sendError(400, "Invalid input URI " + uri);
+            responder.sendError(400, "Invalid input URI " + uri, report);
             return null;
         }
     }
