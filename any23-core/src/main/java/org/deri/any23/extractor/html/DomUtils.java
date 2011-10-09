@@ -260,12 +260,29 @@ public class DomUtils {
         return false;
     }
 
+     /**
+     * Checks the presence of an attribute in the given <code>node</code>.
+      *
+      * @param node the node container.
+      * @param attributeName the name of the attribute.
+      */
+    public static boolean hasAttribute(Node node, String attributeName) {
+        return readAttribute(node, attributeName, null) != null;
+    }
+
+    /**
+     * Verifies if the given target node is an element.
+     *
+     * @param target
+     * @return <code>true</code> if the element the node is an element,
+     *         <code>false</code> otherwise.
+     */
     public static boolean isElementNode(Node target) {
         return Node.ELEMENT_NODE == target.getNodeType();
     }
 
     /**
-     * Reads the value of an <code>attribute</code>, returning the
+     * Reads the value of the specified <code>attribute</code>, returning the
      * <code>defaultValue</code> string if not present.
      *
      * @param node node to read the attribute.
@@ -282,6 +299,30 @@ public class DomUtils {
 			return defaultValue;
 		return attr.getNodeValue();
 	}
+
+    /**
+     * Reads the value of the first <i>attribute</i> which name matches with the specified <code>attributePrefix</code>.
+     * Returns the <code>defaultValue</code> if not found.
+     *
+     * @param node node to look for attributes.
+     * @param attributePrefix attribute prefix.
+     * @param defaultValue default returned value.
+     * @return the value found or default.
+     */
+    public static String readAttributeWithPrefix(Node node, String attributePrefix, String defaultValue) {
+        final NamedNodeMap attributes = node.getAttributes();
+        if (null == attributes) {
+            return defaultValue;
+        }
+        Node attribute;
+        for (int a = 0; a < attributes.getLength(); a++) {
+            attribute = attributes.item(a);
+            if (attribute.getNodeName().startsWith(attributePrefix)) {
+                return attribute.getNodeValue();
+            }
+        }
+        return defaultValue;
+    }
 
     /**
      * Reads the value of an <code>attribute</code>, returning the

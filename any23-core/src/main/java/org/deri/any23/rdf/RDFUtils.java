@@ -264,6 +264,21 @@ public class RDFUtils {
     /**
      * Creates a {@link BNode}.
      */
+    // TODO: replace this with all occurrences of #getBNode()
+    public static BNode bnode(String id) {
+        return valueFactory.createBNode(id);
+    }
+
+    /**
+     * @return a <code>bnode</code> with unique id.
+     */
+    public static BNode bnode() {
+        return valueFactory.createBNode();
+    }
+
+    /**
+     * Creates a {@link BNode}.
+     */
     public static BNode getBNode(String id) {
         return valueFactory.createBNode(
             "node" + MathUtils.md5(id)
