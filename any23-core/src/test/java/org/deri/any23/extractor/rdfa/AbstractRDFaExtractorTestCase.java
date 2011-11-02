@@ -20,6 +20,7 @@ import org.deri.any23.extractor.html.AbstractExtractorTestCase;
 import org.deri.any23.rdf.RDFUtils;
 import org.deri.any23.vocab.DCTERMS;
 import org.deri.any23.vocab.FOAF;
+import org.junit.Assert;
 import org.junit.Test;
 import org.openrdf.model.Statement;
 import org.openrdf.repository.RepositoryException;
@@ -109,17 +110,16 @@ public abstract class AbstractRDFaExtractorTestCase extends AbstractExtractorTes
      */
     @Test
     public void testRDFa11PrefixBackwardCompatibility() throws RepositoryException {
+        final int MIN_EXPECTED_STATEMENTS = 33;
+
         assertExtracts("html/rdfa/goodrelations-rdfa10.html");
         logger.info(dumpHumanReadableTriples());
-        assertModelNotEmpty();
-
-        // TODO: add checks over data types and structure.
-
+        Assert.assertTrue( dumpAsListOfStatements().size() >= MIN_EXPECTED_STATEMENTS );
         List<Statement> rdfa10Stmts = dumpAsListOfStatements();
-        assertExtracts("html/rdfa/goodrelations-rdfa11.html");
-        assertModelNotEmpty();
 
-        assertStatementsSize(null, null, null, rdfa10Stmts.size());
+        assertExtracts("html/rdfa/goodrelations-rdfa11.html");
+        Assert.assertTrue( dumpAsListOfStatements().size() >= MIN_EXPECTED_STATEMENTS );
+
         for(Statement stmt : rdfa10Stmts) {
             assertContains(stmt);
         }
