@@ -20,11 +20,8 @@ import org.deri.any23.extractor.html.AbstractExtractorTestCase;
 import org.deri.any23.rdf.RDFUtils;
 import org.deri.any23.vocab.DCTERMS;
 import org.deri.any23.vocab.FOAF;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.openrdf.model.Literal;
 import org.openrdf.model.Statement;
-import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.repository.RepositoryException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,8 +35,8 @@ import java.util.List;
  */
 public abstract class AbstractRDFaExtractorTestCase extends AbstractExtractorTestCase {
 
-    private static final DCTERMS vDCTERMS = DCTERMS.getInstance();
-    private static final FOAF vFOAF    = FOAF.getInstance();
+    protected static final DCTERMS vDCTERMS = DCTERMS.getInstance();
+    protected static final FOAF vFOAF       = FOAF.getInstance();
 
     Logger logger = LoggerFactory.getLogger(RDFaExtractorTest.class);
 
@@ -55,17 +52,6 @@ public abstract class AbstractRDFaExtractorTestCase extends AbstractExtractorTes
         assertContains(null, vDCTERMS.creator, RDFUtils.literal("Alice", "en") );
         assertContains(null, vDCTERMS.title  , RDFUtils.literal("The trouble with Bob", "en") );
         assertContains(null, RDFUtils.uri("http://fake.org/prop"), RDFUtils.literal("Mary", "en") );
-    }
-
-    @Test @Ignore
-    public void testObjectResourceConversion() throws RepositoryException {
-        assertExtracts("html/rdfa/object-resource-test.html");
-        logger.debug(dumpModelToTurtle());
-         assertContains(
-                null,
-                FOAF.getInstance().page,
-                RDFUtils.uri("http://en.wikipedia.org/New_York")
-        );
     }
 
     /**
@@ -124,10 +110,15 @@ public abstract class AbstractRDFaExtractorTestCase extends AbstractExtractorTes
     @Test
     public void testRDFa11PrefixBackwardCompatibility() throws RepositoryException {
         assertExtracts("html/rdfa/goodrelations-rdfa10.html");
+        logger.info(dumpHumanReadableTriples());
         assertModelNotEmpty();
+
+        // TODO: add checks over data types and structure.
+
         List<Statement> rdfa10Stmts = dumpAsListOfStatements();
         assertExtracts("html/rdfa/goodrelations-rdfa11.html");
         assertModelNotEmpty();
+
         assertStatementsSize(null, null, null, rdfa10Stmts.size());
         for(Statement stmt : rdfa10Stmts) {
             assertContains(stmt);
@@ -157,37 +148,12 @@ public abstract class AbstractRDFaExtractorTestCase extends AbstractExtractorTes
     }
 
     /**
-     * This test checks the behavior of the <i>RDFa</i> extraction where the datatype
-     * of a property is explicitly set.
-     * For details see the <a href="http://www.w3.org/TR/rdfa-syntax/">RDFa in XHTML: Syntax and Processing</a>
-     * recommendation.
-     *
-     * @throws RepositoryException
-     */
-    @Test
-    public void testExplicitDatatypeDeclaration() throws RepositoryException {
-        assertExtracts("html/rdfa/xmlliteral-datatype-test.html");
-        logger.debug(dumpModelToTurtle());
-
-        Literal literal = RDFUtils.literal(
-                "Albert <STRONG xmlns=\"http://www.w3.org/1999/xhtml\" " +
-                "xmlns:rdfs=\"http://www.w3.org/2000/01/rdf-schema#\" "  +
-                "xmlns:xsd=\"http://www.w3.org/2001/XMLSchema#\">Einstein</STRONG>\n",
-                RDF.XMLLITERAL
-        );
-        assertContains(
-                RDFUtils.uri("http://dbpedia.org/resource/Albert_Einstein"),
-                vFOAF.name,
-                literal
-        );
-    }
-
-    /**
      * Tests that the default parser settings enable tolerance in data type parsing.
      */
     @Test
     public void testTolerantParsing() {
         assertExtracts("html/rdfa/oreilly-invalid-datatype.html");
+        // TODO: verify the mailto warning.
     }
 
     /**
@@ -205,6 +171,38 @@ public abstract class AbstractRDFaExtractorTestCase extends AbstractExtractorTes
                 RDFUtils.uri("http://bob.example.com/node/3"),
                 vDCTERMS.title,
                 RDFUtils.literal("A blog post...", "en")
+        );
+    }
+
+    /**
+     * See RDFa 1.1 Specification section 6.2 .
+     *
+     * @throws RepositoryException
+     */
+    @Test
+    public void testIncompleteTripleManagement() throws RepositoryException {
+        assertExtracts("html/rdfa/incomplete-triples.html");
+        logger.info(dumpModelToTurtle());
+
+        assertContains(
+                RDFUtils.uri("http://dbpedia.org/resource/Albert_Einstein"),
+                RDFUtils.uri("http://dbpedia.org/property/birthPlace"),
+                RDFUtils.uri("http://dbpedia.org/resource/Germany")
+        );
+        assertContains(
+                RDFUtils.uri("http://dbpedia.org/resource/Germany"),
+                RDFUtils.uri("http://dbpedia.org/property/conventionalLongName"),
+                RDFUtils.literal("Federal Republic of Germany")
+        );
+        assertContains(
+                RDFUtils.uri("http://dbpedia.org/resource/Albert_Einstein"),
+                RDFUtils.uri("http://dbpedia.org/property/citizenship"),
+                RDFUtils.uri("http://dbpedia.org/resource/Germany")
+        );
+        assertContains(
+                RDFUtils.uri("http://dbpedia.org/resource/Albert_Einstein"),
+                RDFUtils.uri("http://dbpedia.org/property/citizenship"),
+                RDFUtils.uri("http://dbpedia.org/resource/United_States")
         );
     }
 

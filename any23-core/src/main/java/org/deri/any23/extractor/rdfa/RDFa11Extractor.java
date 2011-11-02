@@ -98,7 +98,11 @@ public class RDFa11Extractor implements Extractor.TagSoupDOMExtractor {
              Document in,
              ExtractionResult out
      ) throws IOException, ExtractionException {
-         parser.processDocument( new URL(extractionContext.getDocumentURI().toString() ), in, out );
+         try {
+             parser.processDocument( new URL(extractionContext.getDocumentURI().toString() ), in, out );
+         } catch (RDFa11ParserException rpe) {
+             throw new ExtractionException("Error while performing extraction.", rpe);
+         }
      }
 
      /**

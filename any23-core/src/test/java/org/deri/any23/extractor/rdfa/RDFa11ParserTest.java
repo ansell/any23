@@ -11,6 +11,7 @@ import org.w3c.dom.Element;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -90,7 +91,7 @@ public class RDFa11ParserTest {
     }
 
     @Test
-    public void testGetAsXMLLiteral() throws ParserConfigurationException, IOException {
+    public void testGetAsXMLLiteral() throws ParserConfigurationException, IOException, TransformerException {
         Document doc = getRootDocument();
         Element root = doc.createElement("DIV");
         Element child1 = doc.createElement("DIV");
@@ -102,7 +103,7 @@ public class RDFa11ParserTest {
         root.appendChild(child2);
 
         final Literal literal = RDFa11Parser.getAsXMLLiteral(root);
-        final String value = "<?xml version=\"1.0\"?>\n" +
+        final String value =
                 "<DIV datatype=\"rdf:XMLLiteral\">" +
                 "<DIV>text 1</DIV><DIV>text 2</DIV>" +
                 "</DIV>";
