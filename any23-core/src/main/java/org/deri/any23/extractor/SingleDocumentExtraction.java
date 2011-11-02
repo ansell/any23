@@ -302,9 +302,10 @@ public class SingleDocumentExtraction {
      *
      * @throws IOException
      * @throws ExtractionException
+     * @return the extraction report.
      */
-    public void run() throws IOException, ExtractionException {
-        run(ExtractionParameters.newDefault(configuration));
+    public SingleDocumentExtractionReport run() throws IOException, ExtractionException {
+        return run(ExtractionParameters.newDefault(configuration));
     }
 
     /**
