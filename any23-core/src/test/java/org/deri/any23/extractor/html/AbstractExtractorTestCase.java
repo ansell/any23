@@ -16,7 +16,6 @@
 
 package org.deri.any23.extractor.html;
 
-import org.deri.any23.configuration.DefaultConfiguration;
 import org.deri.any23.extractor.ExtractionException;
 import org.deri.any23.extractor.ExtractorFactory;
 import org.deri.any23.extractor.SingleDocumentExtraction;
