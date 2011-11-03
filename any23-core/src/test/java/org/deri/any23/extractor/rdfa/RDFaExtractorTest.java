@@ -17,11 +17,21 @@
 package org.deri.any23.extractor.rdfa;
 
 import org.deri.any23.extractor.ExtractorFactory;
+import org.junit.Test;
 
 /**
  * Reference Test Class for {@link org.deri.any23.extractor.rdfa.RDFaExtractor}.
  */
 public class RDFaExtractorTest extends AbstractRDFaExtractorTestCase {
+
+    /**
+     * Tests that the default parser settings enable tolerance in data type parsing.
+     */
+    @Test
+    public void testTolerantParsing() {
+        assertExtracts("html/rdfa/oreilly-invalid-datatype.html");
+    }
+
 
     @Override
     protected ExtractorFactory<?> getExtractorFactory() {

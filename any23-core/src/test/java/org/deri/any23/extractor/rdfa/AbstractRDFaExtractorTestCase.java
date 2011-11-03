@@ -114,11 +114,11 @@ public abstract class AbstractRDFaExtractorTestCase extends AbstractExtractorTes
 
         assertExtracts("html/rdfa/goodrelations-rdfa10.html");
         logger.info(dumpHumanReadableTriples());
-        Assert.assertTrue( dumpAsListOfStatements().size() >= MIN_EXPECTED_STATEMENTS );
+        Assert.assertTrue(dumpAsListOfStatements().size() >= MIN_EXPECTED_STATEMENTS);
         List<Statement> rdfa10Stmts = dumpAsListOfStatements();
 
         assertExtracts("html/rdfa/goodrelations-rdfa11.html");
-        Assert.assertTrue( dumpAsListOfStatements().size() >= MIN_EXPECTED_STATEMENTS );
+        Assert.assertTrue(dumpAsListOfStatements().size() >= MIN_EXPECTED_STATEMENTS);
 
         for(Statement stmt : rdfa10Stmts) {
             assertContains(stmt);
@@ -145,15 +145,6 @@ public abstract class AbstractRDFaExtractorTestCase extends AbstractExtractorTes
                 RDFUtils.literal("Albert Einstein", "en")
         );
 
-    }
-
-    /**
-     * Tests that the default parser settings enable tolerance in data type parsing.
-     */
-    @Test
-    public void testTolerantParsing() {
-        assertExtracts("html/rdfa/oreilly-invalid-datatype.html");
-        // TODO: verify the mailto warning.
     }
 
     /**

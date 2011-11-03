@@ -1,5 +1,6 @@
 package org.deri.any23.extractor.rdfa;
 
+import org.deri.any23.extractor.ErrorReporter;
 import org.deri.any23.extractor.ExtractorFactory;
 import org.deri.any23.rdf.RDFUtils;
 import org.deri.any23.vocab.FOAF;
@@ -66,6 +67,15 @@ public class RDFa11ExtractorTest extends AbstractRDFaExtractorTestCase {
                 RDFUtils.uri("http://bob.example.com/chapter"),
                 baseURI
         );
+    }
+
+    /**
+     * Tests that the default parser settings enable tolerance in data type parsing.
+     */
+    @Test
+    public void testTolerantParsing() {
+        assertExtracts("html/rdfa/oreilly-invalid-datatype.html");
+        assertError(ErrorReporter.ErrorLevel.WARN, ".*Cannot map prefix \'mailto\'.*");
     }
 
     @Override
