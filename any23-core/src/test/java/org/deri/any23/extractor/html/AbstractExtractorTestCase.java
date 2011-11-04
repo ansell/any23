@@ -65,8 +65,7 @@ public abstract class AbstractExtractorTestCase {
     /**
      * Internal connection used to collect extraction results.
      */
-    // TODO: move to private visibility.
-    protected RepositoryConnection conn;
+    private RepositoryConnection conn;
 
     /**
      * The latest generated report.
@@ -446,13 +445,18 @@ public abstract class AbstractExtractorTestCase {
         assertContains(s, p, RDFUtils.literal(o));
     }
 
-     protected void assertContains(Resource s, URI p, String o, String lang) throws RepositoryException {
+    protected void assertContains(Resource s, URI p, String o, String lang) throws RepositoryException {
         assertContains(s, p, RDFUtils.literal(o, lang));
     }
 
-    protected int getStatementsSize(Resource subject, URI prop, Value obj)
+    protected RepositoryResult<Statement> getStatements(Resource s, URI p, Value o)
     throws RepositoryException {
-        RepositoryResult<Statement> result = conn.getStatements(subject, prop, obj, false);
+        return conn.getStatements(s, p, o, false);
+    }
+
+    protected int getStatementsSize(Resource s, URI p, Value o)
+    throws RepositoryException {
+        RepositoryResult<Statement> result = getStatements(s, p, o);
         int count = 0;
         try {
             while (result.hasNext()) {
@@ -470,16 +474,16 @@ public abstract class AbstractExtractorTestCase {
         Assert.assertEquals(expected, getStatementsSize(subject, prop, obj) );
     }
 
-    protected void assertStatementsSize(URI prop, Value obj, int expected) throws RepositoryException {
-        assertStatementsSize(null, prop, obj, expected);
+    protected void assertStatementsSize(URI p, Value o, int expected) throws RepositoryException {
+        assertStatementsSize(null, p, o, expected);
     }
 
-    protected void assertStatementsSize(URI prop, String obj, int expected) throws RepositoryException {
-        assertStatementsSize(prop, obj == null ? null : RDFUtils.literal(obj), expected );
+    protected void assertStatementsSize(URI p, String o, int expected) throws RepositoryException {
+        assertStatementsSize(p, o == null ? null : RDFUtils.literal(o), expected );
     }
 
-    protected void assertNotFound(Resource sub, URI prop) throws RepositoryException {
-         RepositoryResult<Statement> statements = conn.getStatements(sub, prop, null, true);
+    protected void assertNotFound(Resource s, URI p) throws RepositoryException {
+         RepositoryResult<Statement> statements = conn.getStatements(s, p, null, true);
         try {
             Assert.assertFalse("Expected no statements.", statements.hasNext());
         } finally {
@@ -487,8 +491,8 @@ public abstract class AbstractExtractorTestCase {
         }
     }
 
-    protected Value findObject(Resource sub, URI prop) throws RepositoryException {
-        RepositoryResult<Statement> statements = conn.getStatements(sub, prop, null, true);
+    protected Value findObject(Resource s, URI p) throws RepositoryException {
+        RepositoryResult<Statement> statements = conn.getStatements(s, p, null, true);
         try {
             junit.framework.Assert.assertTrue("Expected at least a statement.", statements.hasNext());
             return (statements.next().getObject());
@@ -497,12 +501,12 @@ public abstract class AbstractExtractorTestCase {
         }
     }
 
-    protected Resource findObjectAsResource(Resource sub, URI prop) throws RepositoryException {
-        return (Resource) findObject(sub, prop);
+    protected Resource findObjectAsResource(Resource s, URI p) throws RepositoryException {
+        return (Resource) findObject(s, p);
     }
 
-    protected String findObjectAsLiteral(Resource sub, URI prop) throws RepositoryException {
-        return findObject(sub, prop).stringValue();
+    protected String findObjectAsLiteral(Resource s, URI p) throws RepositoryException {
+        return findObject(s, p).stringValue();
     }
 
     protected Collection<ErrorReporter.Error> getErrors(String extractorName) {
