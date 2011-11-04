@@ -243,6 +243,7 @@ public class RDFa11Parser {
     }
 
     private void popEvaluationContext(Node n) {
+        //if(evaluationContextStack.isEmpty()) return;
         Node peekNode = evaluationContextStack.peek().node;
         if(DomUtils.isAncestorOf(peekNode, n)) {
             evaluationContextStack.pop();
@@ -288,15 +289,13 @@ public class RDFa11Parser {
     }
 
     private void processNode(Node node, ExtractionResult extractionResult) throws Exception {
-        /* TODO: enable element node filter.
-        if(node.getNodeType() != Node.DOCUMENT_NODE && node.getNodeType() != Node.ELEMENT_NODE) {
-            return;
-        }
-        */
         if(logger.isDebugEnabled()) logger.debug("processNode: " + DomUtils.getXPathForNode(node));
-
         final EvaluationContext currentEvaluationContext = getContext();
         try {
+            if(node.getNodeType() != Node.DOCUMENT_NODE && node.getNodeType() != Node.ELEMENT_NODE) {
+                return;
+            }
+
             // 5.5.2
             Node currentElement = node;
             updateURIMapping(currentElement);
