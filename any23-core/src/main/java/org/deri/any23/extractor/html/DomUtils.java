@@ -88,26 +88,18 @@ public class DomUtils {
      * @param node the input node.
      * @return the XPath location of node as String.
      */
-    // TODO: TEXT nodes are ignored, this causes issues in error reporting.
     public static String getXPathForNode(Node node) {
-        String index = "";
-        if (node.getNodeType() == Node.ELEMENT_NODE) {
-            int successors = 1;
-            Node previous = node.getPreviousSibling();
-            while (null != previous) {
-                if (previous.getNodeType() == Node.ELEMENT_NODE
-                        && previous.getNodeName().equals(node.getNodeName())) {
-                    successors++;
-                }
-                previous = previous.getPreviousSibling();
-            }
-            index = "/" + node.getNodeName() + "[" + successors + "]";
+        final StringBuilder sb = new StringBuilder();
+        Node parent = node;
+        while(parent != null && parent.getNodeType() != Node.DOCUMENT_NODE) {
+            sb.insert(0, "]");
+            sb.insert(0, getIndexInParent(parent) + 1);
+            sb.insert(0, "[");
+            sb.insert(0, parent.getNodeName());
+            sb.insert(0, "/");
+            parent = parent.getParentNode();
         }
-        Node parent = node.getParentNode();
-        if (null == parent)
-            return index;
-        else
-            return getXPathForNode(parent) + index;
+        return sb.toString();
     }
 
     /**
