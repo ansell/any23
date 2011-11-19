@@ -350,6 +350,29 @@ public class RDFUtils {
     }
 
     /**
+     * Returns a parser type from the given extension.
+     *
+     * @param ext input extension.
+     * @return parser matching the extension.
+     * @throws IllegalArgumentException if no extension matches.
+     */
+    public static Parser getParserFromExtension(String ext) {
+        if("rdf".equals(ext)) {
+            return Parser.RDFXML;
+        }
+        if("ttl".equals(ext)) {
+            return Parser.Turtle;
+        }
+        if("nt".equals(ext)) {
+            return Parser.NTriples;
+        }
+        if("nq".equals(ext)) {
+            return Parser.NQuads;
+        }
+        throw new IllegalArgumentException("Unknown extension : " + ext);
+    }
+
+    /**
      * Parses the content of <code>is</code> input stream with the
      * specified parser <code>p</code> using <code>baseURI</code>.
      *
@@ -403,6 +426,24 @@ public class RDFUtils {
     public static Statement[] parseRDF(Parser p, String in)
     throws RDFHandlerException, IOException, RDFParseException {
         return parseRDF(p, new ByteArrayInputStream(in.getBytes()));
+    }
+
+    /**
+     * Parses the content of the <code>resource</code> file
+     * guessing the content format from the extension.
+     *
+     * @param resource resource name.
+     * @return the statements declared within the resource file.
+     * @throws java.io.IOException if an error occurs while reading file.
+     * @throws org.openrdf.rio.RDFHandlerException if an error occurs while parsing file.
+     * @throws org.openrdf.rio.RDFParseException if an error occurs while parsing file.
+     */
+    public static Statement[] parseRDF(String resource) throws RDFHandlerException, IOException, RDFParseException {
+        final int extIndex = resource.lastIndexOf(".");
+        if(extIndex == -1)
+            throw new IllegalArgumentException("Error while detecting the extension in resource name " + resource);
+        final String extension = resource.substring(extIndex + 1);
+        return parseRDF( getParserFromExtension(extension), RDFUtils.class.getResourceAsStream(resource) );
     }
 
     /**
