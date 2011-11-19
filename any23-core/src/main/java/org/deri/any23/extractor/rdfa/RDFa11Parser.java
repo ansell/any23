@@ -108,6 +108,10 @@ public class RDFa11Parser {
         return documentURL;
     }
 
+    protected static boolean isAbsoluteURI(String uri) {
+        return uri.indexOf(URI_SCHEMA_SEPARATOR) != -1;
+    }
+
     protected static boolean isCURIE(String curie) {
         if(curie == null) {
             throw new NullPointerException("curie string cannot be null.");
@@ -258,6 +262,39 @@ public class RDFa11Parser {
     }
 
     /**
+     * Resolves a <rm>whitelist</em> separated list of <i>CURIE</i> or <i>URI</i>.
+     *
+     * @param n current node.
+     * @param curieOrURIList list of CURIE/URI.
+     * @return
+     * @throws URISyntaxException
+     */
+    protected URI[] resolveCurieOrURIList(Node n, String curieOrURIList) throws URISyntaxException {
+        if(curieOrURIList == null || curieOrURIList.trim().length() == 0) return new URI[0];
+
+        final String[] curieOrURIListParts = curieOrURIList.split("\\s");
+        final List<URI> result = new ArrayList<URI>();
+        Resource curieOrURI;
+        for(String curieORURIListPart : curieOrURIListParts) {
+            curieOrURI = resolveCURIEOrURI(curieORURIListPart);
+            if(curieOrURI != null && curieOrURI instanceof URI) {
+                result.add((URI) curieOrURI);
+            } else {
+                reportError(n, String.format("Invalid CURIE '%s' : expected URI, found BNode.", curieORURIListPart));
+            }
+        }
+        return result.toArray(new URI[result.size()]);
+    }
+
+    protected Resource resolveCURIEOrURI(String curieOrURI) {
+        if( isCURIE(curieOrURI) ) {
+            return resolveNamespacedURI(curieOrURI.substring(1, curieOrURI.length() - 1));
+        }
+        if(isAbsoluteURI(curieOrURI)) return RDFUtils.uri(curieOrURI);
+        return resolveNamespacedURI(curieOrURI);
+    }
+
+    /**
      * Pushes a context whiting the evaluation context stack, associated to tha given generation node.
      *
      * @param current
@@ -280,7 +317,7 @@ public class RDFa11Parser {
      *
      * @param current current node.
      */
-    private void popEvaluationContext(Node current) {
+    private void popContext(Node current) {
         Node peekNode = evaluationContextStack.peek().node;
         if(DomUtils.isAncestorOf(peekNode, current)) {
             evaluationContextStack.pop();
@@ -352,7 +389,7 @@ public class RDFa11Parser {
             final Node child = nodeList.item(i);
             depthFirstNode(child, extractionResult);
             popMappings(child);
-            popEvaluationContext(child);
+            popContext(child);
         }
     }
 
@@ -750,45 +787,14 @@ public class RDFa11Parser {
         }
     }
 
-    /**
-     * Resolves a <em>CURIE</em> reference.
-     * See <i>RDFa 1.0 Specification section 5.4.2</i>.
-     *
-     * @param curie
-     * @param verify
-     * @return
-     */
-    private Resource resolveCURIE(String curie, boolean verify) {
-        if(verify && ! isCURIE(curie) ) {
-            throw new IllegalArgumentException(
-                String.format("The given string is not a valid CURIE: '%s'", curie)
-            );
+    private Resource resolveNamespacedURI(String mapping) {
+        if(mapping.indexOf(URI_PATH_SEPARATOR) == 0) { // Begins with '/'
+            mapping = mapping.substring(1);
         }
 
-        final String curieContent = curie.substring(1, curie.length() - 1);
-
-        // 5.4.5
-        if(isCURIEBNode(curie)) {
-            return RDFUtils.bnode(curieContent);
-        }
-
-        return resolveURI(curieContent);
-    }
-
-    private boolean isAbsoluteURI(String uri) {
-        return uri.indexOf(URI_SCHEMA_SEPARATOR) != -1;
-    }
-
-    private Resource resolveURI(String uri) {
-        if(isAbsoluteURI(uri)) return RDFUtils.uri(uri);
-
-        if(uri.indexOf(URI_PATH_SEPARATOR) == 0) { // Begins with '/'
-            uri = uri.substring(1);
-        }
-
-        final String[] parts = uri.split(":");
+        final String[] parts = mapping.split(":");
         if(parts.length != 2) { // there is no prefix separator.
-            return RDFUtils.uri( documentBase.toString() + uri );
+            return RDFUtils.uri( documentBase.toString() + mapping );
         }
 
         final URI curieMapping = getMapping(parts[0]);
@@ -809,30 +815,6 @@ public class RDFa11Parser {
                         :
                         documentBase.toString() + candidateCURIE.toString()
         );
-    }
-
-    private Resource resolveCURIEOrURI(String curieOrURI) throws URISyntaxException {
-        if( isCURIE(curieOrURI) ) {
-            return resolveCURIE(curieOrURI, false);
-        }
-        return resolveURI(curieOrURI);
-    }
-
-    private URI[] resolveCurieOrURIList(Node n, String curieOrURIList) throws URISyntaxException {
-        if(curieOrURIList == null || curieOrURIList.trim().length() == 0) return new URI[0];
-
-        final String[] curieOrURIListParts = curieOrURIList.split("\\s");
-        final List<URI> result = new ArrayList<URI>();
-        Resource curieOrURI;
-        for(String curieORURIListPart : curieOrURIListParts) {
-            curieOrURI = resolveCURIEOrURI(curieORURIListPart);
-            if(curieOrURI != null && curieOrURI instanceof URI) {
-                result.add((URI) curieOrURI);
-            } else {
-                reportError(n, String.format("Invalid CURIE '%s' : expected URI, found BNode.", curieORURIListPart));
-            }
-        }
-        return result.toArray(new URI[result.size()]);
     }
 
     /**
