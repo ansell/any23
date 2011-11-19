@@ -1,13 +1,34 @@
+/*
+ * Copyright 2008-2010 Digital Enterprise Research Institute (DERI)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.deri.any23.extractor.rdfa;
 
 import org.deri.any23.extractor.ErrorReporter;
 import org.deri.any23.extractor.ExtractorFactory;
 import org.deri.any23.rdf.RDFUtils;
 import org.deri.any23.vocab.FOAF;
+import org.junit.Assert;
 import org.junit.Test;
 import org.openrdf.model.Literal;
 import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.repository.RepositoryException;
+import org.openrdf.rio.RDFHandlerException;
+import org.openrdf.rio.RDFParseException;
+
+import java.io.IOException;
 
 /**
  * Reference test class for {@link RDFa11Extractor} class.
@@ -17,6 +38,11 @@ import org.openrdf.repository.RepositoryException;
 
 public class RDFa11ExtractorTest extends AbstractRDFaExtractorTestCase {
 
+    /**
+     * This test verifies the correct object resource conversion.
+     *
+     * @throws RepositoryException
+     */
     @Test
     public void testObjectResourceConversion() throws RepositoryException {
         assertExtracts("html/rdfa/object-resource-test.html");
@@ -52,10 +78,15 @@ public class RDFa11ExtractorTest extends AbstractRDFaExtractorTestCase {
         );
     }
 
+    /**
+     * This test verifies the correct <em>REL/REV</em> attribute usage.
+     *
+     * @throws RepositoryException
+     */
     @Test
     public void testRelRevUse() throws RepositoryException {
         assertExtracts("html/rdfa/rel-rev-use.html");
-        logger.debug(dumpModelToTurtle());
+        logger.info(dumpModelToTurtle());
 
         assertContains(
                 baseURI,
@@ -63,8 +94,8 @@ public class RDFa11ExtractorTest extends AbstractRDFaExtractorTestCase {
                 RDFUtils.uri("http://www.example.com/books/the_two_towers")
         );
         assertContains(
-                RDFUtils.uri("http://www.example.com/books/the_two_towers"),
-                RDFUtils.uri("http://bob.example.com/chapter"),
+                RDFUtils.uri("http://path/to/chapter"),
+                RDFUtils.uri("http://bob.example.com/isChapterOf"),
                 baseURI
         );
     }
@@ -76,6 +107,48 @@ public class RDFa11ExtractorTest extends AbstractRDFaExtractorTestCase {
     public void testTolerantParsing() {
         assertExtracts("html/rdfa/oreilly-invalid-datatype.html");
         assertError(ErrorReporter.ErrorLevel.WARN, ".*Cannot map prefix \'mailto\'.*");
+    }
+
+    /**
+     * Taken from the <a href="http://www.heppnetz.de/rdfa4google/testcases.html">GoodRelations test cases</a>.
+     * It checks if the extraction is the same when the namespaces are defined in <i>RDFa1.0</i>.
+     *
+     * @throws RepositoryException
+     * @throws java.io.IOException
+     * @throws org.openrdf.rio.RDFHandlerException
+     * @throws org.openrdf.rio.RDFParseException
+     */
+    @Test
+    public void testRDFa10Extraction()
+    throws RepositoryException, RDFHandlerException, IOException, RDFParseException {
+        final int EXPECTED_STATEMENTS = 35;
+
+        assertExtracts("html/rdfa/goodrelations-rdfa10.html");
+        logger.info(dumpModelToNQuads());
+
+        Assert.assertEquals(EXPECTED_STATEMENTS, dumpAsListOfStatements().size());
+        assertContainsModel("/html/rdfa/goodrelations-rdfa10-expected.nq");
+    }
+
+    /**
+     * Taken from the <a href="http://www.heppnetz.de/rdfa4google/testcases.html">GoodRelations test cases</a>.
+     * It checks if the extraction is the same when the namespaces are defined in <i>RDFa1.1</i>.
+     *
+     * @throws RepositoryException
+     * @throws java.io.IOException
+     * @throws org.openrdf.rio.RDFHandlerException
+     * @throws org.openrdf.rio.RDFParseException
+     */
+    @Test
+    public void testRDFa11Extraction()
+    throws RepositoryException, RDFHandlerException, IOException, RDFParseException {
+        final int EXPECTED_STATEMENTS = 35;
+
+        assertExtracts("html/rdfa/goodrelations-rdfa11.html");
+        logger.info(dumpHumanReadableTriples());
+
+        Assert.assertEquals(EXPECTED_STATEMENTS, dumpAsListOfStatements().size());
+        assertContainsModel("/html/rdfa/goodrelations-rdfa10-expected.nq");
     }
 
     @Override

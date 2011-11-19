@@ -17,12 +17,51 @@
 package org.deri.any23.extractor.rdfa;
 
 import org.deri.any23.extractor.ExtractorFactory;
+import org.junit.Assert;
 import org.junit.Test;
+import org.openrdf.model.Statement;
+import org.openrdf.repository.RepositoryException;
+import org.openrdf.rio.RDFHandlerException;
+import org.openrdf.rio.RDFParseException;
+
+import java.io.IOException;
+import java.util.List;
 
 /**
  * Reference Test Class for {@link org.deri.any23.extractor.rdfa.RDFaExtractor}.
  */
 public class RDFaExtractorTest extends AbstractRDFaExtractorTestCase {
+
+    /**
+     * Taken from the <a href="http://www.heppnetz.de/rdfa4google/testcases.html">GoodRelations test cases</a>.
+     * It checks if the extraction is the same when the namespaces are defined in <i>RDFa1.0</i> or
+     * <i>RDFa1.1</i> respectively.
+     *
+     * @throws org.openrdf.repository.RepositoryException
+     * @throws java.io.IOException
+     * @throws org.openrdf.rio.RDFHandlerException
+     * @throws org.openrdf.rio.RDFParseException
+     */
+    @Test
+    public void testRDFa11PrefixBackwardCompatibility()
+    throws RepositoryException, RDFHandlerException, IOException, RDFParseException {
+        final int EXPECTED_STATEMENTS = 33;
+
+        assertExtracts("html/rdfa/goodrelations-rdfa10.html");
+        logger.debug("Model 1 " + dumpHumanReadableTriples());
+        Assert.assertEquals(EXPECTED_STATEMENTS, dumpAsListOfStatements().size());
+        List<Statement> rdfa10Stmts = dumpAsListOfStatements();
+
+        //assertContainsModel("/html/rdfa/goodrelations-rdfa10-expected.nq");
+
+        assertExtracts("html/rdfa/goodrelations-rdfa11.html");
+        logger.debug("Model 2 " + dumpHumanReadableTriples());
+        Assert.assertTrue(dumpAsListOfStatements().size() >= EXPECTED_STATEMENTS);
+
+        for(Statement stmt : rdfa10Stmts) {
+            assertContains(stmt);
+        }
+    }
 
     /**
      * Tests that the default parser settings enable tolerance in data type parsing.
@@ -31,7 +70,6 @@ public class RDFaExtractorTest extends AbstractRDFaExtractorTestCase {
     public void testTolerantParsing() {
         assertExtracts("html/rdfa/oreilly-invalid-datatype.html");
     }
-
 
     @Override
     protected ExtractorFactory<?> getExtractorFactory() {

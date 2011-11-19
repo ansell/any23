@@ -20,14 +20,10 @@ import org.deri.any23.extractor.html.AbstractExtractorTestCase;
 import org.deri.any23.rdf.RDFUtils;
 import org.deri.any23.vocab.DCTERMS;
 import org.deri.any23.vocab.FOAF;
-import org.junit.Assert;
 import org.junit.Test;
-import org.openrdf.model.Statement;
 import org.openrdf.repository.RepositoryException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.List;
 
 /**
  * This class provides a common set of tests for an <i>RDFa</i> extractor.
@@ -99,31 +95,6 @@ public abstract class AbstractRDFaExtractorTestCase extends AbstractExtractorTes
         );
         assertStatementsSize(null, null, null, 8);
         logger.debug(dumpHumanReadableTriples());
-    }
-
-    /**
-     * Taken from the <a href="http://www.heppnetz.de/rdfa4google/testcases.html">GoodRelations test cases</a>.
-     * It checks if the extraction is the same when the namespaces are defined in <i>RDFa1.0</i> or
-     * <i>RDFa1.1</i> respectively.
-     *
-     * @throws RepositoryException
-     */
-    @Test
-    // TODO: verify output. Product bnodes are wrong.
-    public void testRDFa11PrefixBackwardCompatibility() throws RepositoryException {
-        final int MIN_EXPECTED_STATEMENTS = 32;
-
-        assertExtracts("html/rdfa/goodrelations-rdfa10.html");
-        logger.info(dumpHumanReadableTriples());
-        Assert.assertTrue(dumpAsListOfStatements().size() >= MIN_EXPECTED_STATEMENTS);
-        List<Statement> rdfa10Stmts = dumpAsListOfStatements();
-
-        assertExtracts("html/rdfa/goodrelations-rdfa11.html");
-        Assert.assertTrue(dumpAsListOfStatements().size() >= MIN_EXPECTED_STATEMENTS);
-
-        for(Statement stmt : rdfa10Stmts) {
-            assertContains(stmt);
-        }
     }
 
     /**

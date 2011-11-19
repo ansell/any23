@@ -44,6 +44,9 @@ import java.util.Map;
 import java.util.Stack;
 
 /**
+ * This parser is able to extract <a href="http://www.w3.org/TR/rdfa-syntax/">RDFa 1.0</a> and
+ * <a href="http://www.w3.org/TR/rdfa-core/">RDFa 1.1</a> statements from any <i>(X)HTML</i> document.
+ *
  * @author Michele Mostarda (mostarda@fbk.eu)
  */
 public class RDFa11Parser {
@@ -150,6 +153,8 @@ public class RDFa11Parser {
         return XMLNS_DEFAULT.equals(attributeValue);
     }
 
+    public RDFa11Parser() {}
+
     /**
      * <a href="http://www.w3.org/TR/rdfa-syntax/#s_model">RDFa Syntax - Processing Model</a>.
      *
@@ -159,33 +164,55 @@ public class RDFa11Parser {
      */
     public void processDocument(URL documentURL, Document document, ExtractionResult extractionResult)
     throws RDFa11ParserException {
-        reset();
-
-        this.errorReporter = extractionResult;
-
-        // Check 4.1.3 : default XMLNS declaration.
-        if( ! isXMLNSDeclared(document)) {
-            reportError(
-                    document.getDocumentElement(),
-                    String.format(
-                            "The default %s namespace is expected to be declared and equal to '%s' .",
-                            XMLNS_ATTRIBUTE, XMLNS_DEFAULT
-                    )
-            );
-        }
-
         try {
-            documentBase = getDocumentBase(documentURL, document);
-        } catch (MalformedURLException murle) {
-            throw new RDFa11ParserException("Invalid document base URL.", murle);
+            this.errorReporter = extractionResult;
+
+            // Check 4.1.3 : default XMLNS declaration.
+            if( ! isXMLNSDeclared(document)) {
+                reportError(
+                        document.getDocumentElement(),
+                        String.format(
+                                "The default %s namespace is expected to be declared and equal to '%s' .",
+                                XMLNS_ATTRIBUTE, XMLNS_DEFAULT
+                        )
+                );
+            }
+
+            try {
+                documentBase = getDocumentBase(documentURL, document);
+            } catch (MalformedURLException murle) {
+                throw new RDFa11ParserException("Invalid document base URL.", murle);
+            }
+
+            // 5.5.1
+            pushContext(document, new EvaluationContext(documentBase));
+
+            depthFirstNode(document, extractionResult);
+
+            assert listOfIncompleteTriples.isEmpty()
+                    :
+                   "The list of incomplete triples is expected to be empty at the end of processing.";
+        } finally {
+            reset();
         }
-
-        // 5.5.1
-        pushContext(document, new EvaluationContext(documentBase));
-
-        depthFirstNode(document, extractionResult);
     }
 
+    /**
+     * Resets the parser to the original state.
+     */
+    public void reset() {
+        errorReporter = null;
+        documentBase  = null;
+        uriMappingStack.clear();
+        listOfIncompleteTriples.clear();
+        evaluationContextStack.clear();
+    }
+
+    /**
+     * Updates the URI mapping with the XMLNS attributes declared in the current node.
+     *
+     * @param node input node.
+     */
     protected void updateURIMapping(Node node) {
         final NamedNodeMap attributes = node.getAttributes();
         if (null == attributes) return;
@@ -214,6 +241,12 @@ public class RDFa11Parser {
         );
     }
 
+    /**
+     * Returns a URI mapping for a given prefix.
+     *
+     * @param prefix input prefix.
+     * @return URI mapping.
+     */
     protected URI getMapping(String prefix) {
         for (URIMapping uriMapping : uriMappingStack) {
             final URI mapping = uriMapping.map.get(prefix);
@@ -224,32 +257,58 @@ public class RDFa11Parser {
         return null;
     }
 
-    private void reset() {
-        errorReporter = null;
-        documentBase  = null;
-        uriMappingStack.clear();
-        listOfIncompleteTriples.clear();
-        evaluationContextStack.clear();
-    }
-
-
-    private void pushContext(Node node, EvaluationContext ec) {
-        ec.node = node;
+    /**
+     * Pushes a context whiting the evaluation context stack, associated to tha given generation node.
+     *
+     * @param current
+     * @param ec
+     */
+    private void pushContext(Node current, EvaluationContext ec) {
+        ec.node = current;
         evaluationContextStack.push(ec);
     }
 
+    /**
+     * @return the peek evaluation context.
+     */
     private EvaluationContext getContext() {
         return evaluationContextStack.peek();
     }
 
-    private void popEvaluationContext(Node n) {
-        //if(evaluationContextStack.isEmpty()) return;
+    /**
+     * pops out the peek evaluation context if ancestor of current node.
+     *
+     * @param current current node.
+     */
+    private void popEvaluationContext(Node current) {
         Node peekNode = evaluationContextStack.peek().node;
-        if(DomUtils.isAncestorOf(peekNode, n)) {
+        if(DomUtils.isAncestorOf(peekNode, current)) {
             evaluationContextStack.pop();
         }
     }
 
+    /**
+     * Purge all incomplete triples originated from a node that is descendant of <code>current</code>.
+     *
+     * @param current
+     */
+    private void purgeIncompleteTriples(Node current) {
+        final List<IncompleteTriple> toBePurged = new ArrayList<IncompleteTriple>();
+        for(IncompleteTriple incompleteTriple : listOfIncompleteTriples) {
+            if( DomUtils.isAncestorOf(current, incompleteTriple.originatingNode, true) ) {
+                toBePurged.add(incompleteTriple);
+            }
+        }
+        listOfIncompleteTriples.removeAll(toBePurged);
+        toBePurged.clear();
+    }
+
+    /**
+     * Reports an error to the error reporter.
+     *
+     * @param n originating node.
+     * @param msg human readable message.
+     */
     private void reportError(Node n, String msg) {
         final String errorMsg = String.format(
                 "Error while processing node [%s] : '%s'",
@@ -264,16 +323,30 @@ public class RDFa11Parser {
         );
     }
 
+    /**
+     * Performs a <i>deep-first</i> tree visit on the given root node.
+     *
+     * @param node root node.
+     * @param extractionResult
+     */
     private void depthFirstNode(Node node, ExtractionResult extractionResult) {
         try {
             processNode(node, extractionResult);
         } catch (Exception e) {
-            // e.printStackTrace();
+            if(logger.isDebugEnabled()) logger.debug("Error while processing node.", e);
             reportError(node, e.getMessage());
+            // e.printStackTrace();
         }
         depthFirstChildren(node.getChildNodes(), extractionResult);
+        purgeIncompleteTriples(node);
     }
 
+    /**
+     * Performs a <i>deep-first</i> children list visit.
+     *
+     * @param nodeList
+     * @param extractionResult
+     */
     private void depthFirstChildren(NodeList nodeList, ExtractionResult extractionResult) {
         for(int i = 0; i < nodeList.getLength(); i++) {
             final Node child = nodeList.item(i);
@@ -283,39 +356,62 @@ public class RDFa11Parser {
         }
     }
 
+    /**
+     * Writes a triple on the extraction result.
+     *
+     * @param s
+     * @param p
+     * @param o
+     * @param extractionResult
+     */
     private void writeTriple(Resource s, URI p, Value o, ExtractionResult extractionResult) {
-        if(logger.isDebugEnabled()) logger.debug(String.format("writeTriple(%s %s %s)" , s, p, o));
+        if(logger.isTraceEnabled()) logger.trace(String.format("writeTriple(%s %s %s)" , s, p, o));
+        assert s != null && p != null && o != null;
         extractionResult.writeTriple(s, p, o);
     }
 
-    private void processNode(Node node, ExtractionResult extractionResult) throws Exception {
-        if(logger.isDebugEnabled()) logger.debug("processNode: " + DomUtils.getXPathForNode(node));
+    /**
+     * Processes the current node on the extraction algorithm.
+     *
+     * @param currentElement
+     * @param extractionResult
+     * @throws Exception
+     */
+    private void processNode(Node currentElement, ExtractionResult extractionResult) throws Exception {
+        if(logger.isTraceEnabled()) logger.trace("processNode(" + DomUtils.getXPathForNode(currentElement) + ")");
         final EvaluationContext currentEvaluationContext = getContext();
         try {
-            if(node.getNodeType() != Node.DOCUMENT_NODE && node.getNodeType() != Node.ELEMENT_NODE) {
-                return;
-            }
+            if(
+                    currentElement.getNodeType() != Node.DOCUMENT_NODE
+                            &&
+                    currentElement.getNodeType() != Node.ELEMENT_NODE
+            ) return;
 
             // 5.5.2
-            Node currentElement = node;
+            //Node currentElement = node;
             updateURIMapping(currentElement);
 
-            // 5.2.3
+            // 5.5.3
             updateLanguage(currentElement, currentEvaluationContext);
 
-            // 5.2.4
             if(! isRelativeNode(currentElement)) {
-                currentEvaluationContext.newSubject = getNewSubject(currentElement, currentEvaluationContext);
-            } else { // 5.2.5
-                currentEvaluationContext.newSubject = getNewSubjectCurrentObjectResource(
+                // 5.5.4
+                establishNewSubject(currentElement, currentEvaluationContext);
+            } else {
+                // 5.5.5
+                establishNewSubjectCurrentObjectResource(
                         currentElement,
                         currentEvaluationContext
                 );
             }
-            if(currentEvaluationContext.newSubject == null)
+            /*
+            if(currentEvaluationContext.newSubject == null) {
                 currentEvaluationContext.newSubject = RDFUtils.uri(documentBase.toExternalForm());
-
+            }
             assert currentEvaluationContext.newSubject != null : "newSubject must be not null.";
+            */
+            if(currentEvaluationContext.newSubject == null) return;
+
             if(logger.isDebugEnabled()) logger.debug("newSubject: " + currentEvaluationContext.newSubject);
 
             // 5.5.6
@@ -411,11 +507,17 @@ public class RDFa11Parser {
 
                     newEvaluationContext.language = currentEvaluationContext.language;
                 }
-                pushContext(node, newEvaluationContext);
+                pushContext(currentElement, newEvaluationContext);
             }
         }
     }
 
+    /**
+     * Extract URI namespaces (prefixes) from the current node.
+     *
+     * @param node
+     * @param prefixMapList
+     */
     private void extractPrefixes(Node node, List<PrefixMap> prefixMapList) {
         final String prefixAttribute = DomUtils.readAttribute(node, PREFIX_ATTRIBUTE, null);
         if(prefixAttribute == null) return;
@@ -445,78 +547,105 @@ public class RDFa11Parser {
         }
     }
 
+    /**
+     * Updates the current language.
+     *
+     * @param node
+     * @param currentEvaluationContext
+     */
     private void updateLanguage(Node node, EvaluationContext currentEvaluationContext) {
         final String candidateLanguage = DomUtils.readAttribute(node, XML_LANG_ATTRIBUTE, null);
         if(candidateLanguage != null) currentEvaluationContext.language = candidateLanguage;
     }
 
-    // 5.5.4
-    private Resource getNewSubject(Node node, EvaluationContext currentEvaluationContext)
+    /**
+     * Establish the new subject for the current recursion.
+     * See <i>RDFa 1.0 Specification section 5.5.4</i>.
+     *
+     * @param node
+     * @param currentEvaluationContext
+     * @throws URISyntaxException
+     */
+    private void establishNewSubject(Node node, EvaluationContext currentEvaluationContext)
     throws URISyntaxException {
         String candidateURIOrCURIE;
         for(String subjectAttribute : SUBJECT_ATTRIBUTES) {
             candidateURIOrCURIE = DomUtils.readAttribute(node, subjectAttribute, null);
             if(candidateURIOrCURIE != null) {
-                return resolveCURIEOrURI(candidateURIOrCURIE);
+                currentEvaluationContext.newSubject = resolveCURIEOrURI(candidateURIOrCURIE);
+                return;
             }
         }
 
         if(node.getNodeName().equalsIgnoreCase(HEAD_TAG) || node.getNodeName().equalsIgnoreCase(BODY_TAG)) {
-            return RDFUtils.uri(currentEvaluationContext.base.toString());
+            currentEvaluationContext.newSubject = RDFUtils.uri(currentEvaluationContext.base.toString());
+            return;
         }
 
         if(DomUtils.hasAttribute(node, TYPEOF_ATTRIBUTE)) {
-            return RDFUtils.bnode();
+            currentEvaluationContext.newSubject = RDFUtils.bnode();
+            return;
         }
 
         if(DomUtils.hasAttribute(node, PROPERTY_ATTRIBUTE)) {
             currentEvaluationContext.skipElem = true;
         }
         if(currentEvaluationContext.parentObject != null) {
-            return (Resource) currentEvaluationContext.parentObject;
+            currentEvaluationContext.newSubject = (Resource) currentEvaluationContext.parentObject;
+            return;
         }
 
-        return null;
+        currentEvaluationContext.newSubject = null;
     }
 
-    // 5.5.5
-    private Resource getNewSubjectCurrentObjectResource(Node node, EvaluationContext currentEvaluationContext)
+    /**
+     * Establishes the new subject and the current object resource.
+     *
+     * See <i>RDFa 1.0 Specification section 5.5.5</i>.
+     *
+     * @param node
+     * @param currentEvaluationContext
+     * @throws URISyntaxException
+     */
+    private void establishNewSubjectCurrentObjectResource(Node node, EvaluationContext currentEvaluationContext)
     throws URISyntaxException {
+        // Subject.
         String candidateURIOrCURIE;
         candidateURIOrCURIE = DomUtils.readAttribute(node, ABOUT_ATTRIBUTE, null);
         if(candidateURIOrCURIE != null) {
-            return resolveCURIEOrURI(candidateURIOrCURIE);
-        }
-        candidateURIOrCURIE = DomUtils.readAttribute(node, SRC_ATTRIBUTE, null);
-        if(candidateURIOrCURIE != null) {
-            return resolveCURIEOrURI(candidateURIOrCURIE);
+            currentEvaluationContext.newSubject = resolveCURIEOrURI(candidateURIOrCURIE);
+        } else {
+            candidateURIOrCURIE = DomUtils.readAttribute(node, SRC_ATTRIBUTE, null);
+            if (candidateURIOrCURIE != null) {
+                currentEvaluationContext.newSubject = resolveCURIEOrURI(candidateURIOrCURIE);
+            } else {
+                if (node.getNodeName().equalsIgnoreCase(HEAD_TAG) || node.getNodeName().equalsIgnoreCase(BODY_TAG)) {
+                    currentEvaluationContext.newSubject = RDFUtils.uri(currentEvaluationContext.base.toString());
+                } else {
+                    if (DomUtils.hasAttribute(node, TYPEOF_ATTRIBUTE)) {
+                        currentEvaluationContext.newSubject = RDFUtils.bnode();
+                    } else {
+                        if (currentEvaluationContext.parentObject != null) {
+                            currentEvaluationContext.newSubject = (Resource) currentEvaluationContext.parentObject;
+                        }
+                    }
+                }
+            }
         }
 
-        if(node.getNodeName().equalsIgnoreCase(HEAD_TAG) || node.getNodeName().equalsIgnoreCase(BODY_TAG)) {
-            return RDFUtils.uri(currentEvaluationContext.base.toString());
-        }
-        if(DomUtils.hasAttribute(node, TYPEOF_ATTRIBUTE)) {
-            return RDFUtils.bnode();
-        }
-
-        // Then the [current object resource] is set to the URI obtained from the first match from the following rules:
+        // Object.
         candidateURIOrCURIE = DomUtils.readAttribute(node, RESOURCE_ATTRIBUTE, null);
         if(candidateURIOrCURIE != null) {
             currentEvaluationContext.currentObjectResource = resolveCURIEOrURI(candidateURIOrCURIE);
+            return;
         }
+
         candidateURIOrCURIE = DomUtils.readAttribute(node, HREF_ATTRIBUTE, null);
         if(candidateURIOrCURIE != null) {
             currentEvaluationContext.currentObjectResource = resolveCURIEOrURI(candidateURIOrCURIE);
+            return;
         }
-
-        if(currentEvaluationContext.parentObject != null) {
-            if (!DomUtils.hasAttribute(node, PROPERTY_ATTRIBUTE)) {
-                currentEvaluationContext.skipElem = true;
-            }
-            return (Resource) currentEvaluationContext.parentObject;
-        }
-
-        return null;
+        currentEvaluationContext.currentObjectResource = null;
     }
 
     private URI[] getTypes(Node node) throws URISyntaxException {
@@ -540,8 +669,18 @@ public class RDFa11Parser {
         return resolveCurieOrURIList(node, candidateURI);
     }
 
-    // 5.5.9
-    private Value getCurrentObject(Node node) throws URISyntaxException, IOException, TransformerException {
+    /**
+     * Establishes the new object value.
+     * See <i>RDFa 1.0 Specification section 5.5.9</i>.
+     *
+     * @param node
+     * @return
+     * @throws URISyntaxException
+     * @throws IOException
+     * @throws TransformerException
+     */
+    private Value getCurrentObject(Node node)
+    throws URISyntaxException, IOException, TransformerException {
         final String candidateObject = DomUtils.readAttribute(node, HREF_ATTRIBUTE, null);
         if(candidateObject != null) {
             return resolveCURIEOrURI(candidateObject);
@@ -550,7 +689,8 @@ public class RDFa11Parser {
         }
     }
 
-    private Literal gerCurrentObjectLiteral(Node node) throws URISyntaxException, IOException, TransformerException {
+    private Literal gerCurrentObjectLiteral(Node node)
+    throws URISyntaxException, IOException, TransformerException {
         final EvaluationContext currentEvaluationContext = getContext();
         Literal literal;
 
@@ -575,7 +715,13 @@ public class RDFa11Parser {
         return node.getTextContent();
     }
 
-    // 5.5.9.1
+    /**
+     * Extracts the current typed literal from the given node.
+     * See <i>RDFa 1.0 Specification section 5.5.9.1</i>.
+     * @param node
+     * @return
+     * @throws URISyntaxException
+     */
     private Literal getAsTypedLiteral(Node node) throws URISyntaxException {
         final String datatype = DomUtils.readAttribute(node, DATATYPE_ATTRIBUTE, null);
         if (datatype == null || datatype.trim().length() == 0 || XML_LITERAL_DATATYPE.equals(datatype.trim()) ) {
@@ -586,7 +732,7 @@ public class RDFa11Parser {
     }
 
     private void pushMappings(Node sourceNode, List<PrefixMap> prefixMapList) {
-        logger.debug("pushMappings");
+        logger.trace("pushMappings()");
 
         final Map<String, URI> mapping = new HashMap<String, URI>();
         for (PrefixMap prefixMap : prefixMapList) {
@@ -599,12 +745,19 @@ public class RDFa11Parser {
         if(uriMappingStack.isEmpty()) return;
         final URIMapping peek = uriMappingStack.peek();
         if( ! DomUtils.isAncestorOf(peek.sourceNode, node) ) {
-            logger.debug("popMappings");
+            logger.trace("popMappings()");
             uriMappingStack.pop();
         }
     }
 
-    // 5.4.2
+    /**
+     * Resolves a <em>CURIE</em> reference.
+     * See <i>RDFa 1.0 Specification section 5.4.2</i>.
+     *
+     * @param curie
+     * @param verify
+     * @return
+     */
     private Resource resolveCURIE(String curie, boolean verify) {
         if(verify && ! isCURIE(curie) ) {
             throw new IllegalArgumentException(
@@ -682,22 +835,40 @@ public class RDFa11Parser {
         return result.toArray(new URI[result.size()]);
     }
 
+    /**
+     * Defines an evaluation context.
+     */
     class EvaluationContext {
         private Node node;
         private URL base;
         private Resource parentSubject;
         private Value parentObject;
         private String language;
-        private boolean recourse = true;
+        private boolean recourse;
         private boolean skipElem;
         private Resource newSubject;
         private Resource currentObjectResource;
 
+        /**
+         * Sections <em>5.5</em>, <em>5.5.1</em> .
+         *
+         * @param base
+         */
         EvaluationContext(URL base) {
-            this.base = base;
+            this.base             = base;
+            this.parentSubject    = RDFUtils.uri(base.toExternalForm());
+            this.parentObject     = null;
+            this.language         = null;
+            this.recourse         = true;
+            this.skipElem         = false;
+            this.newSubject       = null;
+            currentObjectResource = null;
         }
     }
 
+    /**
+     * Defines a prefix mapping.
+     */
     class PrefixMap {
         final String prefix;
         final URI    uri;
@@ -707,6 +878,9 @@ public class RDFa11Parser {
         }
     }
 
+    /**
+     * Defines a URI mapping.
+     */
     class URIMapping {
         final Node sourceNode;
         final Map<String, URI> map;
@@ -717,11 +891,17 @@ public class RDFa11Parser {
         }
     }
 
+    /**
+     * Defines the direction of an {@link IncompleteTriple}.
+     */
     enum IncompleteTripleDirection {
         Forward,
         Reverse
     }
 
+    /**
+     * Defines an incomplete triple.
+     */
     private class IncompleteTriple {
         final Node     originatingNode;
         final Resource subject;
