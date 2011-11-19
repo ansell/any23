@@ -79,14 +79,36 @@ public class RDFa11ExtractorTest extends AbstractRDFaExtractorTestCase {
     }
 
     /**
+     * Tests the correct behavior of <i>REL</i> and <i>HREF</i>.
+     *
+     * @throws RepositoryException
+     */
+    @Test
+    public void testRelWithHref() throws RepositoryException {
+         assertExtracts("html/rdfa/rel-href.html");
+        logger.debug(dumpModelToTurtle());
+
+        assertContains(
+                RDFUtils.uri( baseURI.toString(),"#me"),
+                FOAF.getInstance().name,
+                "John Doe"
+        );
+        assertContains(
+                RDFUtils.uri( baseURI.toString(),"#me"),
+                FOAF.getInstance().homepage,
+                RDFUtils.uri("http://example.org/blog/")
+        );
+    }
+
+    /**
      * This test verifies the correct <em>REL/REV</em> attribute usage.
      *
      * @throws RepositoryException
      */
     @Test
-    public void testRelRevUse() throws RepositoryException {
-        assertExtracts("html/rdfa/rel-rev-use.html");
-        logger.info(dumpModelToTurtle());
+    public void testRelRevManagement() throws RepositoryException {
+        assertExtracts("html/rdfa/rel-rev.html");
+        logger.debug(dumpModelToTurtle());
 
         assertContains(
                 baseURI,

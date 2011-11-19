@@ -84,6 +84,9 @@ public class RDFa11Parser {
     public static final String PROPERTY_ATTRIBUTE = "property";
     public static final String DATATYPE_ATTRIBUTE = "datatype";
     public static final String CONTENT_ATTRIBUTE  = "content";
+    public static final String VOCAB_ATTRIBUTE    = "vocab";
+    // TODO: introduce support for RDFa profiles. (http://www.w3.org/TR/rdfa-core/#s_profiles)
+    public static final String PROFILE_ATTRIBUTE  = "profile";
 
     public static final String XML_LITERAL_DATATYPE = "rdf:XMLLiteral";
 
