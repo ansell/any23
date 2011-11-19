@@ -23,6 +23,7 @@ import org.deri.any23.extractor.SingleDocumentExtraction;
 import org.deri.any23.extractor.SingleDocumentExtractionReport;
 import org.deri.any23.parser.NQuadsWriter;
 import org.deri.any23.rdf.RDFUtils;
+import org.deri.any23.vocab.SINDICE;
 import org.deri.any23.writer.RepositoryWriter;
 import org.junit.After;
 import org.junit.Assert;
@@ -38,6 +39,7 @@ import org.openrdf.repository.RepositoryException;
 import org.openrdf.repository.RepositoryResult;
 import org.openrdf.repository.sail.SailRepository;
 import org.openrdf.rio.RDFHandlerException;
+import org.openrdf.rio.RDFParseException;
 import org.openrdf.rio.rdfxml.RDFXMLWriter;
 import org.openrdf.rio.turtle.TurtleWriter;
 import org.openrdf.sail.Sail;
@@ -52,15 +54,15 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Abstract class used to write {@link org.deri.any23.extractor.Extractor} specific
- * test cases.
+ * Abstract class used to write {@link org.deri.any23.extractor.Extractor}
+ * specific test cases.
  */
 public abstract class AbstractExtractorTestCase {
 
     /**
      * Base test document.
      */
-    protected static URI baseURI = RDFUtils.uri("http://bob.example.com/");
+    protected static URI baseURI = RDFUtils.uri("http://bob.example.com/"); // TODO: change base URI string.
 
     /**
      * Internal connection used to collect extraction results.
@@ -110,26 +112,63 @@ public abstract class AbstractExtractorTestCase {
     /**
      * @return the connection to the memory repository.
      */
-    public RepositoryConnection getConnection() {
+    protected RepositoryConnection getConnection() {
         return conn;
     }
 
     /**
      * @return the last generated report.
      */
-    public SingleDocumentExtractionReport getReport() {
+    protected SingleDocumentExtractionReport getReport() {
         return report;
     }
 
     /**
-     * Performs data extraction over the content of a file
+     * Returns the list of errors raised by a given extractor.
+     *
+     * @param extractorName name of the extractor.
+     * @return collection of errors.
+     */
+    protected Collection<ErrorReporter.Error> getErrors(String extractorName) {
+        for(
+                Map.Entry<String, Collection<ErrorReporter.Error>> errorEntry
+                :
+                report.getExtractorToErrors().entrySet()
+        ) {
+            if(errorEntry.getKey().equals(extractorName)) {
+                return errorEntry.getValue();
+            }
+        }
+        return Collections.emptyList();
+    }
+
+    /**
+     * Applies the extractor provided by the {@link #getExtractorFactory()} to the specified resource.
+     *
+     * @param resource resource name.
+     * @throws ExtractionException
+     * @throws IOException
+     */
+    // TODO: MimeType detector to null forces the execution of all extractors, but extraction
+    //       tests should be based on mimetype detection.
+    protected void extract(String resource) throws ExtractionException, IOException {
+        SingleDocumentExtraction ex = new SingleDocumentExtraction(
+            new HTMLFixture(resource).getOpener(baseURI.toString()),
+            getExtractorFactory(), new RepositoryWriter(conn)
+        );
+        ex.setMIMETypeDetector(null);
+        report = ex.run();
+    }
+
+    /**
+     * Performs data extraction over the content of a resource
      * and assert that the extraction was correct.
      *
-     * @param fileName
+     * @param resource resource name.
      */
-    public void assertExtracts(String fileName) {
+    protected void assertExtracts(String resource) {
         try {
-            extract(fileName);
+            extract(resource);
         } catch (ExtractionException ex) {
             throw new RuntimeException(ex);
         } catch (IOException ex) {
@@ -144,7 +183,7 @@ public abstract class AbstractExtractorTestCase {
      * @param o object.
      * @throws RepositoryException
      */
-    public void assertContains(URI p, Resource o) throws RepositoryException {
+    protected void assertContains(URI p, Resource o) throws RepositoryException {
         assertContains(null, p, o);
     }
 
@@ -155,7 +194,7 @@ public abstract class AbstractExtractorTestCase {
      * @param o object.
      * @throws RepositoryException
      */
-    public void assertContains(URI p, String o) throws RepositoryException {
+    protected void assertContains(URI p, String o) throws RepositoryException {
         assertContains(null, p, RDFUtils.literal(o));
     }
 
@@ -166,7 +205,7 @@ public abstract class AbstractExtractorTestCase {
      * @param o object.
      * @throws RepositoryException
      */
-    public void assertNotContains(URI p, Resource o) throws RepositoryException {
+    protected void assertNotContains(URI p, Resource o) throws RepositoryException {
         assertNotContains(null, p, o);
     }
 
@@ -178,10 +217,10 @@ public abstract class AbstractExtractorTestCase {
      * @param o object.
      * @throws RepositoryException
      */
-    public void assertContains(Resource s, URI p, Value o) throws RepositoryException {
+    protected void assertContains(Resource s, URI p, Value o) throws RepositoryException {
         Assert.assertTrue(
                 getFailedExtractionMessage() +
-                        String.format("Cannot find triple (%s %s %s)", s, p, o),
+                String.format("Cannot find triple (%s %s %s)", s, p, o),
                 conn.hasStatement(s, p, o, false));
     }
 
@@ -193,7 +232,7 @@ public abstract class AbstractExtractorTestCase {
      * @param o object.
      * @throws RepositoryException
      */
-    public void assertNotContains(Resource s, URI p, String o) throws RepositoryException {
+    protected void assertNotContains(Resource s, URI p, String o) throws RepositoryException {
         Assert.assertFalse(getFailedExtractionMessage(), conn.hasStatement(s, p, RDFUtils.literal(o), false));
     }
 
@@ -205,7 +244,7 @@ public abstract class AbstractExtractorTestCase {
      * @param o object.
      * @throws RepositoryException
      */
-    public void assertNotContains(Resource s, URI p, Resource o) throws RepositoryException {
+    protected void assertNotContains(Resource s, URI p, Resource o) throws RepositoryException {
         Assert.assertFalse(getFailedExtractionMessage(), conn.hasStatement(s, p, o, false));
     }
 
@@ -214,7 +253,7 @@ public abstract class AbstractExtractorTestCase {
      *
      * @throws RepositoryException
      */
-    public void assertModelNotEmpty() throws RepositoryException {
+    protected void assertModelNotEmpty() throws RepositoryException {
         Assert.assertFalse(
                 "The model is expected to be empty." + getFailedExtractionMessage(),
                 conn.isEmpty()
@@ -229,7 +268,7 @@ public abstract class AbstractExtractorTestCase {
      * @param o object.
      * @throws RepositoryException
      */
-    public void assertNotContains(Resource s, URI p, Literal o) throws RepositoryException {
+    protected void assertNotContains(Resource s, URI p, Literal o) throws RepositoryException {
         Assert.assertFalse(getFailedExtractionMessage(), conn.hasStatement(s, p, o, false));
     }
 
@@ -238,19 +277,128 @@ public abstract class AbstractExtractorTestCase {
      *
      * @throws RepositoryException
      */
-    public void assertModelEmpty() throws RepositoryException {
+    protected void assertModelEmpty() throws RepositoryException {
         Assert.assertTrue(getFailedExtractionMessage(), conn.isEmpty());
     }
 
     /**
-     * Returns the blank subject matching the pattern <code>(_:b p o)</code>, it is expected to exists and be just one.
+     * Asserts that an error has been produced by the processed {@link org.deri.any23.extractor.Extractor}.
+     *
+     * @param level expected error level
+     * @param errorRegex regex matching the expected human readable error message.
+     */
+    protected void assertError(ErrorReporter.ErrorLevel level, String errorRegex) {
+        final Collection<ErrorReporter.Error> errors = getErrors( getExtractorFactory().getExtractorName() );
+        boolean found = false;
+        for(ErrorReporter.Error error : errors) {
+            if(error.getLevel() == level && error.getMessage().matches(errorRegex)) {
+                found = true;
+                break;
+            }
+        }
+        Assert.assertTrue(
+                String.format("Cannot find error with level %s matching expression '%s'", level, errorRegex),
+                found
+        );
+    }
+
+    /**
+     * Verifies that the current model contains all the given statements.
+     *
+     * @param statements list of statements to be verified.
+     * @throws RepositoryException
+     */
+    public void assertContainsModel(Statement[] statements) throws RepositoryException {
+        for(Statement statement : statements) {
+            assertContains(statement);
+        }
+    }
+
+    /**
+     * Verifies that the current model contains all the statements declared in the
+     * specified <code>modelFile</code>.
+     *
+     * @param modelResource the resource containing the model.
+     * @throws RDFHandlerException
+     * @throws IOException
+     * @throws RDFParseException
+     * @throws RepositoryException
+     */
+    public void assertContainsModel(String modelResource)
+    throws RDFHandlerException, IOException, RDFParseException, RepositoryException {
+        getConnection().remove(null, SINDICE.getInstance().date, (Value) null, (Resource) null);
+        getConnection().remove(null, SINDICE.getInstance().size, (Value) null, (Resource) null);
+        assertContainsModel(RDFUtils.parseRDF(modelResource));
+    }
+
+    /**
+     * Asserts that the given pattern <code>(s p o)</code> satisfies the expected number of statements.
+     *
+     * @param s subject.
+     * @param p predicate.
+     * @param o object.
+     * @param expected expected matches.
+     * @throws RepositoryException
+     */
+    protected void assertStatementsSize(Resource s, URI p, Value o, int expected)
+    throws RepositoryException {
+        Assert.assertEquals(
+                "Unexpected number of matching statements.",
+                expected,
+                getStatementsSize(s, p, o)
+        );
+    }
+
+    /**
+     * Asserts that the given pattern <code>(_ p o)</code> satisfies the expected number of statements.
+     *
+     * @param p predicate.
+     * @param o object.
+     * @param expected expected matches.
+     * @throws RepositoryException
+     */
+    protected void assertStatementsSize(URI p, Value o, int expected) throws RepositoryException {
+        assertStatementsSize(null, p, o, expected);
+    }
+
+    /**
+     * Asserts that the given pattern <code>(_ p o)</code> satisfies the expected number of statements.
+     *
+     * @param p predicate.
+     * @param o object.
+     * @param expected expected matches.
+     * @throws RepositoryException
+     */
+    protected void assertStatementsSize(URI p, String o, int expected) throws RepositoryException {
+        assertStatementsSize(p, o == null ? null : RDFUtils.literal(o), expected);
+    }
+
+    /**
+     * Asserts that the given pattern <code>(s p _)</code> is not present.
+     *
+     * @param s subject.
+     * @param p predicate.
+     * @throws RepositoryException
+     */
+    protected void assertNotFound(Resource s, URI p) throws RepositoryException {
+         RepositoryResult<Statement> statements = conn.getStatements(s, p, null, true);
+        try {
+            Assert.assertFalse("Expected no statements.", statements.hasNext());
+        } finally {
+            statements.close();
+        }
+    }
+
+    /**
+     * Returns the blank subject matching the pattern <code>(_:b p o)</code>,
+     * it is expected to exists and be just one.
      *
      * @param p predicate.
      * @param o object.
      * @return the matching blank subject.
      * @throws RepositoryException
      */
-    public Resource findExactlyOneBlankSubject(URI p, Value o) throws RepositoryException {
+    protected Resource findExactlyOneBlankSubject(URI p, Value o) throws RepositoryException {
         RepositoryResult<Statement> it = conn.getStatements(null, p, o, false);
         try {
             Assert.assertTrue(getFailedExtractionMessage(), it.hasNext());
@@ -265,14 +413,15 @@ public abstract class AbstractExtractorTestCase {
     }
 
     /**
-     * Returns the object matching the pattern <code>(s p o)</code>, it is expected to exists and be just one.
+     * Returns the object matching the pattern <code>(s p o)</code>,
+     * it is expected to exists and be just one.
      *
      * @param s subject.
      * @param p predicate.
      * @return the matching object.
      * @throws RepositoryException
      */
-    public Value findExactlyOneObject(Resource s, URI p) throws RepositoryException {
+    protected Value findExactlyOneObject(Resource s, URI p) throws RepositoryException {
         RepositoryResult<Statement> it = conn.getStatements(s, p, null, false);
         try {
             Assert.assertTrue(getFailedExtractionMessage(), it.hasNext());
@@ -290,7 +439,7 @@ public abstract class AbstractExtractorTestCase {
      * @return list of matching subjects.
      * @throws RepositoryException
      */
-    public List<Resource> findSubjects(URI p, Value o) throws RepositoryException {
+    protected List<Resource> findSubjects(URI p, Value o) throws RepositoryException {
         RepositoryResult<Statement> it = conn.getStatements(null, p, o, false);
         List<Resource> subjects = new ArrayList<Resource>();
         try {
@@ -306,14 +455,14 @@ public abstract class AbstractExtractorTestCase {
     }
 
     /**
-     * Returns all the objects matching the pattern <code>(s p ?o)</code>.
+     * Returns all the objects matching the pattern <code>(s p _)</code>.
      *
      * @param s predicate.
      * @param p predicate.
      * @return list of matching objects.
      * @throws RepositoryException
      */
-    public List<Value> findObjects(Resource s, URI p) throws RepositoryException {
+    protected List<Value> findObjects(Resource s, URI p) throws RepositoryException {
         RepositoryResult<Statement> it = conn.getStatements(s, p, null, false);
         List<Value> objects = new ArrayList<Value>();
         try {
@@ -329,34 +478,54 @@ public abstract class AbstractExtractorTestCase {
     }
 
     /**
-     * Asserts that an error has been produced by the processed {@link org.deri.any23.extractor.Extractor}.
+     * Finds the object matching the pattern <code>(s p _)</code>, asserts to find
+     * exactly one result.
      *
-     * @param level expected error level
-     * @param errorRegex regex matching the expected human readable error message.
+     * @param s subject.
+     * @param p predicate
+     * @return matching object.
+     * @throws org.openrdf.repository.RepositoryException
      */
-    public void assertError(ErrorReporter.ErrorLevel level, String errorRegex) {
-        final Collection<ErrorReporter.Error> errors = getErrors( getExtractorFactory().getExtractorName() );
-        boolean found = false;
-        for(ErrorReporter.Error error : errors) {
-            if(error.getLevel() == level && error.getMessage().matches(errorRegex)) {
-                found = true;
-                break;
-            }
+    protected Value findObject(Resource s, URI p) throws RepositoryException {
+        RepositoryResult<Statement> statements = conn.getStatements(s, p, null, true);
+        try {
+            Assert.assertTrue("Expected at least a statement.", statements.hasNext());
+            return (statements.next().getObject());
+        } finally {
+            statements.close();
         }
-        Assert.assertTrue(
-                String.format("Cannot find error with level %s matching expression '%s'", level, errorRegex),
-                found
-        );
     }
 
-    protected void extract(String name) throws ExtractionException, IOException {
-        SingleDocumentExtraction ex = new SingleDocumentExtraction(
-                new HTMLFixture(name).getOpener(baseURI.toString()),
-                getExtractorFactory(), new RepositoryWriter(conn));
-        // TODO: MimeType detector to null forces the execution of all extractors, but extraction
-        //       tests should be based on mimetype detection.
-        ex.setMIMETypeDetector(null);
-        report = ex.run();
+    /**
+     * Finds the resource object matching the pattern <code>(s p _)</code>, asserts to find
+     * exactly one result.
+     *
+     * @param s subject.
+     * @param p predicate.
+     * @return matching object.
+     * @throws RepositoryException
+     */
+    protected Resource findObjectAsResource(Resource s, URI p) throws RepositoryException {
+        final Value v = findObject(s, p);
+        try {
+            return (Resource) v;
+        } catch (ClassCastException cce) {
+            Assert.fail("Expected resource object, found: " + v.getClass().getSimpleName());
+            throw new IllegalStateException();
+        }
+    }
+
+    /**
+     * Finds the literal object matching the pattern <code>(s p _)</code>, asserts to find
+     * exactly one result.
+     *
+     * @param s subject.
+     * @param p predicate.
+     * @return matching object.
+     * @throws RepositoryException
+     */
+    protected String findObjectAsLiteral(Resource s, URI p) throws RepositoryException {
+        return findObject(s, p).stringValue();
     }
 
     /**
@@ -407,12 +576,20 @@ public abstract class AbstractExtractorTestCase {
         }
     }
 
+    /**
+     * Dumps the list of statements contained in the extracted model.
+     *
+     * @return list of extracted statements.
+     * @throws RepositoryException
+     */
     protected List<Statement> dumpAsListOfStatements() throws RepositoryException {
-        List<Statement> result = conn.getStatements(null, null, null, false).asList();
-        conn.remove(null, null, null, new Resource[]{});
-        return result;
+        return conn.getStatements(null, null, null, false).asList();
     }
 
+    /**
+     * @return string containing human readable statements.
+     * @throws RepositoryException
+     */
     protected String dumpHumanReadableTriples() throws RepositoryException {
         StringBuilder sb = new StringBuilder();
         RepositoryResult<Statement> result = conn.getStatements(null, null, null, false);
@@ -430,30 +607,75 @@ public abstract class AbstractExtractorTestCase {
         return sb.toString();
     }
 
+    /**
+     * Checks that a statement is contained in the extracted model.
+     * If the statement declares bnodes, they are replaced with <code>_</code> patterns.
+     *
+     * @param statement
+     * @throws RepositoryException
+     */
+    // TODO: bnode check is too weak, introduce graph omomorphism check.
     protected void assertContains(Statement statement) throws RepositoryException {
-        if(statement.getSubject() instanceof BNode) {
-            conn.hasStatement(
-                    statement.getSubject() instanceof  BNode ? null : statement.getSubject(),
-                    statement.getPredicate(),
-                    statement.getObject() instanceof BNode   ? null : statement.getObject(),
-                    false
-            );
-        }
+        Assert.assertTrue(
+                "Cannot find statement " + statement + " in model.",
+                conn.hasStatement(
+                        statement.getSubject() instanceof BNode ? null : statement.getSubject(),
+                        statement.getPredicate(),
+                        statement.getObject()  instanceof BNode ? null : statement.getObject(),
+                        false
+                )
+        );
     }
 
-    protected void assertContains(Resource s, URI p, String o) throws RepositoryException {
-        assertContains(s, p, RDFUtils.literal(o));
+    /**
+     * Assert that the model contains the statement <code>(s p l)</code> where <code>l</code> is a literal.
+     *
+     * @param s subject.
+     * @param p predicate.
+     * @param l literal content.
+     * @throws RepositoryException
+     */
+    protected void assertContains(Resource s, URI p, String l) throws RepositoryException {
+        assertContains(s, p, RDFUtils.literal(l));
     }
 
-    protected void assertContains(Resource s, URI p, String o, String lang) throws RepositoryException {
-        assertContains(s, p, RDFUtils.literal(o, lang));
+    /**
+     * Assert that the model contains the statement <code>(s p l)</code> where <code>l</code>
+     * is a language literal.
+     *
+     * @param s subject.
+     * @param p predicate.
+     * @param l literal content.
+     * @param lang literal language.
+     * @throws RepositoryException
+     */
+    protected void assertContains(Resource s, URI p, String l, String lang) throws RepositoryException {
+        assertContains(s, p, RDFUtils.literal(l, lang));
     }
 
+    /**
+     * Returns all statements matching the pattern <code>(s p o)</code>.
+     *
+     * @param s subject.
+     * @param p predicate.
+     * @param o object.
+     * @return list of statements.
+     * @throws RepositoryException
+     */
     protected RepositoryResult<Statement> getStatements(Resource s, URI p, Value o)
     throws RepositoryException {
         return conn.getStatements(s, p, o, false);
     }
 
+    /**
+     * Counts all statements matching the pattern <code>(s p o)</code>.
+     *
+     * @param s subject.
+     * @param p predicate.
+     * @param o object.
+     * @return number of matches.
+     * @throws RepositoryException
+     */
     protected int getStatementsSize(Resource s, URI p, Value o)
     throws RepositoryException {
         RepositoryResult<Statement> result = getStatements(s, p, o);
@@ -467,59 +689,6 @@ public abstract class AbstractExtractorTestCase {
             result.close();
         }
         return count;
-    }
-
-    protected void assertStatementsSize(Resource subject, URI prop, Value obj, int expected)
-    throws RepositoryException {
-        Assert.assertEquals(expected, getStatementsSize(subject, prop, obj) );
-    }
-
-    protected void assertStatementsSize(URI p, Value o, int expected) throws RepositoryException {
-        assertStatementsSize(null, p, o, expected);
-    }
-
-    protected void assertStatementsSize(URI p, String o, int expected) throws RepositoryException {
-        assertStatementsSize(p, o == null ? null : RDFUtils.literal(o), expected );
-    }
-
-    protected void assertNotFound(Resource s, URI p) throws RepositoryException {
-         RepositoryResult<Statement> statements = conn.getStatements(s, p, null, true);
-        try {
-            Assert.assertFalse("Expected no statements.", statements.hasNext());
-        } finally {
-            statements.close();
-        }
-    }
-
-    protected Value findObject(Resource s, URI p) throws RepositoryException {
-        RepositoryResult<Statement> statements = conn.getStatements(s, p, null, true);
-        try {
-            junit.framework.Assert.assertTrue("Expected at least a statement.", statements.hasNext());
-            return (statements.next().getObject());
-        } finally {
-            statements.close();
-        }
-    }
-
-    protected Resource findObjectAsResource(Resource s, URI p) throws RepositoryException {
-        return (Resource) findObject(s, p);
-    }
-
-    protected String findObjectAsLiteral(Resource s, URI p) throws RepositoryException {
-        return findObject(s, p).stringValue();
-    }
-
-    protected Collection<ErrorReporter.Error> getErrors(String extractorName) {
-        for(
-                Map.Entry<String, Collection<ErrorReporter.Error>> errorEntry
-                :
-                report.getExtractorToErrors().entrySet()
-        ) {
-            if(errorEntry.getKey().equals(extractorName)) {
-                return errorEntry.getValue();
-            }
-        }
-        return Collections.emptyList();
     }
 
     private String getFailedExtractionMessage() throws RepositoryException {
