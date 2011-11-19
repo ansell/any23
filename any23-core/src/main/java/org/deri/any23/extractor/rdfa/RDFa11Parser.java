@@ -68,8 +68,8 @@ public class RDFa11Parser {
     public static final String REV_ATTRIBUTE      = "rev";
 
     public static final String ABOUT_ATTRIBUTE    = "about";
-    public static final String SRC_ATTRIBUTE      = "src";
     public static final String RESOURCE_ATTRIBUTE = "resource";
+    public static final String SRC_ATTRIBUTE      = "src";
     public static final String HREF_ATTRIBUTE     = "href";
 
     public static final String[] SUBJECT_ATTRIBUTES = {
@@ -230,7 +230,7 @@ public class RDFa11Parser {
                 prefixMapList.add(
                         new PrefixMap(
                             attribute.getNodeName().substring(namespacePrefix.length()),
-                            RDFUtils.uri(attribute.getNodeValue())
+                            resolveURI( attribute.getNodeValue() )
                         )
                 );
             }
@@ -286,13 +286,25 @@ public class RDFa11Parser {
         return result.toArray(new URI[result.size()]);
     }
 
+    protected URI resolveURI(String uriStr) {
+        return RDFUtils.uri(uriStr);
+    }
+
+    /**
+     * Resolves a <i>CURIE</i> or <i>URI</i> string.
+     *
+     * @param curieOrURI
+     * @return the resolved resource.
+     */
     protected Resource resolveCURIEOrURI(String curieOrURI) {
         if( isCURIE(curieOrURI) ) {
-            return resolveNamespacedURI(curieOrURI.substring(1, curieOrURI.length() - 1));
+            return resolveNamespacedURI(curieOrURI.substring(1, curieOrURI.length() - 1), true);
         }
-        if(isAbsoluteURI(curieOrURI)) return RDFUtils.uri(curieOrURI);
-        return resolveNamespacedURI(curieOrURI);
+        if(isAbsoluteURI(curieOrURI)) return resolveURI(curieOrURI);
+        return resolveNamespacedURI(curieOrURI, false);
     }
+
+
 
     /**
      * Pushes a context whiting the evaluation context stack, associated to tha given generation node.
@@ -441,9 +453,10 @@ public class RDFa11Parser {
                         currentEvaluationContext
                 );
             }
+
             /*
             if(currentEvaluationContext.newSubject == null) {
-                currentEvaluationContext.newSubject = RDFUtils.uri(documentBase.toExternalForm());
+                currentEvaluationContext.newSubject = resolveURI(documentBase.toExternalForm());
             }
             assert currentEvaluationContext.newSubject != null : "newSubject must be not null.";
             */
@@ -569,7 +582,7 @@ public class RDFa11Parser {
             final URI uri;
             final String uriStr = prefixPart.substring(splitPoint + 1);
             try {
-                uri = RDFUtils.uri(uriStr);
+                uri = resolveURI(uriStr);
             } catch (Exception e) {
                 reportError(
                         node,
@@ -615,7 +628,7 @@ public class RDFa11Parser {
         }
 
         if(node.getNodeName().equalsIgnoreCase(HEAD_TAG) || node.getNodeName().equalsIgnoreCase(BODY_TAG)) {
-            currentEvaluationContext.newSubject = RDFUtils.uri(currentEvaluationContext.base.toString());
+            currentEvaluationContext.newSubject = resolveURI(currentEvaluationContext.base.toString());
             return;
         }
 
@@ -654,10 +667,10 @@ public class RDFa11Parser {
         } else {
             candidateURIOrCURIE = DomUtils.readAttribute(node, SRC_ATTRIBUTE, null);
             if (candidateURIOrCURIE != null) {
-                currentEvaluationContext.newSubject = resolveCURIEOrURI(candidateURIOrCURIE);
+                currentEvaluationContext.newSubject = resolveURI(candidateURIOrCURIE);
             } else {
                 if (node.getNodeName().equalsIgnoreCase(HEAD_TAG) || node.getNodeName().equalsIgnoreCase(BODY_TAG)) {
-                    currentEvaluationContext.newSubject = RDFUtils.uri(currentEvaluationContext.base.toString());
+                    currentEvaluationContext.newSubject = resolveURI(currentEvaluationContext.base.toString());
                 } else {
                     if (DomUtils.hasAttribute(node, TYPEOF_ATTRIBUTE)) {
                         currentEvaluationContext.newSubject = RDFUtils.bnode();
@@ -679,7 +692,7 @@ public class RDFa11Parser {
 
         candidateURIOrCURIE = DomUtils.readAttribute(node, HREF_ATTRIBUTE, null);
         if(candidateURIOrCURIE != null) {
-            currentEvaluationContext.currentObjectResource = resolveCURIEOrURI(candidateURIOrCURIE);
+            currentEvaluationContext.currentObjectResource = resolveURI(candidateURIOrCURIE);
             return;
         }
         currentEvaluationContext.currentObjectResource = null;
@@ -720,7 +733,7 @@ public class RDFa11Parser {
     throws URISyntaxException, IOException, TransformerException {
         final String candidateObject = DomUtils.readAttribute(node, HREF_ATTRIBUTE, null);
         if(candidateObject != null) {
-            return resolveCURIEOrURI(candidateObject);
+            return resolveURI(candidateObject);
         } else {
             return gerCurrentObjectLiteral(node);
         }
@@ -787,14 +800,26 @@ public class RDFa11Parser {
         }
     }
 
-    private Resource resolveNamespacedURI(String mapping) {
+    /**
+     * Resolve a namespaced URI, if <code>safe</code> is <code>true</code>
+     * then the mapping must define a prefix, otherwise it is considered relative.
+     *
+     * @param mapping
+     * @param safe
+     * @return
+     */
+    private Resource resolveNamespacedURI(String mapping, boolean safe) {
         if(mapping.indexOf(URI_PATH_SEPARATOR) == 0) { // Begins with '/'
             mapping = mapping.substring(1);
         }
 
         final String[] parts = mapping.split(":");
         if(parts.length != 2) { // there is no prefix separator.
-            return RDFUtils.uri( documentBase.toString() + mapping );
+            if(safe)
+                throw new IllegalArgumentException(
+                    String.format("Invalid mapping string [%s], must declare a prefix.", mapping)
+                );
+            return resolveURI( documentBase.toString() + mapping );
         }
 
         final URI curieMapping = getMapping(parts[0]);
@@ -808,7 +833,7 @@ public class RDFa11Parser {
         } catch (URISyntaxException urise) {
             throw new IllegalArgumentException(String.format("Invalid CURIE '%s'", candidateCURIEStr) );
         }
-        return RDFUtils.uri(
+        return resolveURI(
                 candidateCURIE.isAbsolute()
                         ?
                         candidateCURIE.toString()
@@ -838,7 +863,7 @@ public class RDFa11Parser {
          */
         EvaluationContext(URL base) {
             this.base             = base;
-            this.parentSubject    = RDFUtils.uri(base.toExternalForm());
+            this.parentSubject    = resolveURI( base.toExternalForm() );
             this.parentObject     = null;
             this.language         = null;
             this.recourse         = true;
