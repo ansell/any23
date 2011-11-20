@@ -106,7 +106,7 @@ public class RDFa11ExtractorTest extends AbstractRDFaExtractorTestCase {
      * @throws RepositoryException
      */
     @Test
-    public void testRelRevManagement() throws RepositoryException {
+    public void testRelRevSupport() throws RepositoryException {
         assertExtracts("html/rdfa/rel-rev.html");
         logger.debug(dumpModelToTurtle());
 
@@ -119,6 +119,28 @@ public class RDFa11ExtractorTest extends AbstractRDFaExtractorTestCase {
                 RDFUtils.uri("http://path/to/chapter"),
                 RDFUtils.uri("http://bob.example.com/isChapterOf"),
                 baseURI
+        );
+    }
+
+    /**
+     * Tests the <em>@vocab</em> support.
+     *
+     * @throws RepositoryException
+     */
+    @Test
+    public void testVocabSupport() throws RepositoryException {
+        assertExtracts("html/rdfa/vocab.html");
+        logger.debug(dumpModelToTurtle());
+
+        assertContains(
+                RDFUtils.uri(baseURI.toString(), "#me"),
+                RDFUtils.uri("http://xmlns.com/foaf/0.1/name"),
+                RDFUtils.literal("John Doe")
+        );
+        assertContains(
+                RDFUtils.uri(baseURI.toString(), "#me"),
+                RDFUtils.uri("http://xmlns.com/foaf/0.1/homepage"),
+                RDFUtils.uri("http://example.org/blog/")
         );
     }
 
@@ -146,7 +168,7 @@ public class RDFa11ExtractorTest extends AbstractRDFaExtractorTestCase {
         final int EXPECTED_STATEMENTS = 35;
 
         assertExtracts("html/rdfa/goodrelations-rdfa10.html");
-        logger.info(dumpModelToNQuads());
+        logger.debug(dumpModelToNQuads());
 
         Assert.assertEquals(EXPECTED_STATEMENTS, dumpAsListOfStatements().size());
         assertContainsModel("/html/rdfa/goodrelations-rdfa10-expected.nq");
@@ -167,7 +189,7 @@ public class RDFa11ExtractorTest extends AbstractRDFaExtractorTestCase {
         final int EXPECTED_STATEMENTS = 35;
 
         assertExtracts("html/rdfa/goodrelations-rdfa11.html");
-        logger.info(dumpHumanReadableTriples());
+        logger.debug(dumpHumanReadableTriples());
 
         Assert.assertEquals(EXPECTED_STATEMENTS, dumpAsListOfStatements().size());
         assertContainsModel("/html/rdfa/goodrelations-rdfa10-expected.nq");
