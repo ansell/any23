@@ -145,7 +145,7 @@ public abstract class AbstractRDFaExtractorTestCase extends AbstractExtractorTes
     @Test
     public void testIncompleteTripleManagement() throws RepositoryException {
         assertExtracts("html/rdfa/incomplete-triples.html");
-        logger.info(dumpModelToTurtle());
+        logger.debug(dumpModelToTurtle());
 
         assertContains(
                 RDFUtils.uri("http://dbpedia.org/resource/Albert_Einstein"),
