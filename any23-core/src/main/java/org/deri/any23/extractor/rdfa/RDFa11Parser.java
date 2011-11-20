@@ -137,7 +137,7 @@ public class RDFa11Parser {
         return DomUtils.hasAttribute(node, REL_ATTRIBUTE) || DomUtils.hasAttribute(node, REV_ATTRIBUTE);
     }
 
-    // 5.5.9.2
+    // RDFa1.0[5.5.9.2]
     protected static Literal getAsPlainLiteral(Node node, String currentLanguage) {
         final String content = DomUtils.readAttribute(node, CONTENT_ATTRIBUTE, null);
         if(content != null) return RDFUtils.literal(content, currentLanguage);
@@ -176,7 +176,7 @@ public class RDFa11Parser {
         try {
             this.errorReporter = extractionResult;
 
-            // Check 4.1.3 : default XMLNS declaration.
+            // Check RDFa1.0[4.1.3] : default XMLNS declaration.
             if( ! isXMLNSDeclared(document)) {
                 reportError(
                         document.getDocumentElement(),
@@ -193,7 +193,7 @@ public class RDFa11Parser {
                 throw new RDFa11ParserException("Invalid document base URL.", murle);
             }
 
-            // 5.5.1
+            // RDFa1.0[5.5.1]
             pushContext(document, new EvaluationContext(documentBase));
 
             depthFirstNode(document, extractionResult);
@@ -475,12 +475,17 @@ public class RDFa11Parser {
      */
     private void writeTriple(Resource s, URI p, Value o, ExtractionResult extractionResult) {
         if(logger.isTraceEnabled()) logger.trace(String.format("writeTriple(%s %s %s)" , s, p, o));
-        assert s != null && p != null && o != null;
+        assert s != null : "subject   is null.";
+        assert p != null : "predicate is null.";
+        assert o != null : "object    is null.";
         extractionResult.writeTriple(s, p, o);
     }
 
     /**
      * Processes the current node on the extraction algorithm.
+     * All the steps of this algorithm are annotated with the
+     * specification and section which describes it. The annotation is at form
+     * <em>RDFa&lt;spec-version%gt;[&lt;section&gt;]</em>
      *
      * @param currentElement
      * @param extractionResult
@@ -497,21 +502,21 @@ public class RDFa11Parser {
                 currentElement.getNodeType() != Node.ELEMENT_NODE
             ) return;
 
-            // RDFa 1.1 7.5.3
+            // RDFa1.1[7.5.3]
             updateVocabulary(currentElement);
 
-            // 5.5.2
+            // RDFa1.0[5.5.2] / RDFa1.1[7.5.4]
             //Node currentElement = node;
             updateURIMapping(currentElement);
 
-            // 5.5.3
+            // RDFa1.0[5.5.3] / RDFa1.1[7.5.5]
             updateLanguage(currentElement, currentEvaluationContext);
 
             if(! isRelativeNode(currentElement)) {
-                // 5.5.4
+                // RDFa1.0[5.5.4] / RDFa1.1[7.5.6]
                 establishNewSubject(currentElement, currentEvaluationContext);
             } else {
-                // 5.5.5
+                // RDFa1.0[5.5.5] / RDFa1.1[7.5.7]
                 establishNewSubjectCurrentObjectResource(
                         currentElement,
                         currentEvaluationContext
@@ -525,16 +530,15 @@ public class RDFa11Parser {
             assert currentEvaluationContext.newSubject != null : "newSubject must be not null.";
             */
             if(currentEvaluationContext.newSubject == null) return;
-
             if(logger.isDebugEnabled()) logger.debug("newSubject: " + currentEvaluationContext.newSubject);
 
-            // 5.5.6
+            // RDFa1.0[5.5.6] / RDFa1.1[7.5.8]
             final URI[] types = getTypes(currentElement);
             for(URI type : types) {
                 writeTriple(currentEvaluationContext.newSubject, RDF.TYPE, type, extractionResult);
             }
 
-            // 5.5.7
+            // RDFa1.0[5.5.7] / RDFa1.1[7.5.9]
             final URI[] rels = getRels(currentElement);
             final URI[] revs = getRevs(currentElement);
             if(currentEvaluationContext.currentObjectResource != null) {
@@ -553,7 +557,7 @@ public class RDFa11Parser {
                             currentEvaluationContext.newSubject, extractionResult
                     );
                 }
-            } else { // 5.5.8
+            } else { // RDFa1.0[5.5.8] / RDFa1.1[7.5.10]
                 for(URI rel : rels) {
                     listOfIncompleteTriples.add(
                             new IncompleteTriple(
@@ -576,7 +580,7 @@ public class RDFa11Parser {
                 }
             }
 
-            // 5.5.9
+            // RDFa1.0[5.5.9] / RDFa1.1[7.5.11]
             final Value currentObject = getCurrentObject(currentElement);
             final URI[] predicates = getPredicate(currentElement);
             if (currentObject != null && predicates != null) {
@@ -585,7 +589,7 @@ public class RDFa11Parser {
                 }
             }
 
-            // 5.5.10
+            // RDFa1.0[5.5.10] / RDFa1.1[7.5.12]
             if(!currentEvaluationContext.skipElem && currentEvaluationContext.newSubject != null) {
                 for (IncompleteTriple incompleteTriple : listOfIncompleteTriples) {
                     incompleteTriple.produceTriple(
@@ -598,6 +602,7 @@ public class RDFa11Parser {
         } catch (Exception e) {
             throw e;
         } finally {
+            // RDFa1.0[5.5.11] / RDFa1.1[7.5.13]
             if(currentEvaluationContext.recourse) {
                 EvaluationContext newEvaluationContext = new EvaluationContext(currentEvaluationContext.base);
                 if(currentEvaluationContext.skipElem) {
@@ -674,7 +679,7 @@ public class RDFa11Parser {
 
     /**
      * Establish the new subject for the current recursion.
-     * See <i>RDFa 1.0 Specification section 5.5.4</i>.
+     * See <i>RDFa 1.0 Specification section 5.5.4</i>, <i>RDFa 1.1 Specification section 7.5.6</i>.
      *
      * @param node
      * @param currentEvaluationContext
@@ -715,7 +720,7 @@ public class RDFa11Parser {
     /**
      * Establishes the new subject and the current object resource.
      *
-     * See <i>RDFa 1.0 Specification section 5.5.5</i>.
+     * See <i>RDFa 1.0 Specification section 5.5.5</i>, <i>RDFa 1.1 Specification section 7.5.7</i>.
      *
      * @param node
      * @param currentEvaluationContext
@@ -785,7 +790,7 @@ public class RDFa11Parser {
 
     /**
      * Establishes the new object value.
-     * See <i>RDFa 1.0 Specification section 5.5.9</i>.
+     * See <i>RDFa 1.0 Specification section 5.5.9</i>, <i>RDFa 1.1 Specification section 7.5.11</i>.
      *
      * @param node
      * @return
@@ -865,12 +870,6 @@ public class RDFa11Parser {
         }
     }
 
-    enum ResolutionPolicy {
-        NSNotRequired,
-        NSRequired,
-        TermAllowed
-    }
-
     /**
      * Resolve a namespaced URI, if <code>safe</code> is <code>true</code>
      * then the mapping must define a prefix, otherwise it is considered relative.
@@ -922,6 +921,15 @@ public class RDFa11Parser {
     }
 
     /**
+     * The resolution policy provided to the method {@link #resolveNamespacedURI(String, ResolutionPolicy)}.
+     */
+    enum ResolutionPolicy {
+        NSNotRequired,
+        NSRequired,
+        TermAllowed
+    }
+
+    /**
      * Defines an evaluation context.
      */
     private class EvaluationContext {
@@ -936,7 +944,7 @@ public class RDFa11Parser {
         private Resource currentObjectResource;
 
         /**
-         * Sections <em>5.5</em>, <em>5.5.1</em> .
+         * Sections <em>RDFa1.0[5.5]</em>, <em>RDFa1.0[5.5.1]</em>, <em>RDFa1.1[7.5.1]</em> .
          *
          * @param base
          */
