@@ -47,27 +47,27 @@ public class DomUtilsTest {
     @Test
     public void testGetXPathForNode() {
         check(
-                "microformats/hcard/01-tantek-basic.html",
+                "/microformats/hcard/01-tantek-basic.html",
                 "//DIV[@class='vcard']",
                 "/HTML[1]/BODY[1]/DIV[1]"
         );
         check(
-                "microformats/hcard/02-multiple-class-names-on-vcard.html",
+                "/microformats/hcard/02-multiple-class-names-on-vcard.html",
                 "//SPAN[@class='fn n']",
                 "/HTML[1]/BODY[1]/DIV[1]/SPAN[1]"
         );
         check(
-                "microformats/hcard/02-multiple-class-names-on-vcard.html",
+                "/microformats/hcard/02-multiple-class-names-on-vcard.html",
                 "//SPAN/SPAN[@class='fn n']",
                 "/HTML[1]/BODY[1]/P[1]/SPAN[1]/SPAN[1]"
         );
         check(
-                "microformats/hcard/02-multiple-class-names-on-vcard.html",
+                "/microformats/hcard/02-multiple-class-names-on-vcard.html",
                 "//SPAN/SPAN/*[@class='given-name']",
                 "/HTML[1]/BODY[1]/P[1]/SPAN[1]/SPAN[1]/SPAN[1]"
         );
         check(
-                "microformats/hcard/02-multiple-class-names-on-vcard.html",
+                "/microformats/hcard/02-multiple-class-names-on-vcard.html",
                 "//SPAN/SPAN/*[@class='family-name']",
                 "/HTML[1]/BODY[1]/P[1]/SPAN[1]/SPAN[1]/SPAN[2]"
         );
@@ -75,7 +75,7 @@ public class DomUtilsTest {
 
     @Test
     public void testFindAllByClassName() {
-        Node dom = new HTMLFixture("microformats/hcard/02-multiple-class-names-on-vcard.html").getDOM();
+        Node dom = new HTMLFixture("/microformats/hcard/02-multiple-class-names-on-vcard.html").getDOM();
         Assert.assertNotNull(dom);
         List<Node> nodes = DomUtils.findAllByClassName(dom, "vcard");
         NodeList nodeList = null;
@@ -97,7 +97,7 @@ public class DomUtilsTest {
 
     @Test
     public void testFindAllByTag() {
-        Node dom = new HTMLFixture("microformats/hcard/02-multiple-class-names-on-vcard.html").getDOM();
+        Node dom = new HTMLFixture("/microformats/hcard/02-multiple-class-names-on-vcard.html").getDOM();
         Assert.assertNotNull(dom);
         List<Node> nodes = DomUtils.findAllByTag(dom, "SPAN");
         NodeList nodeList = null;
@@ -120,7 +120,7 @@ public class DomUtilsTest {
 
     @Test
     public void testFindAllByTagAndClassName() {
-        Node dom = new HTMLFixture("microformats/hcard/02-multiple-class-names-on-vcard.html").getDOM();
+        Node dom = new HTMLFixture("/microformats/hcard/02-multiple-class-names-on-vcard.html").getDOM();
         Assert.assertNotNull(dom);
         List<Node> nodes = DomUtils.findAllByTagAndClassName(dom, "SPAN", "family-name");
         NodeList nodeList = null;
@@ -144,7 +144,7 @@ public class DomUtilsTest {
 
     @Test
     public void testHasClassName() {
-        Node dom = new HTMLFixture("microformats/hcard/02-multiple-class-names-on-vcard.html").getDOM();
+        Node dom = new HTMLFixture("/microformats/hcard/02-multiple-class-names-on-vcard.html").getDOM();
         Assert.assertNotNull(dom);
         List<Node> nodes = DomUtils.findAllByClassName(dom, "vcard");
         for(Node node : nodes) {
@@ -154,7 +154,7 @@ public class DomUtilsTest {
 
     @Test
     public void testReadAttribute() {
-        Node dom = new HTMLFixture("microformats/hcard/02-multiple-class-names-on-vcard.html").getDOM();
+        Node dom = new HTMLFixture("/microformats/hcard/02-multiple-class-names-on-vcard.html").getDOM();
         Assert.assertNotNull(dom);
         List<Node> nodes = DomUtils.findAllByClassName(dom, "vcard");
         for(Node node : nodes) {

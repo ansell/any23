@@ -18,12 +18,15 @@
 package org.apache.any23.extractor.html;
 
 import org.apache.any23.source.DocumentSource;
-import org.apache.any23.source.FileDocumentSource;
+import org.apache.any23.source.StringDocumentSource;
+import org.apache.tika.io.IOUtils;
+import org.junit.Assert;
 import org.w3c.dom.Node;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.URISyntaxException;
 
 /**
  * This class is a wrapper around an HTML document providing a simply facade.
@@ -36,16 +39,16 @@ public class HTMLFixture {
         this.filename = filename;
     }
 
-    private File getFile() {
-        File file = new File(
-                System.getProperty("test.data", "src/test/resources/") + filename);
-        if (!file.exists())
-            throw new AssertionError("the file " + file.getPath() + " does not exist");
-        return file;
-    }
-
     public DocumentSource getOpener(String baseURI) {
-        return new FileDocumentSource(getFile(), baseURI);
+        try
+        {
+            return new StringDocumentSource(IOUtils.toString(this.getClass().getResourceAsStream(filename)), baseURI);
+        }
+        catch(IOException e)
+        {
+            Assert.fail("Could not process document");
+            throw new AssertionError(e);
+        }
     }
 
     /**
@@ -53,7 +56,7 @@ public class HTMLFixture {
      */
     public Node getDOM() {
         try {
-            return new TagSoupParser(new FileInputStream(getFile()), "http://example.org/").getDOM();
+            return new TagSoupParser(this.getClass().getResourceAsStream(filename), "http://example.org/").getDOM();
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }

@@ -36,6 +36,8 @@ import org.openrdf.rio.RDFParseException;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -163,10 +165,10 @@ public class MicrodataExtractorTest extends AbstractExtractorTestCase {
 
     private void extractAndVerifyAgainstNQuads(String actual, String expected)
     throws RepositoryException, RDFHandlerException, IOException, RDFParseException {
-        assertExtract("microdata/" + actual);
+        assertExtract("/microdata/" + actual);
         assertModelNotEmpty();
         logger.debug( dumpModelToNQuads() );
-        List<Statement> expectedStatements = loadResultStatement("microdata/" + expected);
+        List<Statement> expectedStatements = loadResultStatement("/microdata/" + expected);
         int actualStmtSize = getStatementsSize(null, null, null);
         Assert.assertEquals( expectedStatements.size(), actualStmtSize);
         for (Statement statement : expectedStatements) {
@@ -185,10 +187,9 @@ public class MicrodataExtractorTest extends AbstractExtractorTestCase {
         NQuadsParser nQuadsParser = new NQuadsParser();
         TestRDFHandler rdfHandler = new TestRDFHandler();
         nQuadsParser.setRDFHandler(rdfHandler);
-        File file = new File(
-                System.getProperty("test.data", "src/test/resources/") + resultFilePath);
+        InputStream file = this.getClass().getResourceAsStream(resultFilePath);
         nQuadsParser.parse(
-                new FileReader(file),
+                new InputStreamReader(file),
                 baseURI.toString()
         );
         return rdfHandler.getStatements();

@@ -41,6 +41,7 @@ import org.w3c.dom.Document;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -68,13 +69,13 @@ public class RDFMergerTest extends AbstractExtractorTestCase {
 
     @Test
     public void testNoMicroformats() throws RepositoryException, ExtractionException, IOException {
-        extract("html-without-uf.html");
+        extract("/html/html-without-uf.html");
         assertModelEmpty();
     }
 
     @Test
     public void test01XFNFoaf() throws RepositoryException {
-        assertExtract("mixed/01-xfn-foaf.html", false);
+        assertExtract("/html/mixed/01-xfn-foaf.html", false);
         assertModelNotEmpty();
         assertStatementsSize(RDF.TYPE, vVCARD.VCard, 1);
         Resource vcard = findExactlyOneBlankSubject(RDF.TYPE, vVCARD.VCard);
@@ -96,7 +97,7 @@ public class RDFMergerTest extends AbstractExtractorTestCase {
 
     @Test
     public void testAbbrTitleEverything() throws ExtractionException, IOException, RepositoryException {
-        extractHCardAndRelated("microformats/hcard/23-abbr-title-everything.html");
+        extractHCardAndRelated("/microformats/hcard/23-abbr-title-everything.html");
 
         assertContains(vVCARD.fn, "John Doe");
         assertContains(vVCARD.nickname, "JJ");
@@ -131,7 +132,7 @@ public class RDFMergerTest extends AbstractExtractorTestCase {
 
     @Test
     public void testAdr() throws ExtractionException, IOException, RepositoryException {
-        extractHRevAndRelated("microformats/hcard/22-adr.html");
+        extractHRevAndRelated("/microformats/hcard/22-adr.html");
 
         assertStatementsSize(RDF.TYPE, vVCARD.Address, 4);
 
@@ -204,7 +205,7 @@ public class RDFMergerTest extends AbstractExtractorTestCase {
 
     @Test
     public void testGeoAbbr() throws ExtractionException, IOException, RepositoryException {
-        extractHCardAndRelated("microformats/hcard/25-geo-abbr.html");
+        extractHCardAndRelated("/microformats/hcard/25-geo-abbr.html");
         assertModelNotEmpty();
         assertContains(vVCARD.fn, "Paradise");
         assertContains(RDF.TYPE, vVCARD.Organization);
@@ -217,7 +218,7 @@ public class RDFMergerTest extends AbstractExtractorTestCase {
 
     @Test
     public void testAncestors() throws ExtractionException, IOException, RepositoryException {
-        extractHCardAndRelated("microformats/hcard/26-ancestors.html");
+        extractHCardAndRelated("/microformats/hcard/26-ancestors.html");
         assertModelNotEmpty();
         
         assertContains(vVCARD.fn, "John Doe");
@@ -260,7 +261,7 @@ public class RDFMergerTest extends AbstractExtractorTestCase {
 
     @Test
     public void testSingleton() throws ExtractionException, IOException, RepositoryException {
-        extractHCardAndRelated("microformats/hcard/37-singleton.html");
+        extractHCardAndRelated("/microformats/hcard/37-singleton.html");
         assertModelNotEmpty();
         assertStatementsSize(vVCARD.fn, (Value) null, 1);
         assertContains(vVCARD.fn, "john doe 1");
@@ -291,7 +292,7 @@ public class RDFMergerTest extends AbstractExtractorTestCase {
 
     @Test
     public void test01Basic() throws ExtractionException, IOException, RepositoryException {
-        extractHRevAndRelated("microformats/hreview/01-spec.html");
+        extractHRevAndRelated("/microformats/hreview/01-spec.html");
         assertModelNotEmpty();
 
         assertStatementsSize(RDF.TYPE, vREVIEW.Review, 1);
@@ -336,7 +337,7 @@ public class RDFMergerTest extends AbstractExtractorTestCase {
     
     @Test
     public void test02RatedTags() throws ExtractionException, IOException, RepositoryException {
-        extractHRevAndRelated("microformats/hreview/02-spec-2.html");
+        extractHRevAndRelated("/microformats/hreview/02-spec-2.html");
 
         assertStatementsSize(vREVIEW.reviewer, (Value) null, 1);
         assertStatementsSize(vREVIEW.hasReview, (Value) null, 1);
@@ -372,7 +373,7 @@ public class RDFMergerTest extends AbstractExtractorTestCase {
 
     @Test
     public void test03NoHcardForItem() throws ExtractionException, IOException, RepositoryException {
-        extractHRevAndRelated("microformats/hreview/03-spec-3.html");
+        extractHRevAndRelated("/microformats/hreview/03-spec-3.html");
 
         assertModelNotEmpty();
         assertStatementsSize(RDF.TYPE, vREVIEW.Review, 1);
@@ -431,11 +432,9 @@ public class RDFMergerTest extends AbstractExtractorTestCase {
     @Override
     protected void extract(String filename) throws ExtractionException, IOException {
 
-        File file = new File(
-                System.getProperty("test.data", "src/test/resources") +
-                        "/html/" + filename);
-
-        Document document = new TagSoupParser(new FileInputStream(file), baseURI.stringValue()).getDOM();
+        InputStream input = this.getClass().getResourceAsStream(filename);
+        
+        Document document = new TagSoupParser(input, baseURI.stringValue()).getDOM();
         HCardExtractor hCardExtractor = HCardExtractor.factory.createExtractor();
         ExtractionContext hcExtractionContext = new ExtractionContext(
                 hCardExtractor.getDescription().getExtractorName(),
@@ -469,10 +468,10 @@ public class RDFMergerTest extends AbstractExtractorTestCase {
     }
 
     private void extractHCardAndRelated(String filename) throws IOException, ExtractionException {
-        File file = new File(
-                System.getProperty("test.data", "src/test/resources/") + filename);
 
-        Document document = new TagSoupParser(new FileInputStream(file), baseURI.stringValue()).getDOM();
+        InputStream input = this.getClass().getResourceAsStream(filename);
+
+        Document document = new TagSoupParser(input, baseURI.stringValue()).getDOM();
         HCardExtractor hCardExtractor = HCardExtractor.factory.createExtractor();
         ExtractionContext hCardExtractionContext = new ExtractionContext(
                 hCardExtractor.getDescription().getExtractorName(), baseURI
@@ -521,9 +520,8 @@ public class RDFMergerTest extends AbstractExtractorTestCase {
 
     private void extractHRevAndRelated(String filename) throws ExtractionException, IOException {
         extractHCardAndRelated(filename);
-        File file = new File(
-                System.getProperty("test.data", "src/test/resources/") + filename);
-        Document document = new TagSoupParser(new FileInputStream(file), baseURI.stringValue()).getDOM();
+        InputStream input = this.getClass().getResourceAsStream(filename);
+        Document document = new TagSoupParser(input, baseURI.stringValue()).getDOM();
         HReviewExtractor hReviewExtractor = HReviewExtractor.factory.createExtractor();
         ExtractionContext hreviewExtractionContext = new ExtractionContext(
                 hReviewExtractor.getDescription().getExtractorName(), baseURI

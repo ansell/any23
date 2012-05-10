@@ -201,6 +201,7 @@
     <module>cli</module>
     <module>any23-test</module>
     <module>plugins/integration-test</module>
+    <module>any23-test-resources</module>
   </modules>
 
   <scm>
@@ -241,7 +242,7 @@
     <maven-release-plugin.version>2.2.1</maven-release-plugin.version>
     <buildnumber-maven-plugin.version>1.0</buildnumber-maven-plugin.version>
     <maven-compiler-plugin.version>2.5.1</maven-compiler-plugin.version>
-    <maven-jar-plugin.version>2.3.1</maven-jar-plugin.version>
+    <maven-jar-plugin.version>2.4</maven-jar-plugin.version>
     <maven-surefire-plugin.version>2.9</maven-surefire-plugin.version>
     <cobertura-maven-plugin.version>2.5.1</cobertura-maven-plugin.version>
     <maven-site-plugin.version>3.0</maven-site-plugin.version>

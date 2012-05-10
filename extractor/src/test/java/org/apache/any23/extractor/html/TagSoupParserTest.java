@@ -67,9 +67,7 @@ public class TagSoupParserTest {
     public void testExplicitEncodingBehavior()
     throws IOException, ExtractionException, RepositoryException {
         this.tagSoupParser = new TagSoupParser(
-                new FileInputStream(
-                    new File("src/test/resources/html/encoding-test.html")
-                ),
+                this.getClass().getResourceAsStream("/html/encoding-test.html"),
                 page,
                 "UTF-8"
         );
@@ -92,9 +90,8 @@ public class TagSoupParserTest {
     @Test
     public void testImplicitEncodingBehavior() throws IOException, ExtractionException, RepositoryException {
         this.tagSoupParser = new TagSoupParser(
-                new FileInputStream(
-                    new File("src/test/resources/html/encoding-test.html")
-                ),
+                this.getClass().getResourceAsStream("/html/encoding-test.html")
+                ,
                 page
         );
         Assert.assertNotSame(
@@ -113,12 +110,12 @@ public class TagSoupParserTest {
     @Test
     public void testEmptySpanElements() throws IOException {
         final String page = "http://example.com/test-page";
-        InputStream brokenEmptySpanHtml = new FileInputStream(
-                new File("src/test/resources/html/empty-span-broken.html")
-        );
-        InputStream worksEmptySpanHtml = new FileInputStream(
-                new File("src/test/resources/html/empty-span-works.html")
-        );
+        InputStream brokenEmptySpanHtml = 
+                this.getClass().getResourceAsStream("/html/empty-span-broken.html")
+        ;
+        InputStream worksEmptySpanHtml = 
+                this.getClass().getResourceAsStream("/html/empty-span-works.html")
+        ;
         this.tagSoupParser = new TagSoupParser(brokenEmptySpanHtml, page);
         Document brokenElementDom = this.tagSoupParser.getDOM();
         this.tagSoupParser = null; // useless but force GC

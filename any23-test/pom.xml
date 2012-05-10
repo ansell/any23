@@ -15,30 +15,43 @@
       <groupId>org.apache.any23</groupId>
       <artifactId>any23-core</artifactId>
       <version>${project.version}</version>
+      <scope>test</scope>
     </dependency>
 
     <dependency>
       <groupId>org.apache.any23</groupId>
       <artifactId>any23-extractor</artifactId>
       <version>${project.version}</version>
+      <scope>test</scope>
     </dependency>
 
     <dependency>
       <groupId>org.apache.any23</groupId>
       <artifactId>any23-cli</artifactId>
       <version>${project.version}</version>
+      <scope>test</scope>
     </dependency>
 
     <dependency>
       <groupId>org.apache.any23</groupId>
       <artifactId>any23-service</artifactId>
       <version>${project.version}</version>
+      <scope>test</scope>
     </dependency>
 
     <dependency>
       <groupId>org.apache.any23</groupId>
       <artifactId>any23-mime</artifactId>
       <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.any23</groupId>
+      <artifactId>any23-test-resources</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+      <type>test-jar</type>
     </dependency>
 	</dependencies>
 </project>
