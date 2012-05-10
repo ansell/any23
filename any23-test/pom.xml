@@ -16,8 +16,17 @@
       <artifactId>any23-core</artifactId>
       <version>${project.version}</version>
       <scope>test</scope>
+      <type>jar</type>
     </dependency>
 
+    <dependency>
+      <groupId>org.apache.any23</groupId>
+      <artifactId>any23-core</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+      <type>test-jar</type>
+    </dependency>
+    
     <dependency>
       <groupId>org.apache.any23</groupId>
       <artifactId>any23-extractor</artifactId>
@@ -28,13 +37,6 @@
     <dependency>
       <groupId>org.apache.any23</groupId>
       <artifactId>any23-cli</artifactId>
-      <version>${project.version}</version>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.any23</groupId>
-      <artifactId>any23-service</artifactId>
       <version>${project.version}</version>
       <scope>test</scope>
     </dependency>
@@ -54,4 +56,20 @@
       <type>test-jar</type>
     </dependency>
 	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>test-jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+		</plugins>
+	</build>
 </project>
