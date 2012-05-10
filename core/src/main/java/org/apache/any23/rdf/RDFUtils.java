@@ -62,6 +62,8 @@ public class RDFUtils {
     private static final ValueFactory valueFactory = ValueFactoryImpl.getInstance();
 
     /**
+     * FIXME: This method seems to exist solely to make java.net.URL happy. Need to remove reliance on it to become a general framework.
+     * 
      * Fixes typical errors in an absolute URI, such as unescaped spaces.
      *
      * @param uri An absolute URI, can have typical syntax errors
@@ -70,8 +72,9 @@ public class RDFUtils {
      */
     public static String fixAbsoluteURI(String uri) {
         String fixed = fixURIWithException(uri);
-        if (!fixed.matches("[a-zA-Z0-9]+:/.*")) throw new IllegalArgumentException("not a absolute URI: " + uri);
+        if (!fixed.matches("[a-zA-Z0-9]+:/.*")) throw new IllegalArgumentException("not a absolute URI that has a chance of being recognised by java.net.URL: " + uri);
         // Add trailing slash if URI has only authority but no path.
+        // FIXME: This will break with IRIs that use non-ASCII UTF-8 characters
         if (fixed.matches("https?://[a-zA-Z0-9.-]+(:[0-9+])?")) {
             fixed = fixed + "/";
         }

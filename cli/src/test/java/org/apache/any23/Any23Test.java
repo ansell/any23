@@ -45,6 +45,7 @@ import org.apache.any23.writer.ReportingTripleHandler;
 import org.apache.any23.writer.RepositoryWriter;
 import org.apache.any23.writer.TripleHandler;
 import org.apache.any23.writer.TripleHandlerException;
+import org.apache.tika.io.IOUtils;
 import org.junit.Test;
 import org.openrdf.model.Statement;
 import org.openrdf.repository.RepositoryConnection;
@@ -61,6 +62,7 @@ import org.slf4j.LoggerFactory;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.util.List;
 
@@ -117,7 +119,7 @@ public class Any23Test extends Any23OnlineTestBase {
     throws Exception {
         assertEncodingDetection(
                 "UTF-8",
-                new File("src/test/resources/html/encoding-test.html"),
+                this.getClass().getResourceAsStream("/html/encoding-test.html"),
                 "Knud M\u00F6ller"
         );
     }
@@ -137,7 +139,7 @@ public class Any23Test extends Any23OnlineTestBase {
     throws Exception {
         assertEncodingDetection(
                 null, // The encoding will be auto detected.
-                new File("src/test/resources/html/encoding-test.html"),
+                this.getClass().getResourceAsStream("/html/encoding-test.html"),
                 "Knud M\u00F6ller"
         );
     }
@@ -275,8 +277,8 @@ public class Any23Test extends Any23OnlineTestBase {
         TripleHandler rdfWriter = new IgnoreAccidentalRDFa(handler);
         ReportingTripleHandler reporting = new ReportingTripleHandler(rdfWriter);
 
-        DocumentSource source = new FileDocumentSource(
-                new File("src/test/resources/html/rdfa/ansa_2010-02-26_12645863.html"),
+        DocumentSource source = new StringDocumentSource(
+                IOUtils.toString(this.getClass().getResourceAsStream("/html/rdfa/ansa_2010-02-26_12645863.html")),
                     "http://host.com/service");
 
         Assert.assertTrue( any23.extract(source, reporting).hasMatchingExtractors() );
@@ -325,8 +327,8 @@ public class Any23Test extends Any23OnlineTestBase {
     public void testExtractionParameters() throws IOException, ExtractionException, TripleHandlerException {
         final int EXPECTED_TRIPLES  = 6;
         Any23 runner = new Any23();
-        DocumentSource source = new FileDocumentSource(
-                new File("src/test/resources/org/apache/any23/validator/missing-og-namespace.html"),
+        DocumentSource source = new StringDocumentSource(
+                IOUtils.toString(this.getClass().getResourceAsStream("/org/apache/any23/validator/missing-og-namespace.html")),
                 "http://www.test.com"
         );
 
@@ -375,8 +377,8 @@ public class Any23Test extends Any23OnlineTestBase {
     throws IOException, ExtractionException, TripleHandlerException {
         final int EXPECTED_TRIPLES = 19;
         Any23 runner = new Any23();
-        DocumentSource source = new FileDocumentSource(
-                new File("src/test/resources/microformats/nested-microformats-a1.html"),
+        DocumentSource source = new StringDocumentSource(
+                IOUtils.toString(this.getClass().getResourceAsStream("/microformats/nested-microformats-a1.html")),
                 "http://www.test.com"
         );
 
@@ -420,8 +422,8 @@ public class Any23Test extends Any23OnlineTestBase {
     @Test
     public void testExceptionPropagation() throws IOException {
         Any23 any23 = new Any23();
-        DocumentSource source = new FileDocumentSource(
-                new File("src/test/resources/application/turtle/geolinkeddata.ttl"),
+        DocumentSource source = new StringDocumentSource(
+                IOUtils.toString(this.getClass().getResourceAsStream("/application/turtle/geolinkeddata.ttl")),
                 "http://www.test.com"
         );
         CountingTripleHandler cth1 = new CountingTripleHandler();
@@ -606,14 +608,15 @@ public class Any23Test extends Any23OnlineTestBase {
      * @param expectedContent
      * @throws Exception
      */
-    private void assertEncodingDetection(String encoding, File input, String expectedContent)
+    private void assertEncodingDetection(String encoding, InputStream input, String expectedContent)
     throws Exception {
-        FileDocumentSource fileDocumentSource;
+        DocumentSource fileDocumentSource;
         Any23 any23;
         RepositoryConnection conn;
         RepositoryWriter repositoryWriter;
 
-        fileDocumentSource = new FileDocumentSource(input);
+        // NOTE: The base URI here needs to be recognisable by java.net.URL or the process will fail with some extractors that assume all URIs are java.net.URL recognised
+        fileDocumentSource = new StringDocumentSource(IOUtils.toString(input), "http://testwithcolonslashtosatisfyrdfutilsfixabsoluteuri");
         any23 = new Any23();
         Sail store = new MemoryStore();
         store.initialize();
