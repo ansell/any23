@@ -54,7 +54,7 @@ public class DefaultValidator implements Validator {
         final ValidationReportBuilder validationReportBuilder = new DefaultValidationReportBuilder();
         for(Class<? extends Rule> cRule : rulesOrder) {
             Rule rule = newRuleInstance(cRule);
-            final RuleContext ruleContext = new DefaultRuleContext();            
+            final RuleContext<Object> ruleContext = new DefaultRuleContext();            
             boolean applyOn;
             try {
                 applyOn = rule.applyOn(document, ruleContext, validationReportBuilder);

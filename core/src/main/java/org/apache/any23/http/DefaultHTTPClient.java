@@ -84,7 +84,7 @@ public class DefaultHTTPClient implements HTTPClient {
         GetMethod method = null;
         try {
             ensureClientInitialized();
-            String uriStr;
+            String uriStr = null;
             try {
                 URI uriObj = new URI(uri);
                 // [scheme:][//authority][path][?query][#fragment]

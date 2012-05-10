@@ -37,15 +37,13 @@
     <dependency>
       <groupId>org.openrdf.sesame</groupId>
       <artifactId>sesame-model</artifactId>
-      <scope>provided</scope>
     </dependency>
 
     <!-- Any23 Core. -->
     <dependency>
-      <groupId>org.apache.any23</groupId>
+      <groupId>${project.parent.groupId}</groupId>
       <artifactId>apache-any23-core</artifactId>
-      <version>0.7.1-incubating-SNAPSHOT</version>
-      <scope>provided</scope>
+      <version>${project.parent.version}</version>
     </dependency>
 
     <!-- Crawler4j -->
@@ -66,17 +64,6 @@
   </dependencies>
 
   <build>
-    <resources>
-      <resource>
-        <directory>${basedir}/../../</directory>
-        <targetPath>META-INF</targetPath>
-        <includes>
-          <include>DISCLAIMER.txt</include>
-          <include>LICENSE.txt</include>
-          <include>NOTICE.txt</include>
-        </includes>
-      </resource>
-    </resources>
 
     <plugins>
       <plugin>
@@ -95,30 +82,11 @@
         <configuration>
           <appendAssemblyId>false</appendAssemblyId>
           <descriptors>
-            <descriptor>${basedir}/src/main/assembly/bin.xml</descriptor>
+            <descriptor>src/main/assembly/bin.xml</descriptor>
           </descriptors>
         </configuration>
       </plugin>
     </plugins>
   </build>
-
-  <profiles>
-    <profile>
-      <id>release</id>
-      <build>
-        <resources>
-          <resource>
-            <directory>${basedir}/../../</directory>
-            <targetPath>${project.build.directory}/apidocs/META-INF</targetPath>
-            <includes>
-              <include>DISCLAIMER.txt</include>
-              <include>LICENSE.txt</include>
-              <include>NOTICE.txt</include>
-            </includes>
-          </resource>
-        </resources>
-      </build>
-    </profile>
-  </profiles>
 
 </project>

@@ -20,6 +20,7 @@ package org.apache.any23.cli;
 import org.apache.any23.vocab.RDFSchemaUtils;
 import org.apache.any23.vocab.RDFSchemaUtils.VocabularyFormat;
 import org.kohsuke.MetaInfServices;
+import org.openrdf.rio.RDFFormat;
 
 import com.beust.jcommander.IStringConverter;
 import com.beust.jcommander.Parameter;
@@ -39,18 +40,18 @@ public class VocabPrinter implements Tool {
        description = "Vocabulary output format",
        converter = VocabularyFormatConverter.class
     )
-    private VocabularyFormat format = RDFSchemaUtils.VocabularyFormat.NQuads;
+    private RDFFormat format = RDFFormat.NQUADS;
 
     public void run() throws Exception {
         RDFSchemaUtils.serializeVocabularies(format, System.out);
     }
 
-    public static final class VocabularyFormatConverter implements IStringConverter<RDFSchemaUtils.VocabularyFormat> {
+    public static final class VocabularyFormatConverter implements IStringConverter<RDFFormat> {
 
         @Override
-        public VocabularyFormat convert(String value) {
+        public RDFFormat convert(String value) {
             try {
-                return RDFSchemaUtils.VocabularyFormat.valueOf( value );
+                return RDFFormat.valueOf( value );
             } catch (Throwable t) {
                 throw new IllegalArgumentException("Unknown format [" + value + "'");
             }

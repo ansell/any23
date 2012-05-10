@@ -24,12 +24,16 @@ import org.apache.any23.util.StringUtils;
 import org.openrdf.model.URI;
 import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.model.vocabulary.RDFS;
+import org.openrdf.rio.RDFFormat;
+import org.openrdf.rio.RDFHandler;
 import org.openrdf.rio.RDFHandlerException;
 import org.openrdf.rio.RDFWriter;
+import org.openrdf.rio.Rio;
 import org.openrdf.rio.ntriples.NTriplesWriter;
 import org.openrdf.rio.rdfxml.RDFXMLWriter;
 
 import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
 import java.io.PrintStream;
 import java.lang.reflect.Constructor;
 import java.util.List;
@@ -46,15 +50,6 @@ public class RDFSchemaUtils {
     private static final String RDF_XML_SEPARATOR = StringUtils.multiply('=', 100);
     
     /**
-     * Supported formats for vocabulary serialization.
-     */
-    public enum VocabularyFormat {
-        NQuads,
-        NTriples,
-        RDFXML
-    }
-
-    /**
      * Serializes a vocabulary composed of the given <code>namespace</code>,
      * <code>resources</code> and <code>properties</code>.
      *
@@ -70,7 +65,7 @@ public class RDFSchemaUtils {
             URI[] classes,
             URI[] properties,
             Map<URI,String> comments,
-            RDFWriter writer
+            RDFHandler writer
     ) throws RDFHandlerException {
         writer.startRDF();
         for(URI clazz : classes) {
@@ -97,7 +92,7 @@ public class RDFSchemaUtils {
      * @param writer output writer.
      * @throws RDFHandlerException
      */
-    public static void serializeVocabulary(Vocabulary vocabulary, RDFWriter writer)
+    public static void serializeVocabulary(Vocabulary vocabulary, RDFHandler writer)
     throws RDFHandlerException {
         serializeVocabulary(
                 vocabulary.getNamespace(),
@@ -119,25 +114,11 @@ public class RDFSchemaUtils {
      */
     public static void serializeVocabulary(
             Vocabulary vocabulary,
-            VocabularyFormat format,
+            RDFFormat format,
             boolean willFollowAnother,
-            PrintStream ps
+            OutputStream ps
     ) throws RDFHandlerException {
-        final RDFWriter rdfWriter;
-        if(format == VocabularyFormat.RDFXML) {
-            rdfWriter = new RDFXMLWriter(ps);
-            if(willFollowAnother)
-                ps.print("\n");
-                ps.print(RDF_XML_SEPARATOR);
-                ps.print("\n");
-        } else if(format == VocabularyFormat.NTriples) {
-            rdfWriter = new NTriplesWriter(ps);
-        } else if(format == VocabularyFormat.NQuads) {
-            rdfWriter = new NQuadsWriter(ps);
-        }
-        else {
-            throw new IllegalArgumentException("Unsupported format " + format);
-        }
+        final RDFWriter rdfWriter = Rio.createWriter(format, ps);
         serializeVocabulary(vocabulary, rdfWriter);
     }
 
@@ -149,7 +130,7 @@ public class RDFSchemaUtils {
      * @return string contained serialization.
      * @throws RDFHandlerException
      */
-    public static String serializeVocabulary(Vocabulary vocabulary, VocabularyFormat format)
+    public static String serializeVocabulary(Vocabulary vocabulary, RDFFormat format)
     throws RDFHandlerException {
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         final PrintStream ps = new PrintStream(baos);
@@ -164,7 +145,7 @@ public class RDFSchemaUtils {
      * @param format output format for vocabularies.
      * @param ps output print stream.
      */
-    public static void serializeVocabularies(VocabularyFormat format, PrintStream ps) {
+    public static void serializeVocabularies(RDFFormat format, OutputStream ps) {
         final Class vocabularyClass = Vocabulary.class;
         final List<Class> vocabularies = DiscoveryUtils.getClassesInPackage(
                 vocabularyClass.getPackage().getName(),

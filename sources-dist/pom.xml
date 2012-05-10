@@ -20,66 +20,29 @@
 
   <parent>
     <groupId>org.apache.any23</groupId>
-    <artifactId>apache-any23</artifactId>
+    <artifactId>any23-parent</artifactId>
     <version>0.7.1-incubating-SNAPSHOT</version>
-    <relativePath>../../pom.xml</relativePath>
+    <relativePath>../</relativePath>
   </parent>
 
-  <groupId>org.apache.any23.plugins</groupId>
-  <artifactId>apache-any23-html-scraper</artifactId>
-  <version>1.0.2-incubating-SNAPSHOT</version>
+  <artifactId>any23-sources-dist</artifactId>
 
-  <name>Apache Any23 :: Plugins :: HTML Scraper</name>
-  <description>Any23 plugin for scraping HTML code.</description>
+  <name>Apache Any23 :: Sources distribution module</name>
 
-  <dependencies>
-    <!-- Sesame. -->
-    <dependency>
-      <groupId>org.openrdf.sesame</groupId>
-      <artifactId>sesame-model</artifactId>
-    </dependency>
-
-    <!-- Any23 Core. -->
-    <dependency>
-      <groupId>${project.parent.groupId}</groupId>
-      <artifactId>apache-any23-core</artifactId>
-      <version>${project.parent.version}</version>
-    </dependency>
-
-    <!-- BEGIN: BoilerPipe -->
-    <dependency>
-      <groupId>net.sourceforge.nekohtml</groupId>
-      <artifactId>nekohtml</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>xerces</groupId>
-      <artifactId>xercesImpl</artifactId>
-      <version>2.9.1</version>
-      <exclusions>
-        <exclusion>
-          <groupId>xml-apis</groupId>
-          <artifactId>xml-apis</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>de.l3s.boilerpipe</groupId>
-      <artifactId>boilerpipe</artifactId>
-    </dependency>
-    <!-- END: BoilerPipe -->
-  </dependencies>
+  <properties>
+    <assembly.finalName>apache-any23-${project.version}</assembly.finalName>
+  </properties>
 
   <build>
-
     <plugins>
       <!-- Generates the distribution package -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-assembly-plugin</artifactId>
         <configuration>
-          <appendAssemblyId>false</appendAssemblyId>
+          <finalName>${assembly.finalName}</finalName>
           <descriptors>
-            <descriptor>src/main/assembly/bin.xml</descriptor>
+            <descriptor>src/main/assembly/src.xml</descriptor>
           </descriptors>
         </configuration>
       </plugin>

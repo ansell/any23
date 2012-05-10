@@ -30,6 +30,7 @@ import org.apache.any23.http.AcceptHeaderBuilder;
 import org.apache.any23.http.DefaultHTTPClient;
 import org.apache.any23.http.DefaultHTTPClientConfiguration;
 import org.apache.any23.http.HTTPClient;
+import org.apache.any23.http.HTTPClientConfiguration;
 import org.apache.any23.mime.MIMEType;
 import org.apache.any23.mime.MIMETypeDetector;
 import org.apache.any23.mime.TikaMIMETypeDetector;
