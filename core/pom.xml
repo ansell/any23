@@ -143,6 +143,11 @@
       <artifactId>commons-csv</artifactId>
     </dependency>
     <!-- END: Apache Commons CSV -->
+    <dependency>
+    	<groupId>org.apache.any23</groupId>
+    	<artifactId>any23-encoding</artifactId>
+    	<version>${project.parent.version}</version>
+    </dependency>
   </dependencies>
 
   <build>
