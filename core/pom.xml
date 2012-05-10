@@ -30,6 +30,13 @@
   <name>Apache Any23 :: Core</name>
 
   <dependencies>
+    <!-- Any23 Core. -->
+    <dependency>
+      <groupId>org.apache.any23</groupId>
+      <artifactId>any23-nquads</artifactId>
+      <version>${project.parent.version}</version>
+    </dependency>
+
     <dependency>
       <groupId>commons-lang</groupId>
       <artifactId>commons-lang</artifactId>

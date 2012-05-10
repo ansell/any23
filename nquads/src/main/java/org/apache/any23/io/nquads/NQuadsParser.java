@@ -17,7 +17,6 @@
 
 package org.apache.any23.io.nquads;
 
-import org.apache.any23.util.ReaderInputStream;
 import org.openrdf.model.BNode;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
@@ -70,16 +69,10 @@ public class NQuadsParser extends RDFParserBase {
         return NQuads.FORMAT;
     }
 
-    public void parse(Reader reader, String s)
+    public void parse(Reader reader, String baseURI)
     throws IOException, RDFParseException, RDFHandlerException {
-        ReaderInputStream readerInputStream = new ReaderInputStream(reader);
-        parse(readerInputStream, s);
-    }
-
-    public synchronized void parse(InputStream is, String baseURI)
-    throws IOException, RDFParseException, RDFHandlerException {
-        if(is == null) {
-            throw new NullPointerException("inputStream cannot be null.");
+        if(reader == null) {
+            throw new NullPointerException("reader cannot be null.");
         }
         if(baseURI == null) {
             throw new NullPointerException("baseURI cannot be null.");
@@ -93,7 +86,7 @@ public class NQuadsParser extends RDFParserBase {
 
             setBaseURI(baseURI);
 
-            final BufferedReader br = new BufferedReader( new InputStreamReader(is) );
+            final BufferedReader br = new BufferedReader( reader );
             if( rdfHandler != null ) {
                 rdfHandler.startRDF();
             }
@@ -107,6 +100,11 @@ public class NQuadsParser extends RDFParserBase {
             clear();
             clearBNodeIDMap();
         }
+    }
+
+    public synchronized void parse(InputStream is, String baseURI)
+    throws IOException, RDFParseException, RDFHandlerException {
+        parse(new InputStreamReader(is), baseURI);
     }
 
     /**
