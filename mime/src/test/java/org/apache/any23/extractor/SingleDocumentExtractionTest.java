@@ -113,7 +113,7 @@ public class SingleDocumentExtractionTest {
      */
     @Test
     public void testMicroformatDomains() throws IOException, ExtractionException, RepositoryException {
-        singleDocumentExtraction = getInstance("microformats/microformat-domains.html");
+        singleDocumentExtraction = getInstance("/microformats/microformat-domains.html");
         singleDocumentExtraction.run();
         logStorageContent();
         assertTripleCount(vSINDICE.getProperty(SINDICE.DOMAIN), "nested.test.com", 1);
@@ -134,7 +134,7 @@ public class SingleDocumentExtractionTest {
      */
     @Test
     public void testNestedMicroformats() throws IOException, ExtractionException, RepositoryException {
-        singleDocumentExtraction = getInstance("microformats/nested-microformats-a1.html");
+        singleDocumentExtraction = getInstance("/microformats/nested-microformats-a1.html");
         singleDocumentExtraction.run();
 
         logStorageContent();
@@ -157,7 +157,7 @@ public class SingleDocumentExtractionTest {
      */
     @Test
     public void testNestedVCardAdr() throws IOException, ExtractionException, RepositoryException {
-        singleDocumentExtraction = getInstance("microformats/nested-microformats-a3.html");
+        singleDocumentExtraction = getInstance("/microformats/nested-microformats-a3.html");
         singleDocumentExtraction.run();
 
         logStorageContent();
@@ -184,7 +184,7 @@ public class SingleDocumentExtractionTest {
      */
     @Test
     public void testNestedMicroformatsInduced() throws IOException, ExtractionException, RepositoryException {
-        singleDocumentExtraction = getInstance("microformats/nested-microformats-a2.html");
+        singleDocumentExtraction = getInstance("/microformats/nested-microformats-a2.html");
         singleDocumentExtraction.run();
 
         logStorageContent();
@@ -211,7 +211,7 @@ public class SingleDocumentExtractionTest {
      *       show the triple property as double. Despite this the model contains it just once.
      */
     public void testNestedMicroformatsManaged() throws IOException, ExtractionException, RepositoryException {
-        singleDocumentExtraction = getInstance("microformats/nested-microformats-managed.html");
+        singleDocumentExtraction = getInstance("/microformats/nested-microformats-managed.html");
         singleDocumentExtraction.run();
 
         logStorageContent();
