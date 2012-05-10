@@ -27,5 +27,11 @@
     	<version>2.3</version>
     	<scope>test</scope>
     </dependency>
+    <dependency>
+    	<groupId>org.openrdf.sesame</groupId>
+    	<artifactId>sesame-rio-turtle</artifactId>
+    	<!-- NOTE: This is needed as a compile time dependency to create ExtendedTurtleWriter -->
+    	<scope>compile</scope>
+    </dependency>
   </dependencies>
 </project>
