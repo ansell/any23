@@ -52,6 +52,16 @@
       <artifactId>apache-any23-basic-crawler</artifactId>
       <version>1.0.1-incubating-SNAPSHOT</version>
     </dependency>
+      <dependency>
+      	<groupId>org.apache.any23</groupId>
+      	<artifactId>any23-extractor</artifactId>
+      	<version>0.7.0-incubating-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+      	<groupId>org.apache.any23</groupId>
+      	<artifactId>any23-cli</artifactId>
+      	<version>0.7.0-incubating-SNAPSHOT</version>
+      </dependency>
   </dependencies>
 
   <build>

@@ -17,7 +17,7 @@
 
 package org.apache.any23.validator;
 
-import org.apache.any23.extractor.html.DomUtils;
+import org.apache.any23.util.DomUtils;
 import org.w3c.dom.Node;
 
 import java.io.Serializable;

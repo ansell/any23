@@ -43,6 +43,18 @@
       <version>${project.version}</version>
     </dependency>
 
+    <dependency>
+      <groupId>org.apache.any23</groupId>
+      <artifactId>any23-extractor</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.any23</groupId>
+      <artifactId>any23-cli</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
     <!-- BEGIN: Servlet Deps. -->
     <dependency>
       <groupId>org.mortbay.jetty</groupId>

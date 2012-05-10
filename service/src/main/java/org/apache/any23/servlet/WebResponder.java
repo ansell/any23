@@ -17,8 +17,8 @@
 
 package org.apache.any23.servlet;
 
-import org.apache.any23.Any23;
 import org.apache.any23.ExtractionReport;
+import org.apache.any23.Any23;
 import org.apache.any23.extractor.ExtractionException;
 import org.apache.any23.extractor.ExtractionParameters;
 import org.apache.any23.extractor.Extractor;

@@ -26,7 +26,7 @@ import java.util.Map;
 /**
  * This class models the parameters to be used to perform an extraction.
  *
- * @see org.apache.any23.Any23
+ * @see org.apache.any23.cli.Any23
  * @author Michele Mostarda (mostarda@fbk.eu)
  */
 public class ExtractionParameters {
@@ -126,7 +126,7 @@ public class ExtractionParameters {
                 configuration,
                 extractionMode,
                 new HashMap<String, Boolean>(){{
-                    put(SingleDocumentExtraction.METADATA_NESTING_FLAG, nesting);
+                    put("any23.extraction.metadata.nesting", nesting);
                 }},
                 null
         );

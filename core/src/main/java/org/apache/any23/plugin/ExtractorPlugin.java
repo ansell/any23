@@ -21,7 +21,7 @@ import org.apache.any23.extractor.Extractor;
 import org.apache.any23.extractor.ExtractorFactory;
 
 /**
- * This interface defines an {@link org.apache.any23.Any23}
+ * This interface defines an {@link org.apache.any23.cli.Any23}
  * extractor plugin that can be detected and registered from the library classpath.
  *
  * @author Michele Mostarda (mostarda@fbk.eu)

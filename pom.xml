@@ -190,12 +190,17 @@
   <modules>
     <module>nquads</module>
     <module>encoding</module>
+    <module>extractor</module>
+    <module>mime</module>
     <module>core</module>
     <module>plugins/basic-crawler</module>
     <module>plugins/html-scraper</module>
     <module>plugins/office-scraper</module>
-    <module>plugins/integration-test</module>
     <module>service</module>
+    <module>sources-dist</module>
+    <module>cli</module>
+    <module>any23-test</module>
+    <module>plugins/integration-test</module>
   </modules>
 
   <scm>

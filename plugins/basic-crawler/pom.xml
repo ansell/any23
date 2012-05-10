@@ -46,6 +46,18 @@
       <version>${project.parent.version}</version>
     </dependency>
 
+    <dependency>
+      <groupId>org.apache.any23</groupId>
+      <artifactId>any23-extractor</artifactId>
+      <version>${project.parent.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.any23</groupId>
+      <artifactId>any23-cli</artifactId>
+      <version>${project.parent.version}</version>
+    </dependency>
+
     <!-- Crawler4j -->
     <dependency>
       <groupId>edu.uci.ics</groupId>

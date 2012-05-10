@@ -46,6 +46,12 @@
       <version>${project.parent.version}</version>
     </dependency>
 
+    <dependency>
+      <groupId>org.apache.any23</groupId>
+      <artifactId>any23-extractor</artifactId>
+      <version>0.7.0-incubating-SNAPSHOT</version>
+    </dependency>
+
     <!-- BEGIN: BoilerPipe -->
     <dependency>
       <groupId>net.sourceforge.nekohtml</groupId>
