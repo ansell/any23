@@ -380,7 +380,14 @@ public class RDFUtils {
      */
     public static RDFFormat getFormatByExtension(String ext) {
         if( ! ext.startsWith(".") ) ext = "." + ext;
-        return Rio.getParserFormatForFileName(ext);
+        RDFFormat format = Rio.getParserFormatForFileName(ext);
+        
+        if(format == null)
+        {
+            throw new IllegalArgumentException("Unknown extension : " + ext);
+        }
+        
+        return format;
     }
 
     /**
