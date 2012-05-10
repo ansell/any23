@@ -37,6 +37,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.nio.charset.Charset;
 
 /**
  * <i>N-Quads</i> parser implementation based on the
@@ -104,7 +105,7 @@ public class NQuadsParser extends RDFParserBase {
 
     public synchronized void parse(InputStream is, String baseURI)
     throws IOException, RDFParseException, RDFHandlerException {
-        parse(new InputStreamReader(is), baseURI);
+        parse(new InputStreamReader(is, Charset.forName("UTF-8")), baseURI);
     }
 
     /**
