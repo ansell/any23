@@ -49,7 +49,7 @@ public class PopularPrefixes {
             throw new RuntimeException(String.format("Error while loading prefixes from %s", RESOURCE_NAME));
         }
         popularPrefixes = new Prefixes();
-        for (Map.Entry entry : properties.entrySet()) {
+        for (Map.Entry<Object, Object> entry : properties.entrySet()) {
             if (testURICompliance((String) entry.getValue())) {
                 prefixes.add(
                         (String) entry.getKey(),
