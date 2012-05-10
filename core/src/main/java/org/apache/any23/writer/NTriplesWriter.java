@@ -19,6 +19,9 @@ package org.apache.any23.writer;
 
 import java.io.OutputStream;
 
+import org.openrdf.rio.RDFFormat;
+import org.openrdf.rio.Rio;
+
 /**
  * <i>N3</i> triples writer.
  */
@@ -26,7 +29,7 @@ import java.io.OutputStream;
 public class NTriplesWriter extends RDFWriterTripleHandler implements FormatWriter {
 
     public NTriplesWriter(OutputStream out) {
-        super(new org.openrdf.rio.ntriples.NTriplesWriter(out));
+        super(Rio.createWriter(RDFFormat.NTRIPLES, out));
     }
 
 }

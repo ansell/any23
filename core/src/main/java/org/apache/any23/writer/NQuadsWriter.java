@@ -19,6 +19,10 @@ package org.apache.any23.writer;
 
 import java.io.OutputStream;
 
+import net.fortytwo.sesametools.nquads.NQuadsFormat;
+
+import org.openrdf.rio.Rio;
+
 /**
  * Implementation of an <i>NQuads</i> writer.
  *
@@ -28,7 +32,7 @@ import java.io.OutputStream;
 public class NQuadsWriter extends RDFWriterTripleHandler implements FormatWriter {
 
     public NQuadsWriter(OutputStream os) {
-        super( new org.apache.any23.io.nquads.NQuadsWriter(os) );
+        super( Rio.createWriter(NQuadsFormat.NQUADS, os) );
     }
 
 }

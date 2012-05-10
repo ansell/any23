@@ -19,6 +19,9 @@ package org.apache.any23.writer;
 
 import java.io.OutputStream;
 
+import org.openrdf.rio.RDFFormat;
+import org.openrdf.rio.Rio;
+
 /**
  * <a href="http://www.w3.org/2004/03/trix/">TriX</a> format writer implementation.
  *
@@ -28,7 +31,7 @@ import java.io.OutputStream;
 public class TriXWriter extends RDFWriterTripleHandler implements FormatWriter {
 
     public TriXWriter(OutputStream out) {
-        super( new org.openrdf.rio.trix.TriXWriter(out) );
+        super(Rio.createWriter(RDFFormat.TRIX, out) );
     }
 
 }

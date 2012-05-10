@@ -32,11 +32,6 @@
   <dependencies>
     <!-- Any23 Core. -->
     <dependency>
-      <groupId>org.apache.any23</groupId>
-      <artifactId>any23-nquads</artifactId>
-      <version>${project.parent.version}</version>
-    </dependency>
-    <dependency>
     	<groupId>org.apache.any23</groupId>
     	<artifactId>any23-encoding</artifactId>
       <version>${project.parent.version}</version>
@@ -86,18 +81,22 @@
     <dependency>
       <groupId>org.openrdf.sesame</groupId>
       <artifactId>sesame-rio-turtle</artifactId>
+      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>org.openrdf.sesame</groupId>
       <artifactId>sesame-rio-rdfxml</artifactId>
+      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>org.openrdf.sesame</groupId>
       <artifactId>sesame-rio-ntriples</artifactId>
+      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>org.openrdf.sesame</groupId>
       <artifactId>sesame-rio-trix</artifactId>
+      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>org.openrdf.sesame</groupId>
@@ -138,6 +137,13 @@
     <dependency>
       <groupId>info.aduna.commons</groupId>
       <artifactId>aduna-commons-concurrent</artifactId>
+    </dependency>
+    <dependency>
+    	<groupId>net.fortytwo.sesametools</groupId>
+    	<artifactId>nquads</artifactId>
+    	<version>1.7-SNAPSHOT</version>
+    	<!-- Note: This is compile time dependency to get access to NQuadsFormat.NQUADS that is not yet in Rio RDFFormat -->
+    	<scope>compile</scope>
     </dependency>
     <!-- END: Sesame -->
 

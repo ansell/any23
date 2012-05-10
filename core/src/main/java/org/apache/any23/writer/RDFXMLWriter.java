@@ -19,6 +19,9 @@ package org.apache.any23.writer;
 
 import java.io.OutputStream;
 
+import org.openrdf.rio.RDFFormat;
+import org.openrdf.rio.Rio;
+
 /**
  * <i>RDF/XML</i> writer implementation.
  */
@@ -26,7 +29,7 @@ import java.io.OutputStream;
 public class RDFXMLWriter extends RDFWriterTripleHandler implements FormatWriter {
 
     public RDFXMLWriter(OutputStream out) {
-        super( new org.openrdf.rio.rdfxml.RDFXMLWriter(out) );
+        super(Rio.createWriter(RDFFormat.RDFXML, out) );
     }
 
 }

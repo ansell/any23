@@ -17,7 +17,6 @@
 
 package org.apache.any23.vocab;
 
-import org.apache.any23.io.nquads.NQuadsWriter;
 import org.apache.any23.rdf.RDFUtils;
 import org.apache.any23.util.DiscoveryUtils;
 import org.apache.any23.util.StringUtils;
@@ -29,8 +28,6 @@ import org.openrdf.rio.RDFHandler;
 import org.openrdf.rio.RDFHandlerException;
 import org.openrdf.rio.RDFWriter;
 import org.openrdf.rio.Rio;
-import org.openrdf.rio.ntriples.NTriplesWriter;
-import org.openrdf.rio.rdfxml.RDFXMLWriter;
 
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;

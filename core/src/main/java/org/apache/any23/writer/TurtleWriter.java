@@ -19,6 +19,9 @@ package org.apache.any23.writer;
 
 import java.io.OutputStream;
 
+import org.openrdf.rio.RDFFormat;
+import org.openrdf.rio.Rio;
+
 /**
  * <i>N3</i> notation writer.
  */
@@ -31,7 +34,7 @@ public class TurtleWriter extends RDFWriterTripleHandler implements FormatWriter
      * @param out stream to write on.
      */
     public TurtleWriter(OutputStream out) {
-        super(new org.openrdf.rio.turtle.TurtleWriter(out));
+        super(Rio.createWriter(RDFFormat.TURTLE, out));
     }
 
 }

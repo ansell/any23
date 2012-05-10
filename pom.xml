@@ -188,7 +188,6 @@
   </mailingLists>
 
   <modules>
-    <module>nquads</module>
     <module>encoding</module>
     <module>extractor</module>
     <module>mime</module>
@@ -482,12 +481,39 @@
       <url>http://svn.apache.org/repos/asf/incubator/any23/repo-ext/</url>
     </repository>
     <!-- Specific repository for Aduna / Sesame related dependencies. -->
-    <repository>
-      <id>aduna-software-release-repo</id>
-      <name>Aduna SW Release Repository</name>
-      <url>http://repo.aduna-software.org/maven2/releases</url>
-      <layout>default</layout>
-    </repository>
+	<repository>
+		<id>aduna-opensource.releases</id>
+		<name>Aduna repository</name>
+		<url>http://repo.aduna-software.org/maven2/releases</url>
+		<releases>
+			<enabled>true</enabled>
+		</releases>
+		<snapshots>
+			<enabled>false</enabled>
+		</snapshots>
+	</repository>
+	<repository>
+		<id>aduna-opensource.snapshots</id>
+		<name>Aduna snapshot repository</name>
+		<url>http://repo.aduna-software.org/maven2/snapshots</url>
+		<releases>
+			<enabled>false</enabled>
+		</releases>
+		<snapshots>
+			<enabled>true</enabled>
+		</snapshots>
+	</repository>
+	<repository>
+		<id>fortytwo.net</id>
+		<name>SesameTools Repository</name>
+		<url>http://fortytwo.net/maven2</url>
+		<releases>
+			<enabled>true</enabled>
+		</releases>
+		<snapshots>
+			<enabled>true</enabled>
+		</snapshots>
+	</repository>
   </repositories>
 
   <build>

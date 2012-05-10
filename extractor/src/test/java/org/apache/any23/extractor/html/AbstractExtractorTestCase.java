@@ -17,12 +17,13 @@
 
 package org.apache.any23.extractor.html;
 
+import net.fortytwo.sesametools.nquads.NQuadsFormat;
+
 import org.apache.any23.extractor.IssueReport;
 import org.apache.any23.extractor.ExtractionException;
 import org.apache.any23.extractor.ExtractorFactory;
 import org.apache.any23.extractor.SingleDocumentExtraction;
 import org.apache.any23.extractor.SingleDocumentExtractionReport;
-import org.apache.any23.io.nquads.NQuadsWriter;
 import org.apache.any23.rdf.RDFUtils;
 import org.apache.any23.vocab.SINDICE;
 import org.apache.any23.writer.RepositoryWriter;
@@ -39,10 +40,10 @@ import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.repository.RepositoryResult;
 import org.openrdf.repository.sail.SailRepository;
+import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFHandlerException;
 import org.openrdf.rio.RDFParseException;
-import org.openrdf.rio.rdfxml.RDFXMLWriter;
-import org.openrdf.rio.turtle.TurtleWriter;
+import org.openrdf.rio.Rio;
 import org.openrdf.sail.Sail;
 import org.openrdf.sail.memory.MemoryStore;
 
@@ -570,7 +571,7 @@ public abstract class AbstractExtractorTestCase {
     protected String dumpModelToTurtle() throws RepositoryException {
         StringWriter w = new StringWriter();
         try {
-            conn.export(new TurtleWriter(w));
+            conn.export(Rio.createWriter(RDFFormat.TURTLE, w));
             return w.toString();
         } catch (RDFHandlerException ex) {
             throw new RuntimeException(ex);
@@ -586,7 +587,7 @@ public abstract class AbstractExtractorTestCase {
     protected String dumpModelToNQuads() throws RepositoryException {
         StringWriter w = new StringWriter();
         try {
-            conn.export(new NQuadsWriter(w));
+            conn.export(Rio.createWriter(NQuadsFormat.NQUADS, w));
             return w.toString();
         } catch (RDFHandlerException ex) {
             throw new RuntimeException(ex);
@@ -602,7 +603,7 @@ public abstract class AbstractExtractorTestCase {
     protected String dumpModelToRDFXML() throws RepositoryException {
         StringWriter w = new StringWriter();
         try {
-            conn.export(new RDFXMLWriter(w));
+            conn.export(Rio.createWriter(RDFFormat.RDFXML, w));
             return w.toString();
         } catch (RDFHandlerException ex) {
             throw new RuntimeException(ex);
