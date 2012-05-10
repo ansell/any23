@@ -47,7 +47,7 @@ public class WhiteSpacesPurifierTest {
     @Test
     public void testPurification() throws IOException {
         InputStream inputStream =
-                this.getClass().getResourceAsStream("/application/xhtml/blank-file-header.xhtml");
+                new BufferedInputStream(this.getClass().getResourceAsStream("/application/xhtml/blank-file-header.xhtml"));
         this.purifier.purify(inputStream);
         Assert.assertNotNull(inputStream);
         Assert.assertTrue(
