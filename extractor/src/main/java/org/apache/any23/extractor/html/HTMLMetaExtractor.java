@@ -84,7 +84,7 @@ public class HTMLMetaExtractor implements Extractor.TagSoupDOMExtractor {
         documentLang = getDocumentLanguage(in);
         extractLinkDefinedPrefixes(in);
 
-        String baseProfile = vSINDICE.NS;
+        String baseProfile = SINDICE.NS;
         if(profile != null) {
             baseProfile = profile.toString();
         }

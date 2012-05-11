@@ -23,10 +23,7 @@ import org.apache.tika.io.IOUtils;
 import org.junit.Assert;
 import org.w3c.dom.Node;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.net.URISyntaxException;
 
 /**
  * This class is a wrapper around an HTML document providing a simply facade.

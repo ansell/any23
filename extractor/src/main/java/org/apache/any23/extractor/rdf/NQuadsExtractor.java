@@ -23,7 +23,6 @@ import org.apache.any23.extractor.ExtractorDescription;
 import org.apache.any23.extractor.ExtractorFactory;
 import org.apache.any23.extractor.SimpleExtractorFactory;
 import org.openrdf.rio.RDFParser;
-import org.openrdf.rio.helpers.RDFParserBase;
 
 import java.util.Arrays;
 

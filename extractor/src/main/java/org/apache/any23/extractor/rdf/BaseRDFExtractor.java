@@ -26,7 +26,6 @@ import org.apache.any23.extractor.ExtractorDescription;
 import org.openrdf.rio.RDFHandlerException;
 import org.openrdf.rio.RDFParseException;
 import org.openrdf.rio.RDFParser;
-import org.openrdf.rio.helpers.RDFParserBase;
 
 import java.io.IOException;
 import java.io.InputStream;

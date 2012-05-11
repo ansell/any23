@@ -30,7 +30,6 @@ import org.apache.any23.filter.IgnoreTitlesOfEmptyDocuments;
 import org.apache.any23.http.DefaultHTTPClient;
 import org.apache.any23.http.HTTPClient;
 import org.apache.any23.source.DocumentSource;
-import org.apache.any23.source.FileDocumentSource;
 import org.apache.any23.source.HTTPDocumentSource;
 import org.apache.any23.source.StringDocumentSource;
 import org.apache.any23.util.FileUtils;
@@ -60,7 +59,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
