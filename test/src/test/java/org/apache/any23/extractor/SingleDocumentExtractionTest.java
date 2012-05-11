@@ -84,7 +84,7 @@ public class SingleDocumentExtractionTest {
 
     @Before
     public void setUp() throws RepositoryException, SailException {
-        extractorGroup = ExtractorRegistry.getInstance().getExtractorGroup();
+        extractorGroup = ExtractorRegistryImpl.getInstance().getExtractorGroup();
         store = new MemoryStore();
         store.initialize();
         conn = new SailRepository(store).getConnection();
