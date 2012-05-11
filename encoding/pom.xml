@@ -10,6 +10,11 @@
   <name>Any23 Encoding Detection</name>
   <dependencies>
   	<dependency>
+  		<groupId>org.apache.any23</groupId>
+  		<artifactId>any23-api</artifactId>
+  		<version>${project.version}</version>
+  	</dependency>
+  	<dependency>
   		<groupId>org.apache.tika</groupId>
   		<artifactId>tika-parsers</artifactId>
   	</dependency>
