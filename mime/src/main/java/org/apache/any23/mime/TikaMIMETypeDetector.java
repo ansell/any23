@@ -26,7 +26,9 @@ import org.apache.tika.metadata.Metadata;
 import org.apache.tika.mime.MimeType;
 import org.apache.tika.mime.MimeTypeException;
 import org.apache.tika.mime.MimeTypes;
+import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFParser;
+import org.openrdf.rio.Rio;
 import org.openrdf.rio.turtle.TurtleParser;
 
 import java.io.BufferedReader;
@@ -236,6 +238,7 @@ public class TikaMIMETypeDetector implements MIMETypeDetector {
      * @return the supposed mime type or <code>null</code> if nothing appropriate found.
      * @throws IllegalArgumentException if <i>input</i> is not <code>null</code> and is not resettable.
      */
+    @Override
     public MIMEType guessMIMEType(
             String fileName,
             InputStream input,
@@ -344,6 +347,13 @@ public class TikaMIMETypeDetector implements MIMETypeDetector {
             MimeType type = types.getMimeType(resourceName);
             if (type != null) {
                 return type.getName();
+            }
+            
+            RDFFormat parserFormatForFileName = Rio.getParserFormatForFileName(resourceName);
+            
+            // if Rio recognised it, then return the default MIME Type for the given format that it recognised
+            if(parserFormatForFileName != null) {
+                return parserFormatForFileName.getDefaultMIMEType();
             }
         }
 

@@ -51,6 +51,7 @@ public class NaiveMIMETypeDetector implements MIMETypeDetector {
 
     private final static Pattern extensionRegex = Pattern.compile(".*\\.([a-z0-9]+)");
 
+    @Override
     public MIMEType guessMIMEType(
             String fileName,
             InputStream input,
