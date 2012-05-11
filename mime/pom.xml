@@ -16,17 +16,10 @@
   	</dependency>
   	<dependency>
   		<groupId>org.apache.any23</groupId>
-  		<artifactId>any23-extractor</artifactId>
+  		<artifactId>any23-csvutils</artifactId>
   		<version>${project.version}</version>
   		<scope>compile</scope>
   		<type>jar</type>
-  	</dependency>
-  	<dependency>
-  		<groupId>org.apache.any23</groupId>
-  		<artifactId>any23-extractor</artifactId>
-  		<version>${project.version}</version>
-  		<scope>test</scope>
-  		<type>test-jar</type>
   	</dependency>
     <dependency>
       <groupId>org.apache.any23</groupId>

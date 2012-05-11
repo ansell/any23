@@ -29,7 +29,6 @@ import org.apache.tika.mime.MimeTypes;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFParser;
 import org.openrdf.rio.Rio;
-import org.openrdf.rio.turtle.TurtleParser;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -118,7 +117,7 @@ public class TikaMIMETypeDetector implements MIMETypeDetector {
      */
     public static boolean checkTurtleFormat(InputStream is) throws IOException {
         String sample = extractDataSample(is, '.');
-        TurtleParser turtleParser = new TurtleParser();
+        RDFParser turtleParser = Rio.createParser(RDFFormat.TURTLE);
         turtleParser.setDatatypeHandling(RDFParser.DatatypeHandling.VERIFY);
         turtleParser.setStopAtFirstError(true);
         turtleParser.setVerifyData(true);
