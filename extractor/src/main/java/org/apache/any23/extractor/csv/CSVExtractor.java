@@ -19,6 +19,7 @@ package org.apache.any23.extractor.csv;
 
 import static java.lang.Character.toUpperCase;
 
+import org.apache.any23.configuration.DefaultConfiguration;
 import org.apache.any23.extractor.ExtractionContext;
 import org.apache.any23.extractor.ExtractionException;
 import org.apache.any23.extractor.ExtractionParameters;
@@ -88,7 +89,7 @@ public class CSVExtractor implements Extractor.ContentExtractor {
         final URI documentURI = extractionContext.getDocumentURI();
 
         // build the parser
-        csvParser = CSVReaderBuilder.build(in);
+        csvParser = CSVReaderBuilder.build(in, DefaultConfiguration.singleton());
 
         // get the header and generate the URIs for column names
         String[] header = csvParser.getLine();

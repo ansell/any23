@@ -17,7 +17,7 @@
 
 package org.apache.any23.extractor.csv;
 
-import org.apache.any23.configuration.DefaultConfiguration;
+import org.apache.any23.configuration.Configuration;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVStrategy;
 
@@ -42,9 +42,6 @@ public class CSVReaderBuilder {
 
     private static final char[] popularDelimiters = {'\t', '|', ',', ';'};
 
-    private static DefaultConfiguration defaultConfiguration =
-            DefaultConfiguration.singleton();
-
     private static final CSVStrategy[] strategies;
 
     static {
@@ -64,9 +61,9 @@ public class CSVReaderBuilder {
      * @return a {@link CSVParser}
      * @throws java.io.IOException
      */
-    public static CSVParser build(InputStream is) throws IOException {
+    public static CSVParser build(InputStream is, Configuration nextConfiguration) throws IOException {
         CSVStrategy bestStrategy = getBestStrategy(is);
-        if(bestStrategy == null) bestStrategy = getCSVStrategyFromConfiguration();
+        if(bestStrategy == null) bestStrategy = getCSVStrategyFromConfiguration(nextConfiguration);
         return new CSVParser( new InputStreamReader(is), bestStrategy );
     }
 
@@ -95,20 +92,22 @@ public class CSVReaderBuilder {
         return new CSVStrategy(delimiter, '\'', comment);
     }
 
-    private static CSVStrategy getCSVStrategyFromConfiguration() {
+    private static CSVStrategy getCSVStrategyFromConfiguration(Configuration nextConfiguration) {
         char fieldDelimiter = getCharValueFromConfiguration(
                 "any23.extraction.csv.field",
-                DEFAULT_FIELD_DELIMITER
+                DEFAULT_FIELD_DELIMITER,
+                nextConfiguration
         );
         char commentDelimiter = getCharValueFromConfiguration(
                 "any23.extraction.csv.comment",
-                DEFAULT_COMMENT_DELIMITER
+                DEFAULT_COMMENT_DELIMITER,
+                nextConfiguration
         );
         return new CSVStrategy(fieldDelimiter, '\'', commentDelimiter);
     }
 
-    private static char getCharValueFromConfiguration(String property, String defaultValue) {
-        String delimiter = defaultConfiguration.getProperty(
+    private static char getCharValueFromConfiguration(String property, String defaultValue, Configuration nextConfiguration) {
+        String delimiter = nextConfiguration.getProperty(
                 property,
                 defaultValue
         );
