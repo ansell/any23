@@ -197,12 +197,12 @@
     <module>extractor</module>
     <module>cli</module>
     <module>test</module>
+    <module>service</module>
     <module>plugins/basic-crawler</module>
     <module>plugins/html-scraper</module>
     <module>plugins/office-scraper</module>
-    <module>service</module>
-    <module>sources-dist</module>
     <module>plugins/integration-test</module>
+    <module>sources-dist</module>
   </modules>
 
   <scm>
