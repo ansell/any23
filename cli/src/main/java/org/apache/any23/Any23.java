@@ -24,7 +24,6 @@ import org.apache.any23.extractor.ExtractionException;
 import org.apache.any23.extractor.ExtractionParameters;
 import org.apache.any23.extractor.ExtractorFactory;
 import org.apache.any23.extractor.ExtractorGroup;
-import org.apache.any23.extractor.ExtractorRegistry;
 import org.apache.any23.extractor.ExtractorRegistryImpl;
 import org.apache.any23.extractor.SingleDocumentExtraction;
 import org.apache.any23.extractor.SingleDocumentExtractionReport;
