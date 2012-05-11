@@ -76,6 +76,7 @@ public class ExtractorRegistry {
             final DefaultConfiguration conf = DefaultConfiguration.singleton();
             if (instance == null) {
                 instance = new ExtractorRegistry();
+                // FIXME: Remove these hardcoded links to the extractor factories by turning them into SPI interfaces
                 instance.register(RDFXMLExtractor.factory);
                 instance.register(TurtleExtractor.factory);
                 instance.register(NTriplesExtractor.factory);

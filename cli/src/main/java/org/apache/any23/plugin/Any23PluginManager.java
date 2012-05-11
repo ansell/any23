@@ -45,6 +45,7 @@ import static java.util.ServiceLoader.load;
  *
  * @author Michele Mostarda (mostarda@fbk.eu)
  */
+// TODO: Remove dependency on ExtractorRegistry or clean it up and move both it and this class to API module
 public class Any23PluginManager {
 
     /**
