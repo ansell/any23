@@ -26,6 +26,14 @@
   		<artifactId>any23-mime</artifactId>
   		<version>0.7.0-incubating-SNAPSHOT</version>
   	</dependency>
+
+    <dependency>
+      <groupId>org.kohsuke.metainf-services</groupId>
+      <artifactId>metainf-services</artifactId>
+      <scope>compile</scope>
+      <optional>true</optional>
+    </dependency>
+
   	<dependency>
   		<groupId>org.apache.any23</groupId>
   		<artifactId>any23-core</artifactId>
@@ -40,5 +48,11 @@
       <scope>test</scope>
       <type>test-jar</type>
     </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+
   </dependencies>
 </project>

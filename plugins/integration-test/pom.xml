@@ -62,6 +62,11 @@
       	<artifactId>any23-cli</artifactId>
       	<version>0.7.0-incubating-SNAPSHOT</version>
       </dependency>
+	    <dependency>
+	      <groupId>junit</groupId>
+	      <artifactId>junit</artifactId>
+	      <scope>test</scope>
+	    </dependency>
   </dependencies>
 
   <build>
