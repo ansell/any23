@@ -20,6 +20,7 @@ package org.apache.any23.extractor;
 import org.apache.any23.configuration.Configuration;
 import org.apache.any23.configuration.DefaultConfiguration;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -125,9 +126,7 @@ public class ExtractionParameters {
         this(
                 configuration,
                 extractionMode,
-                new HashMap<String, Boolean>(){{
-                    put("any23.extraction.metadata.nesting", nesting);
-                }},
+                new HashMap<String, Boolean>(Collections.singletonMap("any23.extraction.metadata.nesting", nesting)),
                 null
         );
     }
