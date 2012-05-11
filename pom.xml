@@ -189,6 +189,7 @@
 
   <modules>
     <module>api</module>
+    <module>csvutils</module>
     <module>encoding</module>
     <module>extractor</module>
     <module>mime</module>
@@ -199,9 +200,9 @@
     <module>service</module>
     <module>sources-dist</module>
     <module>cli</module>
-    <module>any23-test</module>
+    <module>test</module>
     <module>plugins/integration-test</module>
-    <module>any23-test-resources</module>
+    <module>test-resources</module>
   </modules>
 
   <scm>
