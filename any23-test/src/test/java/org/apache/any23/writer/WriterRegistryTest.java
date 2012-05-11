@@ -21,12 +21,13 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
-import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
- * Test case for {@link WriterRegistry}.
+ * Test case for {@link WriterFactoryRegistry}.
  *
  * @author Michele Mostarda (mostarda@fbk.eu)
  */
@@ -34,34 +35,36 @@ public class WriterRegistryTest {
 
     private static final int NUM_OF_WRITERS = 7;
 
-    private final WriterRegistry target = WriterRegistry.getInstance();
+    private final WriterFactoryRegistry target = WriterFactoryRegistry.getInstance();
 
     @Test
     public void testGetIdentifiers() {
-        final String[] ids = target.getIdentifiers();
-        Assert.assertTrue(ids.length >= NUM_OF_WRITERS);
+        final List<String> ids = target.getIdentifiers();
+        Assert.assertEquals(NUM_OF_WRITERS, ids.size());
         assertUnique(ids);
     }
 
     @Test
     public void testHasIdentifier() {
-        Assert.assertTrue( target.hasIdentifier( target.getIdentifiers()[0] ) );
+        for(String nextIdentifier: target.getIdentifiers()) {
+            Assert.assertTrue( target.hasIdentifier( nextIdentifier ) );
+        }
     }
 
     @Test
     public void testGetMimeTypes() {
-        final String[] mimeTypes = target.getMimeTypes();
-        Assert.assertTrue(mimeTypes.length > 0);
+        final Collection<String> mimeTypes = target.getMimeTypes();
+        Assert.assertTrue(mimeTypes.size() > 0);
     }
 
     @Test
     public void testGetWriters() {
-        Assert.assertTrue( target.getWriters().length >= NUM_OF_WRITERS);
+        Assert.assertTrue( target.getWriters().size() >= NUM_OF_WRITERS);
     }
 
     @Test
     public void testGetWriterByIdentifier() {
-        final String[] ids = target.getIdentifiers();
+        final List<String> ids = target.getIdentifiers();
         for(String id : ids) {
             Assert.assertNotNull( target.getWriterByIdentifier(id) );
         }
@@ -69,7 +72,7 @@ public class WriterRegistryTest {
 
     @Test
     public void testGetWriterInstanceByIdentifier() {
-        final String[] ids = target.getIdentifiers();
+        final List<String> ids = target.getIdentifiers();
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         for(String id : ids) {
             Assert.assertNotNull( target.getWriterInstanceByIdentifier(id, baos) );
@@ -78,15 +81,15 @@ public class WriterRegistryTest {
 
     @Test
     public void testGetWritersByMimeType() {
-        final Set<Class<? extends FormatWriter>> set = new HashSet<Class<? extends FormatWriter>>();
-        final String[] mimeTypes = target.getMimeTypes();
+        final Set<WriterFactory> set = new HashSet<WriterFactory>();
+        final Collection<String> mimeTypes = target.getMimeTypes();
         for(String mimeType : mimeTypes) {
-            set.addAll( Arrays.asList(target.getWritersByMimeType(mimeType)) );
+            set.addAll( target.getWritersByMimeType(mimeType) );
         }
         Assert.assertEquals( NUM_OF_WRITERS, set.size() );
     }
 
-    private void assertUnique(String[] list) {
+    private void assertUnique(Collection<String> list) {
         final Set<String> set = new HashSet<String>();
         for(String elem : list) {
             if(set.contains(elem))

@@ -33,7 +33,7 @@ import org.apache.any23.writer.CountingTripleHandler;
 import org.apache.any23.writer.FormatWriter;
 import org.apache.any23.writer.ReportingTripleHandler;
 import org.apache.any23.writer.TripleHandler;
-import org.apache.any23.writer.WriterRegistry;
+import org.apache.any23.writer.WriterFactoryRegistry;
 import sun.security.validator.ValidatorException;
 
 import javax.servlet.ServletOutputStream;
@@ -52,7 +52,7 @@ import java.util.List;
  */
 class WebResponder {
 
-    private static final WriterRegistry writerRegistry = WriterRegistry.getInstance();
+    private static final WriterFactoryRegistry writerRegistry = WriterFactoryRegistry.getInstance();
 
     /**
      * Library facade.
@@ -316,7 +316,7 @@ class WebResponder {
             );
             return false;
         }
-        outputMediaType = WriterRegistry.getMimeType( fw.getClass() );
+        outputMediaType = fw.getMimeType();                
         List<TripleHandler> tripleHandlers = new ArrayList<TripleHandler>();
         tripleHandlers.add(new IgnoreAccidentalRDFa(fw));
         tripleHandlers.add(new CountingTripleHandler());

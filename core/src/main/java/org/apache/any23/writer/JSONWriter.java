@@ -23,6 +23,7 @@ import org.openrdf.model.Literal;
 import org.openrdf.model.Resource;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
+import org.openrdf.rio.RDFFormat;
 
 import java.io.BufferedOutputStream;
 import java.io.OutputStream;
@@ -33,7 +34,7 @@ import java.io.PrintStream;
  *
  * @author Michele Mostarda (mostarda@fbk.eu)
  */
-@Writer(identifier = "json", mimeType = "text/json" )
+//@Writer(identifier = "json", mimeType = "text/json" )
 public class JSONWriter implements FormatWriter {
 
     private final PrintStream ps;
@@ -225,4 +226,23 @@ public class JSONWriter implements FormatWriter {
     public void setAnnotated(boolean f) {
         // Empty.
     }
+
+    @Override
+    public String getIdentifier()
+    {
+        return JSONWriterFactory.IDENTIFIER;
+    }
+
+    @Override
+    public String getMimeType()
+    {
+        return JSONWriterFactory.MIME_TYPE;
+    }
+
+    @Override
+    public RDFFormat getRdfFormat()
+    {
+        throw new RuntimeException("TODO: Implement an RDFFormat for this RDF JSON serialisation format");
+    }
+
 }

@@ -17,6 +17,8 @@
 
 package org.apache.any23.writer;
 
+import org.openrdf.rio.RDFFormat;
+
 /**
  * Base interface used for the definition of <i>RDF format writers</i>.
  */
@@ -37,5 +39,20 @@ public interface FormatWriter extends TripleHandler {
      *          the extractors used to generate the specific statements.
      */
      void setAnnotated(boolean f);
+     
+     /**
+      * The mnemonic identifier for the format.
+      *
+      * @return a not <code>null</code> identifier.
+      */
+     String getIdentifier();
+
+     String getMimeType();
+     
+     /**
+      * 
+      * @return The Rio RDFFormat object matching the format for this writer.
+      */
+     RDFFormat getRdfFormat();
 
 }

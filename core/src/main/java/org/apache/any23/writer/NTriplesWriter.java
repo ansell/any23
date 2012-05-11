@@ -25,11 +25,29 @@ import org.openrdf.rio.Rio;
 /**
  * <i>N3</i> triples writer.
  */
-@Writer(identifier = "ntriples", mimeType = "text/plain")
+//@Writer(identifier = "ntriples", mimeType = "text/plain")
 public class NTriplesWriter extends RDFWriterTripleHandler implements FormatWriter {
 
     public NTriplesWriter(OutputStream out) {
         super(Rio.createWriter(RDFFormat.NTRIPLES, out));
     }
 
+    @Override
+    public RDFFormat getRdfFormat()
+    {
+        return RDFFormat.NTRIPLES;
+    }
+
+    @Override
+    public String getIdentifier()
+    {
+        return NTriplesWriterFactory.IDENTIFIER;
+    }
+
+    @Override
+    public String getMimeType()
+    {
+        return NTriplesWriterFactory.MIME_TYPE;
+    }
+    
 }

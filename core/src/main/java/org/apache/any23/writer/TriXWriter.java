@@ -27,11 +27,28 @@ import org.openrdf.rio.Rio;
  *
  * @author Michele Mostarda (mostarda@fbk.eu)
  */
-@Writer(identifier = "trix", mimeType = "application/trix")
+//@Writer(identifier = "trix", mimeType = "application/trix")
 public class TriXWriter extends RDFWriterTripleHandler implements FormatWriter {
 
     public TriXWriter(OutputStream out) {
         super(Rio.createWriter(RDFFormat.TRIX, out) );
     }
 
+    @Override
+    public RDFFormat getRdfFormat()
+    {
+        return RDFFormat.TRIX;
+    }
+
+    @Override
+    public String getIdentifier()
+    {
+        return TriXWriterFactory.IDENTIFIER;
+    }
+
+    @Override
+    public String getMimeType()
+    {
+        return TriXWriterFactory.MIME_TYPE;
+    }
 }

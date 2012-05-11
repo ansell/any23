@@ -25,11 +25,29 @@ import org.openrdf.rio.Rio;
 /**
  * <i>RDF/XML</i> writer implementation.
  */
-@Writer(identifier = "rdfxml", mimeType = "application/rdf+xml")
+//@Writer(identifier = "rdfxml", mimeType = "application/rdf+xml")
 public class RDFXMLWriter extends RDFWriterTripleHandler implements FormatWriter {
 
     public RDFXMLWriter(OutputStream out) {
         super(Rio.createWriter(RDFFormat.RDFXML, out) );
     }
 
+    @Override
+    public RDFFormat getRdfFormat()
+    {
+        return RDFFormat.RDFXML;
+    }
+
+    @Override
+    public String getIdentifier()
+    {
+        return RDFXMLWriterFactory.IDENTIFIER;
+    }
+
+    @Override
+    public String getMimeType()
+    {
+        return RDFXMLWriterFactory.MIME_TYPE;
+    }
+    
 }

@@ -25,7 +25,7 @@ import org.openrdf.rio.Rio;
 /**
  * <i>N3</i> notation writer.
  */
-@Writer(identifier = "turtle", mimeType = "text/turtle")
+//@Writer(identifier = "turtle", mimeType = "text/turtle")
 public class TurtleWriter extends RDFWriterTripleHandler implements FormatWriter {
 
     /**
@@ -37,4 +37,21 @@ public class TurtleWriter extends RDFWriterTripleHandler implements FormatWriter
         super(Rio.createWriter(RDFFormat.TURTLE, out));
     }
 
+    @Override
+    public RDFFormat getRdfFormat()
+    {
+        return RDFFormat.TURTLE;
+    }
+
+    @Override
+    public String getIdentifier()
+    {
+        return TurtleWriterFactory.IDENTIFIER;
+    }
+
+    @Override
+    public String getMimeType()
+    {
+        return TurtleWriterFactory.MIME_TYPE;
+    }
 }

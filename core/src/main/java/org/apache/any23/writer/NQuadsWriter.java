@@ -21,6 +21,7 @@ import java.io.OutputStream;
 
 import net.fortytwo.sesametools.nquads.NQuadsFormat;
 
+import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.Rio;
 
 /**
@@ -28,11 +29,29 @@ import org.openrdf.rio.Rio;
  *
  * @author Michele Mostarda (mostarda@fbk.eu)
  */
-@Writer(identifier = "nquads", mimeType = "text/plain")
+//@Writer(identifier = "nquads", mimeType = "text/plain")
 public class NQuadsWriter extends RDFWriterTripleHandler implements FormatWriter {
 
     public NQuadsWriter(OutputStream os) {
         super( Rio.createWriter(NQuadsFormat.NQUADS, os) );
     }
 
+    @Override
+    public RDFFormat getRdfFormat()
+    {
+        return NQuadsFormat.NQUADS;
+    }
+
+    @Override
+    public String getIdentifier()
+    {
+        return NQuadsWriterFactory.IDENTIFIER;
+    }
+
+    @Override
+    public String getMimeType()
+    {
+        return NQuadsWriterFactory.MIME_TYPE;
+    }
+    
 }

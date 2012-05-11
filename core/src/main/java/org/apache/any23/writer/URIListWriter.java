@@ -21,6 +21,7 @@ import org.apache.any23.extractor.ExtractionContext;
 import org.openrdf.model.Resource;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
+import org.openrdf.rio.RDFFormat;
 
 import java.io.OutputStream;
 import java.io.PrintStream;
@@ -33,7 +34,7 @@ import java.util.List;
  * 
  * @author Davide Palmisano (palmisano@fbk.eu)
  */
-@Writer(identifier = "uri", mimeType = "text/plain")
+//@Writer(identifier = "uri", mimeType = "text/plain")
 public class URIListWriter implements FormatWriter {
 
     private List<Resource> resources;
@@ -93,5 +94,23 @@ public class URIListWriter implements FormatWriter {
     @Override
     public void setAnnotated(boolean f) {
         // Empty.
+    }
+
+    @Override
+    public RDFFormat getRdfFormat()
+    {
+        throw new RuntimeException("This writer does not print RDF triples");
+    }
+
+    @Override
+    public String getIdentifier()
+    {
+        return URIListWriterFactory.IDENTIFIER;
+    }
+
+    @Override
+    public String getMimeType()
+    {
+        return URIListWriterFactory.MIME_TYPE;
     }
 }
