@@ -26,6 +26,9 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.openrdf.rio.RDFFormat;
+import org.openrdf.rio.Rio;
+
 /**
  * Basic implementation of {@link MIMETypeDetector} based
  * on file extensions.
@@ -59,10 +62,12 @@ public class NaiveMIMETypeDetector implements MIMETypeDetector {
         }
 
         final RDFFormat parserFormatForFileName = Rio.getParserFormatForFileName(fileName);
-        if (parserFormatForFileName != null) {
+        // if Rio recognised it, then return the default MIME Type for the given format that it recognised
+        if(parserFormatForFileName != null) {
             return MIMEType.parse(parserFormatForFileName.getDefaultMIMEType());
         }
-
+        
+        // else use our list of non-RDF/non-standard extensions to try to generate a mime type
         String extension = getExtension(fileName);
         if (extension == null) {
             // Assume index file on web server.
