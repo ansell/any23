@@ -52,19 +52,18 @@ public class HListingExtractor extends EntityBasedMicroformatExtractor {
     private static final HLISTING hLISTING = HLISTING.getInstance();
     private static final FOAF foaf     = FOAF.getInstance();
 
-    private static final Set<String> ActionClasses = new HashSet<String>() {
-        {
-            add("sell"    );
-            add("rent"    );
-            add("trade"   );
-            add("meet"    );
-            add("announce");
-            add("offer"   );
-            add("wanted"  );
-            add("event"   );
-            add("service" );
-        }
-    };
+    private static final Set<String> ActionClasses = new HashSet<String>(Arrays.asList(
+            "sell",
+            "rent",
+            "trade",
+            "meet",
+            "announce",
+            "offer",
+            "wanted",
+            "event",
+            "service"
+        ))
+    ;
 
     private static final List<String> validClassesForAddress = Arrays.asList(
             "post-office-box",
