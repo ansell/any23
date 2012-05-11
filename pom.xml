@@ -196,12 +196,12 @@
     <module>test-resources</module>
     <module>extractor</module>
     <module>cli</module>
+    <module>test</module>
     <module>plugins/basic-crawler</module>
     <module>plugins/html-scraper</module>
     <module>plugins/office-scraper</module>
     <module>service</module>
     <module>sources-dist</module>
-    <module>test</module>
     <module>plugins/integration-test</module>
   </modules>
 
