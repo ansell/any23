@@ -25,6 +25,7 @@ import org.openrdf.model.Value;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * A {@link TripleHandler} multi decorator, that wraps zero or more
@@ -34,7 +35,7 @@ import java.util.Collections;
  */
 public class CompositeTripleHandler implements TripleHandler {
 
-    private Collection<TripleHandler> children = new ArrayList<TripleHandler>();
+    private List<TripleHandler> children = new ArrayList<TripleHandler>();
 
     /**
      * Constructor with empty decorated list.
@@ -48,7 +49,7 @@ public class CompositeTripleHandler implements TripleHandler {
      * 
      * @param children list of decorated handlers. 
      */
-    public CompositeTripleHandler(Collection<TripleHandler> children) {
+    public CompositeTripleHandler(List<TripleHandler> children) {
         this.children.addAll(children);
     }
 
