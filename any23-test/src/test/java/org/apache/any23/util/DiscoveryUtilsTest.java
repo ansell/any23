@@ -40,7 +40,7 @@ public class DiscoveryUtilsTest {
      */
     @Test
     public void testGetClassesInPackage() throws ClassNotFoundException, IOException {
-        final List<Class> classes = DiscoveryUtils.getClassesInPackage("org.apache.any23.vocab", Vocabulary.class);
+        final List<Class<?>> classes = DiscoveryUtils.getClassesInPackage("org.apache.any23.vocab", Vocabulary.class);
         Assert.assertTrue( classes.size() >= 13 );
     }
 
@@ -52,7 +52,7 @@ public class DiscoveryUtilsTest {
      */
     @Test
     public void testGetClassesInJAR() throws ClassNotFoundException, IOException {
-        final List<Class> classes = DiscoveryUtils.getClassesInPackage("org.openrdf.model", Resource.class);
+        final List<Class<?>> classes = DiscoveryUtils.getClassesInPackage("org.openrdf.model", Resource.class);
         Assert.assertTrue( classes.size() >= 2 );
     }
 

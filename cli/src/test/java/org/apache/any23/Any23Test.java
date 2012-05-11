@@ -670,7 +670,7 @@ public class Any23Test extends Any23OnlineTestBase {
                 statement.getObject()));
     }
 
-    private boolean containsClass(List<?> list, Class clazz) {
+    private boolean containsClass(List<?> list, Class<?> clazz) {
         for(Object o : list) {
             if(o.getClass().equals(clazz)) {
                 return true;

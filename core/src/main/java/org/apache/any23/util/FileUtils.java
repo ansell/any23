@@ -151,7 +151,7 @@ public class FileUtils {
      * @return the string representing the file content.
      * @throws java.io.IOException
      */
-    public static String readResourceContent(Class clazz, String resource) throws IOException {
+    public static String readResourceContent(Class<?> clazz, String resource) throws IOException {
         return StreamUtils.asString( clazz.getResourceAsStream(resource) );
     }
 

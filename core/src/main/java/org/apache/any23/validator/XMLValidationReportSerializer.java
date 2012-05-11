@@ -54,7 +54,7 @@ public class XMLValidationReportSerializer implements ValidationReportSerializer
         if(o == null) {
             return;
         }
-        final Class oClass = o.getClass();
+        final Class<?> oClass = o.getClass();
         final String oClassName = getClassName(oClass);
         ps.printf("<%s>\n", oClassName);
         List<Method> getters = filterGetters(o.getClass());
@@ -68,7 +68,7 @@ public class XMLValidationReportSerializer implements ValidationReportSerializer
         ps.printf("</%s>\n", oClassName);
     }
 
-    private String getClassName(Class oClass) {
+    private String getClassName(Class<?> oClass) {
         final NodeName nodeName = (NodeName) oClass.getAnnotation(NodeName.class);
         if(nodeName != null) {
             return nodeName.value();
@@ -77,7 +77,7 @@ public class XMLValidationReportSerializer implements ValidationReportSerializer
         return Character.toLowerCase(simpleName.charAt(0)) + simpleName.substring(1);
     }
 
-    private List<Method> filterGetters(Class c) {
+    private List<Method> filterGetters(Class<?> c) {
         Method[] methods = c.getDeclaredMethods();
         List<Method> filtered = new ArrayList<Method>();
         for(Method method : methods) {
@@ -148,7 +148,7 @@ public class XMLValidationReportSerializer implements ValidationReportSerializer
             return;
         }
         if(o instanceof Collection) {
-            Collection collection = (Collection) o;
+            Collection<?> collection = (Collection<?>) o;
             if(collection.isEmpty()) {
                 return;
             }

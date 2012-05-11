@@ -49,7 +49,7 @@ public class DiscoveryUtils {
      * @return list of matching classes.
      * @throws IOException
      */
-    public static List<Class> getClassesInPackage(String packageName) {
+    public static List<Class<?>> getClassesInPackage(String packageName) {
         final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         assert classLoader != null;
         final String path = packageName.replace('.', '/');
@@ -71,7 +71,7 @@ public class DiscoveryUtils {
             }
             dirs.add( new File(fileNameDecoded) );
         }
-        final ArrayList<Class> classes = new ArrayList<Class>();
+        final ArrayList<Class<?>> classes = new ArrayList<Class<?>>();
         for (File directory : dirs) {
             classes.addAll(findClasses(directory, packageName) );
         }
@@ -87,11 +87,11 @@ public class DiscoveryUtils {
      * @param filter the interface/class filter.
      * @return list of matching classes.
      */
-    public static List<Class> getClassesInPackage(String packageName, Class filter) {
-        final List<Class> classesInPackage = getClassesInPackage(packageName);
-        final List<Class> result = new ArrayList<Class>();
-        Class superClazz;
-        for(Class clazz : classesInPackage) {
+    public static List<Class<?>> getClassesInPackage(String packageName, Class<?> filter) {
+        final List<Class<?>> classesInPackage = getClassesInPackage(packageName);
+        final List<Class<?>> result = new ArrayList<Class<?>>();
+        Class<?> superClazz;
+        for(Class<?> clazz : classesInPackage) {
             if(clazz.equals(filter)) {
                 continue;
             }
@@ -110,7 +110,7 @@ public class DiscoveryUtils {
      * @param packageName package name.
      * @return list of detected classes.
      */
-    private static List<Class> findClasses(File location, String packageName) {
+    private static List<Class<?>> findClasses(File location, String packageName) {
         final String locationPath = location.getPath();
         if( locationPath.indexOf(FILE_PREFIX) == 0 ) {
             return findClassesInJAR(locationPath);
@@ -125,7 +125,7 @@ public class DiscoveryUtils {
      * @param location package location.
      * @return list of detected classes.
      */
-    private static List<Class> findClassesInJAR(String location) {
+    private static List<Class<?>> findClassesInJAR(String location) {
         final String[] sections = location.split("!");
         if(sections.length != 2) {
             throw new IllegalArgumentException("Invalid JAR location.");
@@ -136,11 +136,11 @@ public class DiscoveryUtils {
         try {
             final JarFile jarFile = new JarFile(jarLocation);
             final Enumeration<JarEntry> entries = jarFile.entries();
-            final List<Class> result = new ArrayList<Class>();
+            final List<Class<?>> result = new ArrayList<Class<?>>();
             JarEntry current;
             String entryName;
             String clazzName;
-            Class clazz;
+            Class<?> clazz;
             while(entries.hasMoreElements()) {
                 current = entries.nextElement();
                 entryName = current.getName();
@@ -175,11 +175,11 @@ public class DiscoveryUtils {
      * @param packageName The package name for classes found inside the base directory
      * @return The classes
      */
-    private static List<Class> findClassesInDir(File directory, String packageName) {
+    private static List<Class<?>> findClassesInDir(File directory, String packageName) {
         if (!directory.exists()) {
             return Collections.emptyList();
         }
-        final List<Class> classes = new ArrayList<Class>();
+        final List<Class<?>> classes = new ArrayList<Class<?>>();
         File[] files = directory.listFiles();
         for (File file : files) {
             String fileName = file.getName();
@@ -188,7 +188,7 @@ public class DiscoveryUtils {
                 classes.addAll(findClassesInDir(file, packageName + "." + fileName));
             } else if (fileName.endsWith(".class") && !fileName.contains("$")) {
                 try {
-                    Class clazz;
+                    Class<?> clazz;
                     try {
                         clazz = Class.forName(packageName + '.' + fileName.substring(0, fileName.length() - 6));
                     } catch (ExceptionInInitializerError e) {

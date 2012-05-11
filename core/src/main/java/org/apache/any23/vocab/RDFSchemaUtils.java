@@ -143,16 +143,16 @@ public class RDFSchemaUtils {
      * @param ps output print stream.
      */
     public static void serializeVocabularies(RDFFormat format, OutputStream ps) {
-        final Class vocabularyClass = Vocabulary.class;
-        final List<Class> vocabularies = DiscoveryUtils.getClassesInPackage(
+        final Class<?> vocabularyClass = Vocabulary.class;
+        final List<Class<?>> vocabularies = DiscoveryUtils.getClassesInPackage(
                 vocabularyClass.getPackage().getName(),
                 vocabularyClass
         );
         int currentIndex = 0;
-        for (Class vocabClazz : vocabularies) {
+        for (Class<?> vocabClazz : vocabularies) {
             final Vocabulary instance;
             try {
-                final Constructor constructor = vocabClazz.getDeclaredConstructor();
+                final Constructor<?> constructor = vocabClazz.getDeclaredConstructor();
                 constructor.setAccessible(true);
                 instance = (Vocabulary) constructor.newInstance();
             } catch (Exception e) {
