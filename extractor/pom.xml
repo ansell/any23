@@ -11,8 +11,13 @@
   <dependencies>
   	<dependency>
   		<groupId>org.apache.any23</groupId>
+  		<artifactId>any23-api</artifactId>
+		<version>${project.version}</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.apache.any23</groupId>
   		<artifactId>any23-core</artifactId>
-  		<version>0.7.0-incubating-SNAPSHOT</version>
+		<version>${project.version}</version>
   	</dependency>
     <dependency>
       <groupId>org.apache.any23</groupId>

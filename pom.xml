@@ -188,6 +188,7 @@
   </mailingLists>
 
   <modules>
+    <module>api</module>
     <module>encoding</module>
     <module>extractor</module>
     <module>mime</module>

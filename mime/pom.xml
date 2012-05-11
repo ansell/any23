@@ -11,7 +11,7 @@
   <dependencies>
   	<dependency>
   		<groupId>org.apache.any23</groupId>
-  		<artifactId>any23-core</artifactId>
+  		<artifactId>any23-api</artifactId>
   		<version>${project.version}</version>
   	</dependency>
   	<dependency>
@@ -39,6 +39,14 @@
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <scope>test</scope>
+    </dependency>
+    <dependency>
+    	<groupId>org.apache.tika</groupId>
+    	<artifactId>tika-core</artifactId>
+    </dependency>
+    <dependency>
+    	<groupId>org.apache.tika</groupId>
+    	<artifactId>tika-parsers</artifactId>
     </dependency>
   </dependencies>
 </project>
