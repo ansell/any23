@@ -139,6 +139,7 @@ public class TikaMIMETypeDetector implements MIMETypeDetector {
      * @throws IOException
      */
     public static boolean checkCSVFormat(InputStream is) throws IOException {
+        // FIXME: Remove this dependency to resolve circular dependency issues and then MIMETypeDetector can be moved back here easily
         return CSVReaderBuilder.isCSV(is);
     }
 
