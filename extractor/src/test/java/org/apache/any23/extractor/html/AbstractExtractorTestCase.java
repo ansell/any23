@@ -275,9 +275,9 @@ public abstract class AbstractExtractorTestCase {
      * @throws RepositoryException
      */
     protected void assertModelNotEmpty() throws RepositoryException {
-        Assert.assertFalse(
-                "The model is expected to be empty." + getFailedExtractionMessage(),
-                conn.isEmpty()
+        Assert.assertTrue(
+                "The model is expected not to be empty." + getFailedExtractionMessage(),
+                !conn.isEmpty()
         );
     }
 
