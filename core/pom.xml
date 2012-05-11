@@ -38,12 +38,6 @@
     </dependency>
     
     <dependency>
-    	<groupId>org.apache.any23</groupId>
-    	<artifactId>any23-encoding</artifactId>
-      <version>${project.parent.version}</version>
-    </dependency>
-
-    <dependency>
       <groupId>commons-lang</groupId>
       <artifactId>commons-lang</artifactId>
     </dependency>

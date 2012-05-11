@@ -24,6 +24,11 @@
   		<artifactId>any23-core</artifactId>
 		<version>${project.version}</version>
   	</dependency>
+  	<dependency>
+  		<groupId>org.apache.any23</groupId>
+  		<artifactId>any23-encoding</artifactId>
+		<version>${project.version}</version>
+  	</dependency>
     <dependency>
       <groupId>org.apache.any23</groupId>
       <artifactId>any23-test-resources</artifactId>
