@@ -370,7 +370,23 @@ public class Any23PluginManager {
      */
     public synchronized ExtractorGroup getApplicableExtractors(File... pluginLocations)
     throws IOException, IllegalAccessException, InstantiationException {
-        final ExtractorGroup defaultExtractors = ExtractorRegistry.getInstance().getExtractorGroup();
+        return getApplicableExtractors(ExtractorRegistry.getInstance(), pluginLocations);
+    }
+
+    /**
+     * Returns an extractor group containing both the default extractors declared by the
+     * {@link org.apache.any23.extractor.ExtractorRegistry} and the {@link ExtractorPlugin}s.
+     * @param registry TODO
+     * @param pluginLocations optional list of plugin locations.
+     *
+     * @return a not <code>null</code> and not empty extractor group.
+     * @throws java.io.IOException
+     * @throws IllegalAccessException
+     * @throws InstantiationException
+     */
+    public synchronized ExtractorGroup getApplicableExtractors(ExtractorRegistry registry, File... pluginLocations)
+    throws IOException, IllegalAccessException, InstantiationException {
+        final ExtractorGroup defaultExtractors = registry.getExtractorGroup();
         return configureExtractors(defaultExtractors, pluginLocations);
     }
 
