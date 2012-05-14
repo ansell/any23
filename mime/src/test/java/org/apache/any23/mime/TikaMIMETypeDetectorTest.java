@@ -28,6 +28,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * Test case for {@link TikaMIMETypeDetector} class.
@@ -114,67 +117,171 @@ public class TikaMIMETypeDetectorTest {
 
     @Test
     public void testDetectRSS1ByContent() throws Exception {
-        detectMIMEtypeByContent("application/rdf+xml", "/application/rss1");
+        detectMIMEtypeByContent("application/rdf+xml", manifestRss1());
+    }
+
+    /**
+     * @return
+     */
+    private List<String> manifestRss1()
+    {
+        return Arrays.asList("/application/rss1/test1");
     }
 
     @Test
     public void testDetectRSS2ByContent() throws Exception {
-        detectMIMEtypeByContent("application/rss+xml", "/application/rss2");
+        detectMIMEtypeByContent("application/rss+xml", manifestRss2());
+    }
+
+    /**
+     * @return
+     */
+    private List<String> manifestRss2()
+    {
+        return Arrays.asList("/application/rss2/index.html", "/application/rss2/rss2sample.xml", "/application/rss2/test1");
     }
 
     @Test
     public void testDetectRDFN3ByContent() throws Exception {
-        detectMIMEtypeByContent("text/n3", "/application/rdfn3");
+        detectMIMEtypeByContent("text/n3", manifestN3());
+    }
+
+    /**
+     * @return
+     */
+    private List<String> manifestN3()
+    {
+        return Arrays.asList("/application/rdfn3/test1", "/application/rdfn3/test2", "/application/rdfn3/test3");
     }
 
     @Test
     public void testDetectRDFNQuadsByContent() throws Exception {
-        detectMIMEtypeByContent("text/nq", "/application/nquads");
+        detectMIMEtypeByContent("text/nq", manifestNQuads());
+    }
+
+    /**
+     * @return
+     */
+    private List<String> manifestNQuads()
+    {
+        return Arrays.asList("/application/nquads/test1.nq", "/application/nquads/test2.nq");
     }
 
     @Test
     public void testDetectRDFXMLByContent() throws Exception {
-        detectMIMEtypeByContent("application/rdf+xml", "/application/rdfxml");
+        detectMIMEtypeByContent("application/rdf+xml", manifestRdfXml());
+    }
+
+    /**
+     * @return
+     */
+    private List<String> manifestRdfXml()
+    {
+        return Arrays.asList("/application/rdfxml/error.rdf", "/application/rdfxml/foaf", "/application/rdfxml/physics.owl", "/application/rdfxml/test1", "/application/rdfxml/test2", "/application/rdfxml/test3");
     }
 
     @Test
     public void testDetectTriXByContent() throws Exception {
-        detectMIMEtypeByContent("application/trix", "/application/trix");
+        detectMIMEtypeByContent("application/trix", manifestTrix());
+    }
+
+    /**
+     * @return
+     */
+    private List<String> manifestTrix()
+    {
+        return Arrays.asList("/application/trix/test1.trx");
     }
 
     @Test
     public void testDetectAtomByContent() throws Exception {
-        detectMIMEtypeByContent("application/atom+xml", "/application/atom");
+        detectMIMEtypeByContent("application/atom+xml", manifestAtom());
+    }
+
+    /**
+     * @return
+     */
+    private List<String> manifestAtom()
+    {
+        return Arrays.asList("/application/atom/atom.xml");
     }
 
     @Test
     public void testDetectHTMLByContent() throws Exception {
-        detectMIMEtypeByContent("text/html", "/text/html");
+        detectMIMEtypeByContent("text/html", manifestHtml());
+    }
+
+    /**
+     * @return
+     */
+    private List<String> manifestHtml()
+    {
+        return Arrays.asList("/text/html/test1");
     }
 
     @Test
     public void testDetectRDFaByContent() throws Exception {
-        detectMIMEtypeByContent("application/xhtml+xml", "/application/rdfa");
+        detectMIMEtypeByContent("application/xhtml+xml", manifestRdfa());
+    }
+
+    /**
+     * @return
+     */
+    private List<String> manifestRdfa()
+    {
+        return Arrays.asList("/application/rdfa/false.test", "/application/rdfa/london-gazette.html", "/application/rdfa/mic.xhtml", "/application/rdfa/test1.html");
     }
 
     @Test
     public void testDetectXHTMLByContent() throws Exception {
-        detectMIMEtypeByContent("application/xhtml+xml", "/application/xhtml");
+        detectMIMEtypeByContent("application/xhtml+xml", manifestXHtml());
+    }
+
+    /**
+     * @return
+     */
+    private List<String> manifestXHtml()
+    {
+        return Arrays.asList("/application/xhtml/blank-file-header.xhtml", "/application/xhtml/index.html", "/application/xhtml/test1");
     }
 
     @Test
     public void testDetectWSDLByContent() throws Exception {
-        detectMIMEtypeByContent("application/x-wsdl", "/application/wsdl");
+        detectMIMEtypeByContent("application/x-wsdl", manifestWsdl());
+    }
+
+    /**
+     * @return
+     */
+    private List<String> manifestWsdl()
+    {
+        return Arrays.asList("/application/wsdl/error.wsdl", "/application/wsdl/test1");
     }
 
     @Test
     public void testDetectZIPByContent() throws Exception {
-        detectMIMEtypeByContent("application/zip", "/application/zip");
+        detectMIMEtypeByContent("application/zip", manifestZip());
+    }
+
+    /**
+     * @return
+     */
+    private List<String> manifestZip()
+    {
+        return Arrays.asList("/application/zip/4_entries.zip", "/application/zip/test1.zip", "/application/zip/test2");
     }
 
     @Test
     public void testDetectCSVByContent() throws Exception {
-        detectMIMEtypeByContent("text/csv", "/org/apache/any23/extractor/csv/");
+        detectMIMEtypeByContent("text/csv", manifestCsv());
+    }
+
+    /**
+     * @return
+     */
+    private List<String> manifestCsv()
+    {
+        return Arrays.asList("/org/apache/any23/extractor/csv/test-comma.csv", "/org/apache/any23/extractor/csv/test-semicolon.csv", "/org/apache/any23/extractor/csv/test-tab.csv", "/org/apache/any23/extractor/csv/test-type.csv");
     }
 
     /* END: by content. */
@@ -257,67 +364,67 @@ public class TikaMIMETypeDetectorTest {
 
     @Test
     public void testRDFXMLByContentAndName() throws Exception {
-        detectMIMETypeByContentAndName("application/rdf+xml", "/application/rdfxml");
+        detectMIMETypeByContentAndName("application/rdf+xml", manifestRdfXml());
     }
 
     @Test
     public void testTriXByContentAndName() throws Exception {
-        detectMIMETypeByContentAndName("application/trix", "/application/trix");
+        detectMIMETypeByContentAndName("application/trix", manifestTrix());
     }
 
     @Test
     public void testRSS1ByContentAndName() throws Exception {
-        detectMIMETypeByContentAndName("application/rdf+xml", "/application/rss1");
+        detectMIMETypeByContentAndName("application/rdf+xml", manifestRss1());
     }
 
     @Test
     public void testRSS2ByContentAndName() throws Exception {
-        detectMIMETypeByContentAndName("application/rss+xml", "/application/rss2");
+        detectMIMETypeByContentAndName("application/rss+xml", manifestRss2());
     }
 
     @Test
     public void testDetectRDFN3ByContentAndName() throws Exception {
-        detectMIMETypeByContentAndName("text/n3", "/application/rdfn3");
+        detectMIMETypeByContentAndName("text/n3", manifestN3());
     }
 
     @Test
     public void testDetectRDFNQuadsByContentAndName() throws Exception {
-        detectMIMETypeByContentAndName("text/rdf+nq", "/application/nquads");
+        detectMIMETypeByContentAndName("text/rdf+nq", manifestNQuads());
     }
 
     @Test
     public void testAtomByContentAndName() throws Exception {
-        detectMIMETypeByContentAndName("application/atom+xml", "/application/atom");
+        detectMIMETypeByContentAndName("application/atom+xml", manifestAtom());
     }
 
     @Test
     public void testHTMLByContentAndName() throws Exception {
-        detectMIMETypeByContentAndName("text/html", "/text/html");
+        detectMIMETypeByContentAndName("text/html", manifestHtml());
     }
 
     @Test
     public void testXHTMLByContentAndName() throws Exception {
-        detectMIMETypeByContentAndName("application/xhtml+xml", "/application/xhtml");
+        detectMIMETypeByContentAndName("application/xhtml+xml", manifestXHtml());
     }
 
      @Test
     public void testWSDLByContentAndName() throws Exception {
-        detectMIMETypeByContentAndName("application/x-wsdl", "/application/wsdl");
+        detectMIMETypeByContentAndName("application/x-wsdl", manifestWsdl());
     }
 
     @Test
     public void testZipByContentAndName() throws Exception {
-        detectMIMETypeByContentAndName("application/zip", "/application/zip");
+        detectMIMETypeByContentAndName("application/zip", manifestZip());
     }
 
     @Test
     public void testRDFaByContentAndName() throws Exception {
-        detectMIMETypeByContentAndName("application/xhtml+xml", "/application/rdfa");
+        detectMIMETypeByContentAndName("application/xhtml+xml", manifestRdfa());
     }
 
     @Test
     public void testCSVByContentAndName() throws Exception {
-        detectMIMETypeByContentAndName("text/csv","/org/apache/any23/extractor/csv");
+        detectMIMETypeByContentAndName("text/csv", manifestCsv());
     }
 
     /* END: by content and name. */
@@ -346,32 +453,26 @@ public class TikaMIMETypeDetectorTest {
      * Checks the detection of a specific MIME based on content analysis.
      *
      * @param expectedMimeType the expected mime type.
-     * @param testDir the target file.
+     * @param manifest the target file.
      * @throws IOException
      * @throws URISyntaxException 
      */
-    private void detectMIMEtypeByContent(String expectedMimeType, String testResourceDir)
+    private void detectMIMEtypeByContent(String expectedMimeType, Collection<String> manifest)
     throws IOException, URISyntaxException {
         
-        // FIXME: This is not possible with resource jar files, so a manifest needs to be created for each set, insead of just specifying the directory path
-        if(true)
-            return;
-        
-        File f = new File(this.getClass().getResource(testResourceDir).toURI());
         String detectedMimeType;
-        for (File test : f.listFiles()) {
-            if (test.getName().startsWith(".")) continue;
-            InputStream is = this.getClass().getResourceAsStream(test.getPath());
+        for (String test : manifest) {
+            InputStream is = this.getClass().getResourceAsStream(test);
             detectedMimeType = detector.guessMIMEType(
                     null,
                     is,
                     null
             ).toString();
-            if (test.getName().startsWith("error"))
+            if (test.startsWith("error"))
                 Assert.assertNotSame(expectedMimeType, detectedMimeType);
             else {
                 Assert.assertEquals(
-                        String.format("Error in mimetype detection for file %s", test.getAbsolutePath()),
+                        String.format("Error in mimetype detection for file %s", test),
                         expectedMimeType,
                         detectedMimeType
                 );
@@ -401,21 +502,16 @@ public class TikaMIMETypeDetectorTest {
      * Verifies the detection of a specific MIME based on content and filename.
      *
      * @param expectedMimeType
-     * @param testDir
+     * @param manifest
      * @throws IOException
      */
-    private void detectMIMETypeByContentAndName(String expectedMimeType, String testDir) throws IOException {
-        // FIXME: This is not possible with resource jar files, so a manifest needs to be created for each set, insead of just specifying the directory path
-        if(true)
-            return;
-        
-        File f = new File(testDir);
+    private void detectMIMETypeByContentAndName(String expectedMimeType, Collection<String> manifest) throws IOException {
+
         String detectedMimeType;
-        for (File test : f.listFiles()) {
-            if (test.getName().startsWith(".")) continue;
-            InputStream is = this.getClass().getResourceAsStream(test.getPath());
-            detectedMimeType = detector.guessMIMEType(test.getName(), is, null).toString();
-            if (test.getName().startsWith("error"))
+        for (String test : manifest) {
+            InputStream is = this.getClass().getResourceAsStream(test);
+            detectedMimeType = detector.guessMIMEType(test, is, null).toString();
+            if (test.startsWith("error"))
                 Assert.assertNotSame(expectedMimeType, detectedMimeType);
             else {
                 Assert.assertEquals(
