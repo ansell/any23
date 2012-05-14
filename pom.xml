@@ -1069,6 +1069,26 @@
         </plugins>
       </build>
     </profile>
+    
+	<profile>
+		<id>metadatanet-deploy</id>
+		<activation>
+			<activeByDefault>false</activeByDefault>
+		</activation>
+		<distributionManagement>
+			<repository>
+				<id>maenad-releases</id>
+				<name>maenad-releases</name>
+				<url>http://maven.metadata.net/artifactory/libs-releases-local</url>
+			</repository>
+			<snapshotRepository>
+				<id>maenad-snapshots</id>
+				<name>maenad-snapshots</name>
+				<url>http://maven.metadata.net/artifactory/libs-snapshots-local</url>
+			</snapshotRepository>
+		</distributionManagement>
+	</profile>
+		
   </profiles>
 
 </project>
