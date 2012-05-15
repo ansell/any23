@@ -6,6 +6,7 @@
     <artifactId>any23-parent</artifactId>
     <groupId>org.apache.any23</groupId>
     <version>0.7.0-incubating-SNAPSHOT</version>
+    <relativePath>..</relativePath>
   </parent>
   <artifactId>any23-nquads</artifactId>
   <name>Any23 NQuads</name>
@@ -14,6 +15,13 @@
   		<groupId>org.openrdf.sesame</groupId>
   		<artifactId>sesame-model</artifactId>
   	</dependency>
+    <dependency>
+      <groupId>org.apache.any23</groupId>
+      <artifactId>any23-test-resources</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+      <type>test-jar</type>
+    </dependency>
   	<dependency>
   		<groupId>org.openrdf.sesame</groupId>
   		<artifactId>sesame-rio-api</artifactId>
@@ -22,5 +30,21 @@
   		<groupId>org.openrdf.sesame</groupId>
   		<artifactId>sesame-rio-ntriples</artifactId>
   	</dependency>
+    <dependency>
+      <groupId>org.kohsuke.metainf-services</groupId>
+      <artifactId>metainf-services</artifactId>
+      <scope>compile</scope>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+    	<groupId>junit</groupId>
+    	<artifactId>junit</artifactId>
+    	<scope>test</scope>
+    </dependency>
+    <dependency>
+    	<groupId>org.slf4j</groupId>
+    	<artifactId>slf4j-log4j12</artifactId>
+    	<scope>test</scope>
+    </dependency>
   </dependencies>
 </project>

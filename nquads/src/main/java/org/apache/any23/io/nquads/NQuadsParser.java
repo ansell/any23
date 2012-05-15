@@ -66,14 +66,22 @@ public class NQuadsParser extends RDFParserBase {
 
     public NQuadsParser() {}
 
+    @Override
     public RDFFormat getRDFFormat() {
         return NQuads.FORMAT;
     }
 
+    @Override
+    public synchronized void parse(InputStream is, String baseURI)
+    throws IOException, RDFParseException, RDFHandlerException {
+        parse(new InputStreamReader(is), baseURI);
+    }
+    
+    @Override
     public void parse(Reader reader, String baseURI)
     throws IOException, RDFParseException, RDFHandlerException {
         if(reader == null) {
-            throw new NullPointerException("reader cannot be null.");
+            throw new NullPointerException("inputStream cannot be null.");
         }
         if(baseURI == null) {
             throw new NullPointerException("baseURI cannot be null.");
@@ -87,11 +95,14 @@ public class NQuadsParser extends RDFParserBase {
 
             setBaseURI(baseURI);
 
-            final BufferedReader br = new BufferedReader( reader );
+            if(!(reader instanceof BufferedReader))
+            {
+                reader = new BufferedReader(reader);
+            }
             if( rdfHandler != null ) {
                 rdfHandler.startRDF();
             }
-            while( parseLine(br) ) {
+            while( parseLine((BufferedReader)reader) ) {
                 nextRow();
             }
         } finally {
@@ -101,11 +112,6 @@ public class NQuadsParser extends RDFParserBase {
             clear();
             clearBNodeIDMap();
         }
-    }
-
-    public synchronized void parse(InputStream is, String baseURI)
-    throws IOException, RDFParseException, RDFHandlerException {
-        parse(new InputStreamReader(is, Charset.forName("UTF-8")), baseURI);
     }
 
     /**

@@ -18,6 +18,7 @@
 package org.apache.any23.cli;
 
 import org.apache.any23.Any23OnlineTestBase;
+import org.apache.any23.io.nquads.NQuads;
 import org.apache.any23.rdf.RDFUtils;
 import org.apache.any23.util.FileUtils;
 import org.junit.Test;

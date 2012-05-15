@@ -81,10 +81,20 @@ public class TikaMIMETypeDetectorTest {
         assertN3DetectionFail(
             "<http://example.org/path> <http://foo.com> <http://dom.org/Document/foo#> <http://path/to/graph> ."
         );
+        
+        assertN3DetectionFail(
+                "#This is under a license with a period at the end of the sentence."
+        );
+        
+        // FIXME: The following succeeds as a false positive, even though the entire line is commented, and ignoring the comment it is invalid N3
+        assertN3DetectionFail(
+                "#<http://www.wrong.com> <http://wrong.com/1.1/tt> \"x\"^^<http://xxx.net/int> . <http://path.to.graph>"
+        );
     }
 
     @Test
     public void testNQuadsDetection() throws IOException {
+        
         assertNQuadsDetection(
                 "<http://www.ex.eu> <http://foo.com> <http://example.org/Document/foo#> <http://path.to.graph> ."
         );
@@ -100,7 +110,9 @@ public class TikaMIMETypeDetectorTest {
         assertNQuadsDetection(
                 "<http://www.ex.eu> <http://dd.cc.org/1.1/p> \"xxx\"^^<http://www.sp.net/a#tt> <http://path.to.graph> ."
         );
-        assertNQuadsDetection(
+        
+        // This is not a valid NQuads line as it uses a prefix in the datatype
+        assertNQuadsDetectionFail(
                 "<http://www.ex.eu> <http://purlo.org/1.1/title> \"yyy\"^^xsd:datetime <http://path.to.graph> ."
         );
 
@@ -108,9 +120,18 @@ public class TikaMIMETypeDetectorTest {
         assertNQuadsDetectionFail(
                 "<http://www.wrong.com> <http://wrong.com/1.1/tt> \"x\"^^<http://xxx.net/int> . <http://path.to.graph>"
         );
+        
         // N3 is not mislead with NQuads.
         assertNQuadsDetectionFail(
                 "<http://example.org/path> <http://foo.com> <http://example.org/Document/foo#> ."
+        );
+        
+        assertNQuadsDetectionFail(
+                "#This is under a license with a period at the end of the sentence."
+        );
+        
+        assertNQuadsDetectionFail(
+                "#<http://www.wrong.com> <http://wrong.com/1.1/tt> \"x\"^^<http://xxx.net/int> . <http://path.to.graph>"
         );
     }
 

@@ -17,13 +17,12 @@
 
 package org.apache.any23.extractor.html;
 
-import net.fortytwo.sesametools.nquads.NQuadsFormat;
-
 import org.apache.any23.extractor.IssueReport;
 import org.apache.any23.extractor.ExtractionException;
 import org.apache.any23.extractor.ExtractorFactory;
 import org.apache.any23.extractor.SingleDocumentExtraction;
 import org.apache.any23.extractor.SingleDocumentExtractionReport;
+import org.apache.any23.io.nquads.NQuads;
 import org.apache.any23.rdf.RDFUtils;
 import org.apache.any23.vocab.SINDICE;
 import org.apache.any23.writer.RepositoryWriter;
@@ -587,7 +586,7 @@ public abstract class AbstractExtractorTestCase {
     protected String dumpModelToNQuads() throws RepositoryException {
         StringWriter w = new StringWriter();
         try {
-            conn.export(Rio.createWriter(NQuadsFormat.NQUADS, w));
+            conn.export(Rio.createWriter(NQuads.FORMAT, w));
             return w.toString();
         } catch (RDFHandlerException ex) {
             throw new RuntimeException(ex);

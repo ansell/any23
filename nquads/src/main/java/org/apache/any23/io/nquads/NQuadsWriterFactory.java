@@ -15,42 +15,37 @@
  * limitations under the License.
  */
 
-package org.apache.any23.writer;
+package org.apache.any23.io.nquads;
+
+import org.kohsuke.MetaInfServices;
+import org.openrdf.rio.RDFFormat;
+import org.openrdf.rio.RDFWriter;
+import org.openrdf.rio.RDFWriterFactory;
 
 import java.io.OutputStream;
-
-import org.apache.any23.io.nquads.NQuads;
-import org.openrdf.rio.RDFFormat;
-import org.openrdf.rio.Rio;
+import java.io.Writer;
 
 /**
- * Implementation of an <i>NQuads</i> writer.
+ * Implementation of {@link RDFWriterFactory} for <code>NQuads</code>.
  *
  * @author Michele Mostarda (mostarda@fbk.eu)
  */
-//@Writer(identifier = "nquads", mimeType = "text/plain")
-public class NQuadsWriter extends RDFWriterTripleHandler implements FormatWriter {
-
-    public NQuadsWriter(OutputStream os) {
-        super( Rio.createWriter(NQuads.FORMAT, os) );
-    }
+@MetaInfServices
+public class NQuadsWriterFactory implements RDFWriterFactory {
 
     @Override
-    public RDFFormat getRdfFormat()
-    {
+    public RDFFormat getRDFFormat() {
         return NQuads.FORMAT;
     }
 
     @Override
-    public String getIdentifier()
-    {
-        return NQuadsWriterFactory.IDENTIFIER;
+    public RDFWriter getWriter(OutputStream outputStream) {
+        return new NQuadsWriter(outputStream);
     }
 
     @Override
-    public String getMimeType()
-    {
-        return NQuadsWriterFactory.MIME_TYPE;
+    public RDFWriter getWriter(Writer writer) {
+        return new NQuadsWriter(writer);
     }
-    
+
 }

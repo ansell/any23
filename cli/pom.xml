@@ -33,6 +33,12 @@
   	</dependency>
 
     <dependency>
+      <groupId>org.apache.any23</groupId>
+      <artifactId>any23-nquads</artifactId>
+      <version>${project.parent.version}</version>
+    </dependency>
+
+    <dependency>
       <groupId>org.kohsuke.metainf-services</groupId>
       <artifactId>metainf-services</artifactId>
       <scope>compile</scope>

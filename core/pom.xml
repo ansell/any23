@@ -38,6 +38,12 @@
     </dependency>
     
     <dependency>
+      <groupId>org.apache.any23</groupId>
+      <artifactId>any23-nquads</artifactId>
+      <version>${project.parent.version}</version>
+    </dependency>
+
+    <dependency>
       <groupId>commons-lang</groupId>
       <artifactId>commons-lang</artifactId>
     </dependency>
@@ -137,13 +143,6 @@
     <dependency>
       <groupId>info.aduna.commons</groupId>
       <artifactId>aduna-commons-concurrent</artifactId>
-    </dependency>
-    <dependency>
-    	<groupId>net.fortytwo.sesametools</groupId>
-    	<artifactId>nquads</artifactId>
-    	<version>1.7-SNAPSHOT</version>
-    	<!-- Note: This is compile time dependency to get access to NQuadsFormat.NQUADS that is not yet in Rio RDFFormat -->
-    	<scope>compile</scope>
     </dependency>
     <!-- END: Sesame -->
 

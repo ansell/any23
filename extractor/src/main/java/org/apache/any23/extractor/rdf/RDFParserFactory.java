@@ -17,11 +17,10 @@
 
 package org.apache.any23.extractor.rdf;
 
-import net.fortytwo.sesametools.nquads.NQuadsFormat;
-
 import org.apache.any23.extractor.IssueReport;
 import org.apache.any23.extractor.ExtractionContext;
 import org.apache.any23.extractor.ExtractionResult;
+import org.apache.any23.io.nquads.NQuads;
 import org.apache.any23.rdf.Any23ValueFactoryWrapper;
 import org.openrdf.model.impl.ValueFactoryImpl;
 import org.openrdf.rio.ParseErrorListener;
@@ -135,7 +134,7 @@ public class RDFParserFactory {
             final ExtractionContext extractionContext,
             final ExtractionResult extractionResult
     ) {
-        RDFParser parser = Rio.createParser(NQuadsFormat.NQUADS);
+        RDFParser parser = Rio.createParser(NQuads.FORMAT);
         configureParser(parser, verifyDataType, stopAtFirstError, extractionContext, extractionResult);
         return parser;
     }
