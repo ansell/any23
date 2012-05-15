@@ -20,7 +20,6 @@ package org.apache.any23.extractor.microdata;
 import org.apache.any23.extractor.ExtractionException;
 import org.apache.any23.extractor.ExtractorFactory;
 import org.apache.any23.extractor.html.AbstractExtractorTestCase;
-import org.apache.any23.io.nquads.NQuads;
 import org.apache.any23.vocab.SINDICE;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +28,7 @@ import org.junit.Test;
 import org.openrdf.model.BNode;
 import org.openrdf.model.Statement;
 import org.openrdf.repository.RepositoryException;
+import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFHandler;
 import org.openrdf.rio.RDFHandlerException;
 import org.openrdf.rio.RDFParseException;
@@ -184,7 +184,7 @@ public class MicrodataExtractorTest extends AbstractExtractorTestCase {
 
     private List<Statement> loadResultStatement(String resultFilePath)
             throws RDFHandlerException, IOException, RDFParseException {
-        RDFParser nQuadsParser = Rio.createParser(NQuads.FORMAT);
+        RDFParser nQuadsParser = Rio.createParser(RDFFormat.NQUADS);
         TestRDFHandler rdfHandler = new TestRDFHandler();
         nQuadsParser.setRDFHandler(rdfHandler);
         InputStream file = this.getClass().getResourceAsStream(resultFilePath);

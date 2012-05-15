@@ -18,7 +18,6 @@
 package org.apache.any23.mime;
 
 import org.apache.any23.extractor.csv.CSVReaderBuilder;
-import org.apache.any23.io.nquads.NQuads;
 import org.apache.any23.mime.purifier.Purifier;
 import org.apache.any23.mime.purifier.WhiteSpacesPurifier;
 import org.apache.commons.io.input.CharSequenceReader;
@@ -129,7 +128,7 @@ public class TikaMIMETypeDetector implements MIMETypeDetector {
      * @throws IOException
      */
     public static boolean checkNQuadsFormat(InputStream is) throws IOException {
-        return checkByRioFormat(NQuads.FORMAT, is, nquadsInsideBlockChars, nquadsOutsideBlockChars, nquadsSwitchBlockChars);
+        return checkByRioFormat(RDFFormat.NQUADS, is, nquadsInsideBlockChars, nquadsOutsideBlockChars, nquadsSwitchBlockChars);
     }
 
     /**
@@ -305,7 +304,7 @@ public class TikaMIMETypeDetector implements MIMETypeDetector {
             } else {
                 if( checkByRioFormat(RDFFormat.N3, input, n3InsideBlockChars, n3OutsideBlockChars, n3SwitchBlockChars) ) {
                     type = N3_MIMETYPE;
-                } else if( checkByRioFormat(NQuads.FORMAT, input, nquadsInsideBlockChars, nquadsOutsideBlockChars, nquadsSwitchBlockChars) ) {
+                } else if( checkByRioFormat(RDFFormat.NQUADS, input, nquadsInsideBlockChars, nquadsOutsideBlockChars, nquadsSwitchBlockChars) ) {
                     type = NQUADS_MIMETYPE;
                 } else if( checkByRioFormat(RDFFormat.TURTLE, input, turtleInsideBlockChars, turtleOutsideBlockChars, turtleSwitchBlockChars) ) {
                     type = TURTLE_MIMETYPE;

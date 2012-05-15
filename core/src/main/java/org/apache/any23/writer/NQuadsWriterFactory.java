@@ -5,7 +5,6 @@ package org.apache.any23.writer;
 
 import java.io.OutputStream;
 
-import org.apache.any23.io.nquads.NQuads;
 import org.kohsuke.MetaInfServices;
 import org.openrdf.rio.RDFFormat;
 
@@ -30,7 +29,7 @@ public class NQuadsWriterFactory implements WriterFactory
     @Override
     public RDFFormat getRdfFormat()
     {
-        return NQuads.FORMAT;
+        return RDFFormat.NQUADS;
     }
 
     @Override

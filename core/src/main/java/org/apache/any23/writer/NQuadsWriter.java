@@ -19,7 +19,6 @@ package org.apache.any23.writer;
 
 import java.io.OutputStream;
 
-import org.apache.any23.io.nquads.NQuads;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.Rio;
 
@@ -32,13 +31,13 @@ import org.openrdf.rio.Rio;
 public class NQuadsWriter extends RDFWriterTripleHandler implements FormatWriter {
 
     public NQuadsWriter(OutputStream os) {
-        super( Rio.createWriter(NQuads.FORMAT, os) );
+        super( Rio.createWriter(RDFFormat.NQUADS, os) );
     }
 
     @Override
     public RDFFormat getRdfFormat()
     {
-        return NQuads.FORMAT;
+        return RDFFormat.NQUADS;
     }
 
     @Override

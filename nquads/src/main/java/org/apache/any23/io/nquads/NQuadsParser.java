@@ -68,7 +68,7 @@ public class NQuadsParser extends RDFParserBase {
 
     @Override
     public RDFFormat getRDFFormat() {
-        return NQuads.FORMAT;
+        return RDFFormat.NQUADS;
     }
 
     @Override
