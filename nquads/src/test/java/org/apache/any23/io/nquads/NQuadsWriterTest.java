@@ -146,5 +146,21 @@ public class NQuadsWriterTest {
 
         Assert.assertEquals("Unexpected number of lines.", 400, baos.toString().split("\n").length);
     }
+    
+    @Test
+    public void testNoContext() throws RDFHandlerException 
+    {
+        Statement s1 = vf.createStatement(vf.createURI("http://test.example.org/test/subject/1"), vf.createURI("http://other.example.com/test/predicate/1"), vf.createLiteral("test literal"));
+        
+        writer.startRDF();
+        writer.handleStatement(s1);
+        writer.endRDF();
+        
+        String content = baos.toString();
+        logger.info(content);
+        String[] lines = content.split("\n");
+        Assert.assertEquals("Unexpected number of lines.", 1, lines.length);
+        Assert.assertTrue( lines[0].matches("<.*> <.*> \".*\"  \\.") );
+    }
 
 }
