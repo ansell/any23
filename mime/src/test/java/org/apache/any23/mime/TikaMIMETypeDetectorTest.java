@@ -71,7 +71,7 @@ public class TikaMIMETypeDetectorTest {
         assertN3Detection("<http://www.example.com> <http://purl.org/dc/elements/1.1/title> \"x\" .");
         assertN3Detection("<http://www.example.com> <http://purl.org/dc/elements/1.1/title> \"x\"@it .");
         assertN3Detection("<http://www.example.com> <http://purl.org/dc/elements/1.1/title> \"x\"^^<http://xxx.net> .");
-        assertN3Detection("<http://www.example.com> <http://purl.org/dc/elements/1.1/title> \"x\"^^xsd:integer .");
+        assertN3DetectionFail("<http://www.example.com> <http://purl.org/dc/elements/1.1/title> \"x\"^^xsd:integer .");
 
         // Wrong N3 line '.'
         assertN3DetectionFail("" +

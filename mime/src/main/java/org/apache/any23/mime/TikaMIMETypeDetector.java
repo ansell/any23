@@ -91,19 +91,25 @@ public class TikaMIMETypeDetector implements MIMETypeDetector {
 
     private static MimeTypes types;
 
-    private static char[] n3InsideBlockChars = new char[]{'#', '<'};
+    private static char[] n3InsideBlockChars = new char[]{'<'};
+    
+    private static char[] n3LineCommentChars = new char[]{'#'};
 
     private static char[] n3OutsideBlockChars = new char[]{'\n', '>'};
 
     private static char[] n3SwitchBlockChars = new char[]{'"'};
 
-    private static char[] nquadsInsideBlockChars = new char[]{'#', '<'};
+    private static char[] nquadsInsideBlockChars = new char[]{'<'};
+
+    private static char[] nquadsLineCommentChars = new char[]{'#'};
 
     private static char[] nquadsOutsideBlockChars = new char[]{'\n'};
 
     private static char[] nquadsSwitchBlockChars = new char[]{'"'};
 
-    private static char[] turtleInsideBlockChars = new char[]{'#', '<'};
+    private static char[] turtleInsideBlockChars = new char[]{'<'};
+
+    private static char[] turtleLineCommentChars = new char[]{'#'};
 
     private static char[] turtleOutsideBlockChars = new char[]{'\n', '>'};
 
@@ -117,7 +123,7 @@ public class TikaMIMETypeDetector implements MIMETypeDetector {
      * @throws IOException
      */
     public static boolean checkN3Format(InputStream is) throws IOException {
-        return checkByRioFormat(RDFFormat.N3, is, n3InsideBlockChars, n3OutsideBlockChars, n3SwitchBlockChars);
+        return checkByRioFormat(RDFFormat.N3, is, n3InsideBlockChars, n3LineCommentChars, n3OutsideBlockChars, n3SwitchBlockChars);
     }
 
     /**
@@ -128,7 +134,7 @@ public class TikaMIMETypeDetector implements MIMETypeDetector {
      * @throws IOException
      */
     public static boolean checkNQuadsFormat(InputStream is) throws IOException {
-        return checkByRioFormat(RDFFormat.NQUADS, is, nquadsInsideBlockChars, nquadsOutsideBlockChars, nquadsSwitchBlockChars);
+        return checkByRioFormat(RDFFormat.NQUADS, is, nquadsInsideBlockChars, nquadsLineCommentChars, nquadsOutsideBlockChars, nquadsSwitchBlockChars);
     }
 
     /**
@@ -140,8 +146,8 @@ public class TikaMIMETypeDetector implements MIMETypeDetector {
      * @return <code>true</code> if <i>Turtle</i> patterns are detected, <code>false</code> otherwise.
      * @throws IOException
      */
-    public static boolean checkByRioFormat(RDFFormat format, InputStream is, char[] insideBlockChars, char[] outsideBlockChars, char[] switchBlockChars) throws IOException {
-        StringBuilder sample = extractDataSample(is, '.', insideBlockChars, outsideBlockChars, switchBlockChars);
+    public static boolean checkByRioFormat(RDFFormat format, InputStream is, char[] insideBlockChars, char[] lineCommentChars, char[] outsideBlockChars, char[] switchBlockChars) throws IOException {
+        StringBuilder sample = extractDataSample(is, '.', insideBlockChars, lineCommentChars, outsideBlockChars, switchBlockChars);
         RDFParser turtleParser = Rio.createParser(format);
         turtleParser.setDatatypeHandling(RDFParser.DatatypeHandling.VERIFY);
         turtleParser.setStopAtFirstError(true);
@@ -179,9 +185,9 @@ public class TikaMIMETypeDetector implements MIMETypeDetector {
      * @return <code>true</code> if a pattern has been applied, <code>false</code> otherwise.
      * @throws IOException
      */
-    private static boolean findPattern(Pattern[] patterns, char delimiterChar, InputStream is, char[] insideBlockCharacters, char[] outsideBlockCharacters, char[] switchBlockCharacters)
+    private static boolean findPattern(Pattern[] patterns, char delimiterChar, InputStream is, char[] insideBlockCharacters, char[] lineCommentCharacters, char[] outsideBlockCharacters, char[] switchBlockCharacters)
     throws IOException {
-        StringBuilder sample = extractDataSample(is, delimiterChar, insideBlockCharacters, outsideBlockCharacters, switchBlockCharacters);
+        StringBuilder sample = extractDataSample(is, delimiterChar, insideBlockCharacters, lineCommentCharacters, outsideBlockCharacters, switchBlockCharacters);
         for(Pattern pattern : patterns) {
             if(pattern.matcher(sample).find()) {
                 return true;
@@ -199,7 +205,7 @@ public class TikaMIMETypeDetector implements MIMETypeDetector {
      * @return the sample string.
      * @throws IOException if an error occurs during sampling.
      */
-    private static StringBuilder extractDataSample(InputStream is, char breakChar, char[] insideBlockCharacters, char[] outsideBlockCharacters, char[] switchBlockCharacters) throws IOException {
+    private static StringBuilder extractDataSample(InputStream is, char breakChar, char[] insideBlockCharacters, char[] lineCommentChars, char[] outsideBlockCharacters, char[] switchBlockCharacters) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(is));
         StringBuilder sb = new StringBuilder();
         // TODO: Make this configurable
@@ -211,14 +217,32 @@ public class TikaMIMETypeDetector implements MIMETypeDetector {
         try {
             while ((c = br.read()) != -1) {
                 read++;
-                if (read > MAX_SIZE) {
+                if (sb.length() > MAX_SIZE) {
                     break;
                 }
+                
+                if(!insideBlock)
+                {
+                    for(char nextLineCommentChar : lineCommentChars)
+                    {
+                        // if we hit a comment character that signals the rest of the line is a comment 
+                        // then we do not want to extract any of the rest of the line, including the 
+                        // comment character for our sample, so we read to the end of the line and then 
+                        // continue the loop without appending anything
+                        if(c == nextLineCommentChar)
+                        {
+                            br.readLine();
+                            continue;
+                        }
+                    }
+                }
+                
                 for(char nextInsideChar : insideBlockCharacters)
                 {
                     if (c == nextInsideChar)
                         insideBlock = true;
                 }
+                
                 for(char nextOutsideChar : outsideBlockCharacters)
                 {
                     if (c == nextOutsideChar) 
@@ -302,11 +326,11 @@ public class TikaMIMETypeDetector implements MIMETypeDetector {
             if( ! MimeTypes.OCTET_STREAM.equals(mt) ) {
                 type = mt;
             } else {
-                if( checkByRioFormat(RDFFormat.N3, input, n3InsideBlockChars, n3OutsideBlockChars, n3SwitchBlockChars) ) {
+                if( checkByRioFormat(RDFFormat.N3, input, n3InsideBlockChars, n3LineCommentChars, n3OutsideBlockChars, n3SwitchBlockChars) ) {
                     type = N3_MIMETYPE;
-                } else if( checkByRioFormat(RDFFormat.NQUADS, input, nquadsInsideBlockChars, nquadsOutsideBlockChars, nquadsSwitchBlockChars) ) {
+                } else if( checkByRioFormat(RDFFormat.NQUADS, input, nquadsInsideBlockChars, nquadsLineCommentChars, nquadsOutsideBlockChars, nquadsSwitchBlockChars) ) {
                     type = NQUADS_MIMETYPE;
-                } else if( checkByRioFormat(RDFFormat.TURTLE, input, turtleInsideBlockChars, turtleOutsideBlockChars, turtleSwitchBlockChars) ) {
+                } else if( checkByRioFormat(RDFFormat.TURTLE, input, turtleInsideBlockChars, turtleLineCommentChars, turtleOutsideBlockChars, turtleSwitchBlockChars) ) {
                     type = TURTLE_MIMETYPE;
                 } else if( checkCSVFormat(input) ) {
                     type = CSV_MIMETYPE;
