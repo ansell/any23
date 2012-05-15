@@ -85,6 +85,21 @@ public class NQuadsParserTest {
     }
 
     /**
+     * Tests the correct behavior with no context.
+     *
+     * @throws RDFHandlerException
+     * @throws IOException
+     * @throws RDFParseException
+     */
+    @Test
+    public void testParseNoContext() throws RDFHandlerException, IOException, RDFParseException {
+        final ByteArrayInputStream bais = new ByteArrayInputStream(
+                "<http://s> <http://p> <http://o> .".getBytes()
+        );
+        parser.parse(bais, "http://base-uri");
+    }
+
+    /**
      * Tests parsing of empty lines and comments.
      *
      * @throws java.io.IOException

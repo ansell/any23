@@ -111,6 +111,11 @@ public class TikaMIMETypeDetectorTest {
                 "<http://www.ex.eu> <http://dd.cc.org/1.1/p> \"xxx\"^^<http://www.sp.net/a#tt> <http://path.to.graph> ."
         );
         
+        // context is optional, see spec at http://sw.deri.org/2008/07/n-quads/
+        assertNQuadsDetection(
+                "<http://example.org/path> <http://foo.com> <http://example.org/Document/foo#> ."
+        );
+        
         // This is not a valid NQuads line as it uses a prefix in the datatype
         assertNQuadsDetectionFail(
                 "<http://www.ex.eu> <http://purlo.org/1.1/title> \"yyy\"^^xsd:datetime <http://path.to.graph> ."
@@ -119,11 +124,6 @@ public class TikaMIMETypeDetectorTest {
         // Wrong NQuads line.
         assertNQuadsDetectionFail(
                 "<http://www.wrong.com> <http://wrong.com/1.1/tt> \"x\"^^<http://xxx.net/int> . <http://path.to.graph>"
-        );
-        
-        // N3 is not mislead with NQuads.
-        assertNQuadsDetectionFail(
-                "<http://example.org/path> <http://foo.com> <http://example.org/Document/foo#> ."
         );
         
         assertNQuadsDetectionFail(
