@@ -231,6 +231,7 @@
     <implementation.build.tstamp>${implementation.build}; ${maven.build.timestamp}</implementation.build.tstamp>
     <slf4j.logger.version>1.6.4</slf4j.logger.version>
     <sesame.version>2.6.5</sesame.version>
+    <sesametools.version>1.7-SNAPSHOT</sesametools.version>
 
     <!-- Maven Plugin Versions -->
     <maven-javadoc-plugin.version>2.8.1</maven-javadoc-plugin.version>
@@ -330,6 +331,11 @@
       </dependency>
       <dependency>
         <groupId>org.openrdf.sesame</groupId>
+        <artifactId>sesame-rio-n3</artifactId>
+        <version>${sesame.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.openrdf.sesame</groupId>
         <artifactId>sesame-rio-turtle</artifactId>
         <version>${sesame.version}</version>
       </dependency>
@@ -347,6 +353,11 @@
         <groupId>org.openrdf.sesame</groupId>
         <artifactId>sesame-rio-trix</artifactId>
         <version>${sesame.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>net.fortytwo.sesametools</groupId>
+        <artifactId>nquads</artifactId>
+        <version>${sesametools.version}</version>
       </dependency>
       <dependency>
         <groupId>org.openrdf.sesame</groupId>

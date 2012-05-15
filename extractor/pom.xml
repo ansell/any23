@@ -58,6 +58,10 @@
       <artifactId>mockito-core</artifactId>
       <scope>test</scope>
     </dependency>
+    <dependency>
+    	<groupId>net.fortytwo.sesametools</groupId>
+    	<artifactId>nquads</artifactId>
+    </dependency>
   </dependencies>
 	<build>
 		<plugins>

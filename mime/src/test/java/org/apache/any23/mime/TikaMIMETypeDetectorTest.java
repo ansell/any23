@@ -17,14 +17,15 @@
 
 package org.apache.any23.mime;
 
-import junit.framework.Assert;
 import org.apache.any23.mime.purifier.WhiteSpacesPurifier;
+
+import org.junit.Assert;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
@@ -247,7 +248,7 @@ public class TikaMIMETypeDetectorTest {
 
     @Test
     public void testDetectWSDLByContent() throws Exception {
-        detectMIMEtypeByContent("application/x-wsdl", manifestWsdl());
+        detectMIMEtypeByContent("application/wsdl+xml", manifestWsdl());
     }
 
     /**
@@ -409,7 +410,7 @@ public class TikaMIMETypeDetectorTest {
 
      @Test
     public void testWSDLByContentAndName() throws Exception {
-        detectMIMETypeByContentAndName("application/x-wsdl", manifestWsdl());
+        detectMIMETypeByContentAndName("application/wsdl+xml", manifestWsdl());
     }
 
     @Test
@@ -462,13 +463,13 @@ public class TikaMIMETypeDetectorTest {
         
         String detectedMimeType;
         for (String test : manifest) {
-            InputStream is = this.getClass().getResourceAsStream(test);
+            InputStream is = new BufferedInputStream(this.getClass().getResourceAsStream(test));
             detectedMimeType = detector.guessMIMEType(
                     null,
                     is,
                     null
             ).toString();
-            if (test.startsWith("error"))
+            if (test.contains("error"))
                 Assert.assertNotSame(expectedMimeType, detectedMimeType);
             else {
                 Assert.assertEquals(
@@ -510,8 +511,15 @@ public class TikaMIMETypeDetectorTest {
         String detectedMimeType;
         for (String test : manifest) {
             InputStream is = this.getClass().getResourceAsStream(test);
-            detectedMimeType = detector.guessMIMEType(test, is, null).toString();
-            if (test.startsWith("error"))
+            String filename = test;
+            
+            if(filename.indexOf("/") >= 0)
+            {
+                filename = filename.substring(filename.indexOf("/"));
+            }
+            
+            detectedMimeType = detector.guessMIMEType(filename, is, null).toString();
+            if (test.contains("error"))
                 Assert.assertNotSame(expectedMimeType, detectedMimeType);
             else {
                 Assert.assertEquals(
