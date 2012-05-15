@@ -105,7 +105,7 @@
 	</foaf:knows>
 	<foaf:knows>
 		<foaf:Person rdf:about="http://identi.ca/user/3546">
-		<foaf:name>J�?rgen Umbrich</foaf:name>
+		<foaf:name>Jürgen Umbrich</foaf:name>
 		<foaf:mbox_sha1sum>b9514eba2ed2ae41a072765fe3ed3544de10974f</foaf:mbox_sha1sum>
 		</foaf:Person>
 	</foaf:knows>

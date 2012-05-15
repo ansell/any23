@@ -62,6 +62,11 @@ public class TikaEncodingDetectorTest {
     }
 
     @Test
+    public void testUTF8RDFXML() throws IOException {
+         assertEncoding( "UTF-8", "/application/rdfxml/foaf" );
+    }
+
+    @Test
     public void testUTF8HTML() throws IOException {
          assertEncoding( "UTF-8", "/microformats/xfn/encoding-utf-8.html" );
     }
