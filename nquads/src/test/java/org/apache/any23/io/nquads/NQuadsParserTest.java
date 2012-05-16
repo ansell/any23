@@ -77,14 +77,14 @@ public class NQuadsParserTest {
      * @throws RDFParseException
      */
     @Test
-    public void testIncompleteParsing() throws RDFHandlerException, IOException, RDFParseException {
+    public void testIncompleteParsingWithoutPeriod() throws RDFHandlerException, IOException, RDFParseException {
         final ByteArrayInputStream bais = new ByteArrayInputStream(
                 "<http://s> <http://p> <http://o> <http://g>".getBytes()
         );
         try
         {
             parser.parse(bais, "http://test.base.uri");
-            Assert.fail("Expected exception when passing in a datatype using an N3 style prefix");
+            Assert.fail("Expected exception when not inserting a trailing period at the end of a statement.");
         }
         catch(RDFParseException rdfpe)
         {
@@ -93,6 +93,79 @@ public class NQuadsParserTest {
         }
     }
 
+    /**
+     * Tests the correct behavior with incomplete input.
+     *
+     * @throws RDFHandlerException
+     * @throws IOException
+     * @throws RDFParseException
+     */
+    @Test
+    public void testIncompleteParsingWithPeriod() throws RDFHandlerException, IOException, RDFParseException {
+        final ByteArrayInputStream bais = new ByteArrayInputStream(
+                "<http://s> <http://p> <http://o> <http://g>.".getBytes()
+        );
+        try
+        {
+            parser.parse(bais, "http://test.base.uri");
+            Assert.fail("Expected exception when not inserting a new line character at the end of a statement.");
+        }
+        catch(RDFParseException rdfpe)
+        {
+            Assert.assertEquals(1, rdfpe.getLineNumber());
+            Assert.assertEquals(44, rdfpe.getColumnNumber());
+        }
+    }
+
+    /**
+     * Tests the behaviour with non-whitespace characters after a period character without a context.
+     *
+     * @throws RDFHandlerException
+     * @throws IOException
+     * @throws RDFParseException
+     */
+    @Test
+    public void testNonWhitespaceAfterPeriodNoContext() throws RDFHandlerException, IOException, RDFParseException {
+        final ByteArrayInputStream bais = new ByteArrayInputStream(
+                "<http://www.wrong.com> <http://wrong.com/1.1/tt> \"x\"^^<http://xxx.net/int> . <http://path.to.graph> ".getBytes()
+        );
+        try
+        {
+            parser.parse(bais, "http://base-uri");
+            Assert.fail("Expected exception when there is non-whitespace characters after a period.");
+        }
+        catch(RDFParseException rdfpe)
+        {
+            Assert.assertEquals(1, rdfpe.getLineNumber());
+            Assert.assertEquals(44, rdfpe.getColumnNumber());
+        }
+    }
+
+    /**
+     * Tests the behaviour with non-whitespace characters after a period character without a context.
+     *
+     * @throws RDFHandlerException
+     * @throws IOException
+     * @throws RDFParseException
+     */
+    @Test
+    public void testNonWhitespaceAfterPeriodWithContext() throws RDFHandlerException, IOException, RDFParseException {
+        final ByteArrayInputStream bais = new ByteArrayInputStream(
+                "<http://www.wrong.com> <http://wrong.com/1.1/tt> \"x\"^^<http://xxx.net/int> <http://path.to.graph> . <thisisnotlegal> ".getBytes()
+        );
+        try
+        {
+            parser.parse(bais, "http://base-uri");
+            Assert.fail("Expected exception when there is non-whitespace characters after a period.");
+        }
+        catch(RDFParseException rdfpe)
+        {
+            Assert.assertEquals(1, rdfpe.getLineNumber());
+            Assert.assertEquals(44, rdfpe.getColumnNumber());
+        }
+    }
+
+    
     /**
      * Tests the correct behavior with no context.
      *
@@ -108,6 +181,7 @@ public class NQuadsParserTest {
         parser.parse(bais, "http://base-uri");
     }
 
+    
     /**
      * Tests parsing of empty lines and comments.
      *

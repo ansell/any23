@@ -243,6 +243,7 @@ public class NQuadsParser extends RDFParserBase {
     private boolean parseLine(BufferedReader br)
     throws IOException, RDFParseException, RDFHandlerException {
 
+        // FIXME: The following may not be legal
         if(!consumeSpacesAndNotEOS(br)) {
             return false;
         }
@@ -261,9 +262,9 @@ public class NQuadsParser extends RDFParserBase {
         final URI      context;
         try {
             sub = parseSubject(br);
-            consumeSpaces(br);
+            consumeSpacesMandatory(br);
             pred = parsePredicate(br);
-            consumeSpaces(br);
+            consumeSpacesMandatory(br);
             obj = parseObject(br);
             consumeSpaces(br);
             context = parseContextAndOrDot(br);
@@ -321,7 +322,7 @@ public class NQuadsParser extends RDFParserBase {
      */
     private boolean consumeSpacesAndNotEOS(BufferedReader br) throws IOException {
         try {
-            consumeSpaces(br);
+            consumeSpacesOptional(br);
             return true;
         } catch (EOS eos) {
             return false;
@@ -374,12 +375,12 @@ public class NQuadsParser extends RDFParserBase {
     }
 
     /**
-     * Consumes spaces until a non space char is detected.
+     * Consumes 0 or more spaces until a non space char is detected.
      *
      * @param br input stream reader from which consume spaces.
      * @throws IOException
      */
-    private void consumeSpaces(BufferedReader br) throws IOException {
+    private void consumeSpacesOptional(BufferedReader br) throws IOException {
         char c;
         while(true) {
             mark(br);
@@ -391,6 +392,33 @@ public class NQuadsParser extends RDFParserBase {
             }
         }
         reset(br);
+    }
+
+    /**
+     * Consumes 1 or more spaces until a non space char is detected.
+     *
+     * @param br input stream reader from which consume spaces.
+     * @throws IOException
+     * @throws RDFParseException 
+     */
+    private void consumeSpacesMandatory(BufferedReader br) throws IOException, RDFParseException {
+        char c;
+        boolean foundSpace = false;
+        while(true) {
+            mark(br);
+            c = readChar(br);
+            if(c == ' ' || c == '\r' || c == '\f' || c == '\t') {
+                foundSpace = true;
+                mark(br);
+            } else {
+                break;
+            }
+        }
+        reset(br);
+        if(!foundSpace)
+        {
+            throw new RDFParseException("Did not find a space between elements", row, col);
+        }
     }
 
     /**
