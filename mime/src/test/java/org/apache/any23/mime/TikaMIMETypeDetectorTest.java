@@ -536,7 +536,7 @@ public class TikaMIMETypeDetectorTest {
 
         String detectedMimeType;
         for (String test : manifest) {
-            InputStream is = this.getClass().getResourceAsStream(test);
+            InputStream is = new BufferedInputStream(this.getClass().getResourceAsStream(test));
             String filename = test;
             
             if(filename.indexOf("/") >= 0)
