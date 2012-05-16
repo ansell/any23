@@ -136,6 +136,9 @@
               <includes>
                 <include>**/*IT.java</include>
               </includes>
+              <systemPropertyVariables>
+              	<any23.online.test.disabled>true</any23.online.test.disabled>
+              </systemPropertyVariables>
             </configuration>
           </execution>
         </executions>

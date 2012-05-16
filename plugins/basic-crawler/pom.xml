@@ -110,6 +110,10 @@
         <configuration>
           <!-- Solve concurrency issues in Crawler4j internal status. -->
           <forkMode>always</forkMode>
+          <!-- Only perform offline tests unless specifically told otherwise here in the future -->
+          <systemPropertyVariables>
+              	<any23.online.test.disabled>true</any23.online.test.disabled>
+          </systemPropertyVariables>
         </configuration>
       </plugin>
 

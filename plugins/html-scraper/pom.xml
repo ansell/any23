@@ -107,6 +107,16 @@
           </descriptors>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <!-- Only perform offline tests unless specifically told otherwise here in the future -->
+          <systemPropertyVariables>
+              	<any23.online.test.disabled>true</any23.online.test.disabled>
+          </systemPropertyVariables>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
 
