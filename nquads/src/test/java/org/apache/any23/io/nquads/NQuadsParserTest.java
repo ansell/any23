@@ -20,6 +20,7 @@ package org.apache.any23.io.nquads;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openrdf.model.BNode;
 import org.openrdf.model.Literal;
@@ -100,6 +101,7 @@ public class NQuadsParserTest {
      * @throws IOException
      * @throws RDFParseException
      */
+    @Ignore
     @Test
     public void testIncompleteParsingWithPeriod() throws RDFHandlerException, IOException, RDFParseException {
         final ByteArrayInputStream bais = new ByteArrayInputStream(
@@ -124,6 +126,7 @@ public class NQuadsParserTest {
      * @throws IOException
      * @throws RDFParseException
      */
+    @Ignore
     @Test
     public void testNonWhitespaceAfterPeriodNoContext() throws RDFHandlerException, IOException, RDFParseException {
         final ByteArrayInputStream bais = new ByteArrayInputStream(
@@ -148,6 +151,7 @@ public class NQuadsParserTest {
      * @throws IOException
      * @throws RDFParseException
      */
+    @Ignore
     @Test
     public void testNonWhitespaceAfterPeriodWithContext() throws RDFHandlerException, IOException, RDFParseException {
         final ByteArrayInputStream bais = new ByteArrayInputStream(
