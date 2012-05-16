@@ -62,7 +62,7 @@ public class NQuadsParser extends RDFParserBase {
     /**
      * Current row, col and marker trackers.
      */
-    private int row, col, mark;
+    private volatile int row, col, mark;
 
     public NQuadsParser() {}
 
@@ -436,8 +436,10 @@ public class NQuadsParser extends RDFParserBase {
             }
             return uri;
         } catch (RDFParseException rdfpe) {
-            reportFatalError(rdfpe, row, col);
-            throw rdfpe;
+            // The reportFatalError method actually throws the error, but it may try to use -1, -1 for row and column unless we do it this way
+            reportFatalError(new RDFParseException(rdfpe, row, col), row, col);
+            // this line is to satisfy the compiler, as reportFatalError does not return an RDFParseException, it internally throws them in every case instead of returning
+            throw new RDFParseException(rdfpe, row, col);
         }
     }
 
@@ -480,6 +482,7 @@ public class NQuadsParser extends RDFParserBase {
      * @param br
      * @return the literal attribute.
      * @throws IOException
+     * @throws RDFParseException 
      */
     private LiteralAttribute parseLiteralAttribute(BufferedReader br) throws IOException, RDFParseException {
         char c = readChar(br);
@@ -492,6 +495,7 @@ public class NQuadsParser extends RDFParserBase {
         if(c == '^') {
             isLang = false;
             assertChar(br, '^');
+            return new LiteralAttribute(false, parseURI(br).stringValue());
         }
 
         final String attribute;

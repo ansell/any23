@@ -73,6 +73,16 @@ public class TikaMIMETypeDetectorTest {
         assertN3Detection("<http://www.example.com> <http://purl.org/dc/elements/1.1/title> \"x\"^^<http://xxx.net> .");
         assertN3DetectionFail("<http://www.example.com> <http://purl.org/dc/elements/1.1/title> \"x\"^^xsd:integer .");
 
+        // Should be picked up as an empty N3 file, this is the bane of the Nx/Turtle filetypes
+        assertN3Detection(
+                "#This is under a license with a period at the end of the sentence."
+        );
+        
+        // Should be picked up as an empty N3 file, this is the bane of the Nx/Turtle filetypes
+        assertN3Detection(
+                "#<http://www.wrong.com> <http://wrong.com/1.1/tt> \"x\"^^<http://xxx.net/int> . <http://path.to.graph>"
+        );
+        
         // Wrong N3 line '.'
         assertN3DetectionFail("" +
                 "<http://wrong.example.org/path> <http://wrong.foo.com> . <http://wrong.org/Document/foo#>"
@@ -82,14 +92,6 @@ public class TikaMIMETypeDetectorTest {
             "<http://example.org/path> <http://foo.com> <http://dom.org/Document/foo#> <http://path/to/graph> ."
         );
         
-        assertN3DetectionFail(
-                "#This is under a license with a period at the end of the sentence."
-        );
-        
-        // FIXME: The following succeeds as a false positive, even though the entire line is commented, and ignoring the comment it is invalid N3
-        assertN3DetectionFail(
-                "#<http://www.wrong.com> <http://wrong.com/1.1/tt> \"x\"^^<http://xxx.net/int> . <http://path.to.graph>"
-        );
     }
 
     @Test
@@ -111,9 +113,24 @@ public class TikaMIMETypeDetectorTest {
                 "<http://www.ex.eu> <http://dd.cc.org/1.1/p> \"xxx\"^^<http://www.sp.net/a#tt> <http://path.to.graph> ."
         );
         
+        // Should be picked up as an empty N3 file, this is the bane of the Nx/Turtle filetypes
+        assertNQuadsDetection(
+                "#This is under a license with a period at the end of the sentence."
+        );
+        
+        // Should be picked up as an empty N3 file, this is the bane of the Nx/Turtle filetypes
+        assertNQuadsDetection(
+                "#<http://www.wrong.com> <http://wrong.com/1.1/tt> \"x\"^^<http://xxx.net/int> . <http://path.to.graph>"
+        );
+
         // context is optional, see spec at http://sw.deri.org/2008/07/n-quads/
         assertNQuadsDetection(
                 "<http://example.org/path> <http://foo.com> <http://example.org/Document/foo#> ."
+        );
+        
+        // Wrong NQuads line.
+        assertNQuadsDetectionFail(
+                "<http://www.wrong.com> <http://wrong.com/1.1/tt> \"x\"^^<http://xxx.net/int> . <http://path.to.graph>"
         );
         
         // This is not a valid NQuads line as it uses a prefix in the datatype
@@ -121,18 +138,6 @@ public class TikaMIMETypeDetectorTest {
                 "<http://www.ex.eu> <http://purlo.org/1.1/title> \"yyy\"^^xsd:datetime <http://path.to.graph> ."
         );
 
-        // Wrong NQuads line.
-        assertNQuadsDetectionFail(
-                "<http://www.wrong.com> <http://wrong.com/1.1/tt> \"x\"^^<http://xxx.net/int> . <http://path.to.graph>"
-        );
-        
-        assertNQuadsDetectionFail(
-                "#This is under a license with a period at the end of the sentence."
-        );
-        
-        assertNQuadsDetectionFail(
-                "#<http://www.wrong.com> <http://wrong.com/1.1/tt> \"x\"^^<http://xxx.net/int> . <http://path.to.graph>"
-        );
     }
 
     /* BEGIN: by content. */

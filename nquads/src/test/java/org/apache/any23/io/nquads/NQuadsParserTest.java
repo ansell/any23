@@ -226,7 +226,7 @@ public class NQuadsParserTest {
      * @throws RDFParseException
      */
     @Test
-    public void testParseBasicLiteraDatatype() throws RDFHandlerException, IOException, RDFParseException {
+    public void testParseBasicLiteralDatatype() throws RDFHandlerException, IOException, RDFParseException {
         final ByteArrayInputStream bais = new ByteArrayInputStream(
             ("<http://www.v/dat/4b2-21>" +
              "<http://www.w3.org/20/ica#dtend>" +
@@ -246,6 +246,37 @@ public class NQuadsParserTest {
         Assert.assertNull(object.getLanguage());
         Assert.assertEquals("http://www.w3.org/2001/XMLSchema#integer", object.getDatatype().toString());
         Assert.assertEquals("http://sin.siteserv.org/def/", statement.getContext().stringValue());
+    }
+
+    /**
+     * Tests N-Quads parsing with literal and datatype using a prefix, which is illegal in NQuads, but legal in N3/Turtle that may otherwise look like NQuads
+     * 
+     * @throws RDFHandlerException
+     * @throws IOException
+     * @throws RDFParseException
+     */
+    @Test
+    public void testParseBasicLiteralDatatypePrefix() throws RDFHandlerException, IOException{
+        
+        final ByteArrayInputStream bais = new ByteArrayInputStream(
+            ("<http://www.v/dat/4b2-21>" +
+             "<http://www.w3.org/20/ica#dtend>" +
+             "\"2010\"^^xsd:integer" +
+             "<http://sin.siteserv.org/def/>."
+            ).getBytes()
+        );
+        final TestRDFHandler rdfHandler = new TestRDFHandler();
+        parser.setRDFHandler(rdfHandler);
+        try
+        {
+            parser.parse(bais, "http://test.base.uri");
+            Assert.fail("Expected exception when passing in a datatype using an N3 style prefix");
+        }
+        catch(RDFParseException rdfpe)
+        {
+            Assert.assertEquals(1, rdfpe.getLineNumber());
+            Assert.assertEquals(67, rdfpe.getColumnNumber());
+        }
     }
 
     /**
