@@ -128,16 +128,16 @@ public class TikaMIMETypeDetectorTest {
                 "<http://example.org/path> <http://foo.com> <http://example.org/Document/foo#> ."
         );
         
-        // Wrong NQuads line.
-        assertNQuadsDetectionFail(
-                "<http://www.wrong.com> <http://wrong.com/1.1/tt> \"x\"^^<http://xxx.net/int> . <http://path.to.graph>"
-        );
-        
         // This is not a valid NQuads line as it uses a prefix in the datatype
         assertNQuadsDetectionFail(
                 "<http://www.ex.eu> <http://purlo.org/1.1/title> \"yyy\"^^xsd:datetime <http://path.to.graph> ."
         );
 
+        // Wrong NQuads line.
+        assertNQuadsDetectionFail(
+                "<http://www.wrong.com> <http://wrong.com/1.1/tt> \"x\"^^<http://xxx.net/int> . <http://path.to.graph>"
+        );
+        
     }
 
     /* BEGIN: by content. */
