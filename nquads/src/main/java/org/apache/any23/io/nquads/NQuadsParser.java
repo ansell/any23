@@ -74,7 +74,7 @@ public class NQuadsParser extends RDFParserBase {
     @Override
     public synchronized void parse(InputStream is, String baseURI)
     throws IOException, RDFParseException, RDFHandlerException {
-        parse(new InputStreamReader(is), baseURI);
+        parse(new InputStreamReader(is, Charset.forName("US-ASCII")), baseURI);
     }
     
     @Override
