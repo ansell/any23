@@ -461,6 +461,15 @@ public class NQuadsParserTest {
         Assert.assertEquals("http://g/はむ", graphURI);
     }
 
+    /**
+     * FIXME: This test needs to be converted to a failing test, as NQuads documents 
+     * do not contain bare UTF-8 characters, since they are limited to US-ASCII.
+     * 
+     * @throws RDFHandlerException
+     * @throws IOException
+     * @throws RDFParseException
+     */
+    @Ignore
     @Test
     public void testUnicodeLiteralManagement() throws RDFHandlerException, IOException, RDFParseException {
         TestRDFHandler rdfHandler = new TestRDFHandler();
@@ -471,7 +480,7 @@ public class NQuadsParserTest {
                 INPUT_LITERAL
         );
         final ByteArrayInputStream bais = new ByteArrayInputStream(
-            INPUT_STRING.getBytes()
+            INPUT_STRING.getBytes("US-ASCII")
         );
         parser.parse(bais, "http://base-uri");
 
