@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -59,7 +60,7 @@ public class NQuadsWriter implements RDFWriter {
     private boolean started = false;
 
     public NQuadsWriter(OutputStream os) {
-        this( new OutputStreamWriter(os) );
+        this( new OutputStreamWriter(os, Charset.forName("US-ASCII")) );
     }
 
     public NQuadsWriter(Writer w) {
