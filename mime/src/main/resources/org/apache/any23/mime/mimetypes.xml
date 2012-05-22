@@ -24,9 +24,9 @@
 
     <!-- BEGIN: Semantic Web document mime types. -->
 
-    <!-- N3 -->
-    <mime-type type="text/rdf+n3">
-        <alias type="text/n3"/>
+    <!-- N3 http://www.w3.org/TeamSubmission/n3/#mimetype -->
+    <mime-type type="text/n3">
+        <alias type="text/rdf+n3"/>
         <alias type="application/n3"/>
         <glob pattern="*.n3"/>
         <magic priority="50">
@@ -34,16 +34,17 @@
         </magic>
     </mime-type>
 
-    <!-- NQuads -->
-    <mime-type type="text/rdf+nq">
+    <!-- NQuads http://sw.deri.org/2008/07/n-quads/#mediatype -->
+    <mime-type type="text/x-nquads">
+        <alias type="text/rdf+nq"/>
         <alias type="text/nq"/>
         <alias type="application/nq"/>
         <glob pattern="*.nq"/>
     </mime-type>
 
-    <!-- Turtle -->
-    <mime-type type="application/x-turtle">
-        <alias type="text/turtle"/>
+    <!-- Turtle http://www.w3.org/TeamSubmission/turtle/#sec-mediaReg -->
+    <mime-type type="text/turtle">
+        <alias type="application/x-turtle"/>
         <alias type="application/turtle"/>
         <glob pattern="*.ttl"/>
     </mime-type>
@@ -51,11 +52,11 @@
     <!-- RDFXML -->
     <mime-type type="application/rdf+xml">
         <sub-class-of type="application/xml"/>
+        <alias type="text/rdf"/>
         <root-XML localName="RDF"/>
         <root-XML localName="rdf"/>
 	    <root-XML localName="RDF" namespaceURI="http://www.w3.org/1999/02/22-rdf-syntax-ns#"/>
         <root-XML namespaceURI="http://purl.org/rss/1.0/"/>
-        <alias type="text/rdf"/>
         <magic priority="50">
             <match value="&lt;rdf:RDF" type="string" offset="0:64"/>
             <match value="&lt;RDF" type="string" offset="0:64"/>
@@ -96,9 +97,10 @@
     </mime-type>
 
 	<mime-type type="application/atom+xml">
-	  <root-XML localName="feed" namespaceURI="http://purl.org/atom/ns#"/>
-	  <root-XML localName="feed" namespaceURI="http://www.w3.org/2005/Atom/"/>
-	  <glob pattern="*.atom"/>
+		<sub-class-of type="application/xml" />
+		<root-XML localName="feed" namespaceURI="http://purl.org/atom/ns#" />
+		<root-XML localName="feed" namespaceURI="http://www.w3.org/2005/Atom/" />
+		<glob pattern="*.atom" />
 	</mime-type>
 
     <!-- END Semantic Web document mime types. -->

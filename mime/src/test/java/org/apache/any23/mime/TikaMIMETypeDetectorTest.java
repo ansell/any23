@@ -48,9 +48,9 @@ public class TikaMIMETypeDetectorTest {
     private static final String TRIX   = "application/trix";
     private final static String XHTML  = "application/xhtml+xml";
     private final static String RDFXML = "application/rdf+xml";
-    private final static String TURTLE = "application/x-turtle";
-    private final static String N3     = "text/rdf+n3";
-    private final static String NQuads = "text/rdf+nq";
+    private final static String TURTLE = "text/turtle";
+    private final static String N3     = "text/n3";
+    private final static String NQuads = "text/x-nquads";
     private final static String CSV    = "text/csv";
 
     private TikaMIMETypeDetector detector;
@@ -187,7 +187,7 @@ public class TikaMIMETypeDetectorTest {
     @Ignore
     @Test
     public void testDetectRDFNQuadsByContent() throws Exception {
-        detectMIMEtypeByContent("text/nq", manifestNQuads());
+        detectMIMEtypeByContent("text/x-nquads", manifestNQuads());
     }
 
     /**
@@ -331,12 +331,12 @@ public class TikaMIMETypeDetectorTest {
 
     @Test
     public void testDetectTextN3ByMeta() throws IOException {
-        detectMIMETypeByMimeTypeHint(N3, "text/rdf+n3");
+        detectMIMETypeByMimeTypeHint(N3, "text/n3");
     }
 
     @Test
     public void testDetectTextNQuadsByMeta() throws IOException {
-        detectMIMETypeByMimeTypeHint(NQuads, "text/rdf+nq");
+        detectMIMETypeByMimeTypeHint(NQuads, "text/x-nquads");
     }
 
     @Test
@@ -420,7 +420,7 @@ public class TikaMIMETypeDetectorTest {
 
     @Test
     public void testDetectRDFNQuadsByContentAndName() throws Exception {
-        detectMIMETypeByContentAndName("text/rdf+nq", manifestNQuads());
+        detectMIMETypeByContentAndName("text/x-nquads", manifestNQuads());
     }
 
     @Test
