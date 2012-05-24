@@ -50,6 +50,40 @@
     <dependency>
     	<groupId>org.apache.tika</groupId>
     	<artifactId>tika-parsers</artifactId>
+    	<exclusions>
+    		<exclusion>
+    			<artifactId>vorbis-java-tika</artifactId>
+    			<groupId>org.gagravarr</groupId>
+    		</exclusion>
+    		<exclusion>
+    			<artifactId>netcdf</artifactId>
+    			<groupId>edu.ucar</groupId>
+    		</exclusion>
+    		<exclusion>
+    			<artifactId>poi</artifactId>
+    			<groupId>org.apache.poi</groupId>
+    		</exclusion>
+    		<exclusion>
+    			<artifactId>poi-scratchpad</artifactId>
+    			<groupId>org.apache.poi</groupId>
+    		</exclusion>
+    		<exclusion>
+    			<artifactId>poi-ooxml</artifactId>
+    			<groupId>org.apache.poi</groupId>
+    		</exclusion>
+    		<exclusion>
+    			<artifactId>isoparser</artifactId>
+    			<groupId>com.googlecode.mp4parser</groupId>
+    		</exclusion>
+    		<exclusion>
+    			<artifactId>vorbis-java-core</artifactId>
+    			<groupId>org.gagravarr</groupId>
+    		</exclusion>
+    		<exclusion>
+    			<artifactId>asm</artifactId>
+    			<groupId>asm</groupId>
+    		</exclusion>
+    	</exclusions>
     </dependency>
     <dependency>
     	<groupId>org.openrdf.sesame</groupId>
