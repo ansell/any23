@@ -34,15 +34,22 @@ import org.openrdf.rio.RDFHandler;
 import org.openrdf.rio.RDFHandlerException;
 import org.openrdf.rio.RDFParseException;
 import org.openrdf.rio.RDFParser;
+import org.openrdf.rio.RDFFormat;
+import org.openrdf.rio.RDFWriter;
+import org.openrdf.rio.Rio;
+import org.openrdf.rio.helpers.StatementCollector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.io.StringWriter;
+import java.util.Collection;
 
 import static org.hamcrest.core.Is.is;
 
@@ -69,7 +76,7 @@ public class NQuadsParserTest {
     public void tearDown() {
         parser = null;
     }
-
+    
     /**
      * Tests the correct behavior with incomplete input.
      *
