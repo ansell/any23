@@ -20,11 +20,15 @@ package org.apache.any23.rdf;
 import org.apache.any23.io.nquads.NQuads;
 import org.junit.Assert;
 import org.junit.Test;
+import org.openrdf.rio.RDFParser;
+import org.openrdf.rio.RDFWriter;
+import org.openrdf.rio.Rio;
 import org.openrdf.rio.RDFFormat;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStreamWriter;
+import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
@@ -99,4 +103,24 @@ public class RDFUtilsTest {
         );
     }
 
+    /**
+     * Tests that the NQuads module is being picked up using the Service Provider 
+     * Interface using RDFFormat.NQUADS
+     */
+    @Test
+    public void testRio()
+    {
+        RDFParser parser2 = Rio.createParser(RDFFormat.NQUADS);
+        
+        Assert.assertNotNull(parser2);
+        
+        RDFWriter writer = Rio.createWriter(RDFFormat.NQUADS, new ByteArrayOutputStream());
+        
+        Assert.assertNotNull(writer);
+        
+        RDFWriter writer2 = Rio.createWriter(RDFFormat.NQUADS, new StringWriter());
+        
+        Assert.assertNotNull(writer2);
+    }
+    
 }
