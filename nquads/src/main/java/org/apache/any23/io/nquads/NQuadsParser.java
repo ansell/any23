@@ -266,7 +266,7 @@ public class NQuadsParser extends RDFParserBase {
             pred = parsePredicate(br);
             consumeSpacesMandatory(br);
             obj = parseObject(br);
-            consumeSpaces(br);
+            consumeSpacesOptional(br);
             context = parseContextAndOrDot(br);
         } catch (EOS eos) {
             reportFatalError("Unexpected end of stream.", row, col);
@@ -755,10 +755,11 @@ public class NQuadsParser extends RDFParserBase {
         reset(br);
         if(c == '<') {
             final URI context = parseURI(br);
-            consumeSpaces(br);
+            consumeSpacesMandatory(br);
             parseDot(br);
             return context;
         } else {
+            consumeSpacesOptional(br);            
             parseDot(br);
             return null;
         }

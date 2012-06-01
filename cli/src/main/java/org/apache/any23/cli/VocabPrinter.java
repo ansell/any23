@@ -18,7 +18,6 @@
 package org.apache.any23.cli;
 
 import org.apache.any23.vocab.RDFSchemaUtils;
-import org.apache.any23.vocab.RDFSchemaUtils.VocabularyFormat;
 import org.kohsuke.MetaInfServices;
 import org.openrdf.rio.RDFFormat;
 

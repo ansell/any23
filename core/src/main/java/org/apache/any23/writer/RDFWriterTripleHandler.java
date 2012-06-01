@@ -24,6 +24,7 @@ import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.rio.RDFHandler;
 import org.openrdf.rio.RDFHandlerException;
+import org.openrdf.rio.RDFWriter;
 
 /**
  * A {@link TripleHandler} that writes
@@ -35,7 +36,7 @@ import org.openrdf.rio.RDFHandlerException;
  */
 public abstract class RDFWriterTripleHandler implements FormatWriter, TripleHandler {
 
-    private final RDFHandler writer;
+    private final RDFWriter writer;
 
     private boolean closed = false;
 
@@ -44,7 +45,7 @@ public abstract class RDFWriterTripleHandler implements FormatWriter, TripleHand
      */
     private boolean annotated = false;
 
-    RDFWriterTripleHandler(RDFHandler destination) {
+    RDFWriterTripleHandler(RDFWriter destination) {
         writer = destination;
         try {
             writer.startRDF();
