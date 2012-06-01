@@ -755,7 +755,7 @@ public class NQuadsParser extends RDFParserBase {
         reset(br);
         if(c == '<') {
             final URI context = parseURI(br);
-            consumeSpacesMandatory(br);
+            consumeSpacesOptional(br);
             parseDot(br);
             return context;
         } else {

@@ -180,7 +180,7 @@ public class Rover implements Tool {
 
     protected void performExtraction(DocumentSource documentSource) throws Exception {
         if (!any23.extract(extractionParameters, documentSource, tripleHandler).hasMatchingExtractors()) {
-            throw new IllegalStateException(format("No suitable extractors found for source %s", documentSource));
+            throw new IllegalStateException(format("No suitable extractors found for source %s", documentSource.getDocumentURI()));
         }
     }
 
@@ -210,6 +210,7 @@ public class Rover implements Tool {
         try {
             final long start = System.currentTimeMillis();
             for (String inputURI : inputURIs) {
+                logger.info("inputURI={}", inputURI);
                 DocumentSource source = any23.createDocumentSource(inputURI);
 
                 performExtraction( source );

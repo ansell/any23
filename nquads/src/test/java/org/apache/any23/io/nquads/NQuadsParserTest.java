@@ -583,8 +583,8 @@ public class NQuadsParserTest {
             "http://test.base.uri"
         );
 
-        rdfHandler.assertHandler(5);
-        parseLocationListerner.assertListener(24, 108);
+        rdfHandler.assertHandler(6);
+        parseLocationListerner.assertListener(9, 1);
     }
 
     /**
@@ -608,7 +608,7 @@ public class NQuadsParserTest {
         );
 
         rdfHandler.assertHandler(400);
-        parseLocationListener.assertListener(417, 349);
+        parseLocationListener.assertListener(401, 1);
     }
 
     @Test
@@ -790,14 +790,19 @@ public class NQuadsParserTest {
             } else {
                 Assert.assertTrue(statement.getSubject() instanceof BNode);
             }
-            if( statements == 5 ) {
+            if( statements == 4 ) {
                 Assert.assertEquals(new URIImpl("http://test.base.uri#like"), statement.getPredicate() );
             }
-            Assert.assertEquals(
-                    new URIImpl( String.format("http://example.org/alice/foaf%s.rdf", statements + 1) ),
-                    statement.getContext()
-            );
-
+            else if( statements == 5 ) {
+                Assert.assertEquals(new URIImpl("http://test.base.uri#type"), statement.getPredicate() );
+            }
+            if( statements != 5) {
+                Assert.assertEquals(
+                        new URIImpl( String.format("http://example.org/alice/foaf%s.rdf", statements + 1) ),
+                        statement.getContext()
+                );
+            }
+            
             super.handleStatement(statement);
         }
     }

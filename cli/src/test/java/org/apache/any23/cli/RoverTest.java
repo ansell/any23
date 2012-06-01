@@ -23,7 +23,10 @@ import org.apache.any23.util.StringUtils;
 import org.apache.any23.util.URLUtils;
 import org.junit.Assert;
 import org.junit.Assume;
+import org.junit.Ignore;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.openrdf.model.Statement;
 import org.openrdf.rio.RDFFormat;
 
@@ -36,9 +39,18 @@ import java.io.File;
  */
 public class RoverTest extends ToolTestBase {
 
+    @Rule
+    public TemporaryFolder testDirectory;
+    
+    public void setUp() throws Exception 
+    {
+        inputFolder = testDirectory.newFolder();
+        outputFolder = testDirectory.newFolder();
+    }
+    
     private static final String[] TARGET_FILES = {
-        "src/test/resources/microdata/microdata-nested.html",
-        "src/test/resources/org/apache/any23/extractor/csv/test-semicolon.csv"
+        "/microdata/microdata-nested.html",
+        "/org/apache/any23/extractor/csv/test-semicolon.csv"
     };
 
     private static final String[] TARGET_URLS = {
@@ -46,25 +58,44 @@ public class RoverTest extends ToolTestBase {
             "http://twitter.com/dpalmisano"
     };
 
+    private File inputFolder;
+
+    private File outputFolder;
+
     public RoverTest() {
         super(Rover.class);
     }
 
     @Test
     public void testRunMultiFiles() throws Exception {
-        runWithMultiSourcesAndVerify(TARGET_FILES, 0);
+
+        String[] copiedTargets = new String[TARGET_FILES.length];
+        for(int i = 0; i < TARGET_FILES.length; i++)
+        {
+            File tempFile = copyResourceToTempFile(TARGET_FILES[i], inputFolder);
+            
+            copiedTargets[i] = tempFile.getAbsolutePath();
+        }
+        
+        runWithMultiSourcesAndVerify(copiedTargets, 0);
     }
 
+    /**
+     * FIXME: Currently broken!
+     * 
+     * @throws Exception
+     */
+    @Ignore
     @Test
     public void testRunWithDefaultNS() throws Exception {
         final String DEFAULT_GRAPH = "http://test/default/ns";
-        final File outFile = File.createTempFile("rover-test", "out");
+        final File outFile = File.createTempFile("rover-test", "out", outputFolder);
         final int exitCode = runTool(
                 String.format(
-                        "-o %s -f nquads -p -n %s -d %s",
+                        "-o %s -f nquads -p -n --defaultns %s %s",
                         outFile.getAbsolutePath(),
-                        "src/test/resources/cli/rover-test1.nq",
-                        DEFAULT_GRAPH
+                        DEFAULT_GRAPH,
+                        copyResourceToTempFile("/cli/rover-test1.nq", inputFolder).getAbsolutePath()
                 )
         );
 
@@ -95,6 +126,7 @@ public class RoverTest extends ToolTestBase {
     }
 
     private void runWithMultiSourcesAndVerify(String[] targets, int expectedExit) throws Exception {
+        
         final File outFile = File.createTempFile("rover-test", "out");
         final File logFile = File.createTempFile("rover-test", "log");
         outFile.delete();

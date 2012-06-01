@@ -17,7 +17,11 @@
 
 package org.apache.any23.cli;
 
+import java.io.File;
+
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 /**
  * Test case for {@link MicrodataParser} CLI.
@@ -26,13 +30,23 @@ import org.junit.Test;
  */
 public class MicrodataParserTest extends ToolTestBase {
 
+    @Rule
+    public TemporaryFolder testDirectory;
+    
+    private File inputFolder;
+    
+    public void setUp() throws Exception 
+    {
+        inputFolder = testDirectory.newFolder();
+    }
+    
     public MicrodataParserTest() {
         super(MicrodataParser.class);
     }
 
     @Test
     public void testRunOnFile() throws Exception {
-        runToolCheckExit0("file:"+this.getClass().getResource("/microdata/microdata-nested.html").toString());
+        runToolCheckExit0("file:"+copyResourceToTempFile("/microdata/microdata-nested.html", inputFolder).getAbsolutePath());
     }
 
     @Test

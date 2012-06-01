@@ -19,7 +19,14 @@ package org.apache.any23.cli;
 
 import com.beust.jcommander.Parameters;
 import org.apache.any23.Any23OnlineTestBase;
+import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Arrays;
 
 import static java.lang.String.format;
@@ -33,6 +40,8 @@ import static org.junit.Assert.assertEquals;
 // TODO: improve support for Tool testing, intercept i/o streams.
 public abstract class ToolTestBase extends Any23OnlineTestBase {
 
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
+    
     public static final String TOOL_RUN_METHOD = "run";
 
     private final Class<? extends Tool> toolClazz;
@@ -88,4 +97,18 @@ public abstract class ToolTestBase extends Any23OnlineTestBase {
         );
     }
 
+    protected File copyResourceToTempFile(String resourceLocation, File tempDir) throws FileNotFoundException, IOException
+    {
+        log.info("nextResource="+resourceLocation);
+        String fileEnding = resourceLocation.substring(resourceLocation.lastIndexOf("/")+1);
+        log.info("fileEnding="+fileEnding);
+        
+        File tempFile = File.createTempFile("any23tooltest-", "-"+fileEnding, tempDir);
+        
+        FileOutputStream output = new FileOutputStream(tempFile);
+        
+        IOUtils.copy(this.getClass().getResourceAsStream(resourceLocation), output);
+        
+        return tempFile;
+    }
 }
