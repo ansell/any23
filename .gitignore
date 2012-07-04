@@ -1,6 +1,9 @@
-target
+target/
 *.iml
 .idea
+.settings/
 .classpath
-.settings
 .project
+bin/
+pom.xml.versionsBackup
+*~

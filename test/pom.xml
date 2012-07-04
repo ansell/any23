@@ -1,9 +1,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <artifactId>any23-parent</artifactId>
+    <artifactId>apache-any23</artifactId>
     <groupId>org.apache.any23</groupId>
-    <version>0.7.0-incubating-SNAPSHOT</version>
+    <version>0.7.1-incubating-SNAPSHOT</version>
     <relativePath>..</relativePath>
   </parent>
   <artifactId>any23-test</artifactId>
@@ -12,7 +12,7 @@
   <dependencies>
     <!-- Core Module -->
     <dependency>
-      <groupId>org.apache.any23</groupId>
+      <groupId>${project.groupId}</groupId>
       <artifactId>any23-core</artifactId>
       <version>${project.version}</version>
       <scope>test</scope>
@@ -20,7 +20,7 @@
     </dependency>
 
     <dependency>
-      <groupId>org.apache.any23</groupId>
+      <groupId>${project.groupId}</groupId>
       <artifactId>any23-core</artifactId>
       <version>${project.version}</version>
       <scope>test</scope>
@@ -28,7 +28,7 @@
     </dependency>
     
     <dependency>
-      <groupId>org.apache.any23</groupId>
+      <groupId>${project.groupId}</groupId>
       <artifactId>any23-extractor</artifactId>
       <version>${project.version}</version>
       <scope>test</scope>
@@ -36,7 +36,7 @@
     </dependency>
 
     <dependency>
-      <groupId>org.apache.any23</groupId>
+      <groupId>${project.groupId}</groupId>
       <artifactId>any23-nquads</artifactId>
       <version>${project.version}</version>
       <scope>test</scope>
@@ -44,7 +44,7 @@
     </dependency>
 
     <dependency>
-      <groupId>org.apache.any23</groupId>
+      <groupId>${project.groupId}</groupId>
       <artifactId>any23-extractor</artifactId>
       <version>${project.version}</version>
       <scope>test</scope>
@@ -52,21 +52,21 @@
     </dependency>
 
     <dependency>
-      <groupId>org.apache.any23</groupId>
+      <groupId>${project.groupId}</groupId>
       <artifactId>any23-cli</artifactId>
       <version>${project.version}</version>
       <scope>test</scope>
     </dependency>
 
     <dependency>
-      <groupId>org.apache.any23</groupId>
+      <groupId>${project.groupId}</groupId>
       <artifactId>any23-mime</artifactId>
       <version>${project.version}</version>
       <scope>test</scope>
     </dependency>
 
     <dependency>
-      <groupId>org.apache.any23</groupId>
+      <groupId>${project.groupId}</groupId>
       <artifactId>any23-test-resources</artifactId>
       <version>${project.version}</version>
       <scope>test</scope>

@@ -47,7 +47,7 @@
     </dependency>
 
     <dependency>
-      <groupId>org.apache.any23</groupId>
+      <groupId>${project.parent.groupId}</groupId>
       <artifactId>any23-extractor</artifactId>
       <version>${project.parent.version}</version>
     </dependency>
