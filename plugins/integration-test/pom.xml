@@ -33,7 +33,7 @@
 
   <dependencies>
     <dependency>
-      <groupId>org.apache.any23</groupId>
+      	<groupId>${project.parent.groupId}</groupId>
       <artifactId>apache-any23-core</artifactId>
       <version>${project.parent.version}</version>
     </dependency>
@@ -53,14 +53,14 @@
       <version>1.0.1-incubating-SNAPSHOT</version>
     </dependency>
       <dependency>
-      	<groupId>org.apache.any23</groupId>
+      	<groupId>${project.parent.groupId}</groupId>
       	<artifactId>any23-extractor</artifactId>
-      	<version>0.7.0-incubating-SNAPSHOT</version>
+      <version>${project.parent.version}</version>
       </dependency>
       <dependency>
-      	<groupId>org.apache.any23</groupId>
+      	<groupId>${project.parent.groupId}</groupId>
       	<artifactId>any23-cli</artifactId>
-      	<version>0.7.0-incubating-SNAPSHOT</version>
+      <version>${project.parent.version}</version>
       </dependency>
 	    <dependency>
 	      <groupId>junit</groupId>

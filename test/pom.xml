@@ -13,7 +13,7 @@
     <!-- Core Module -->
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>any23-core</artifactId>
+      <artifactId>apache-any23-core</artifactId>
       <version>${project.version}</version>
       <scope>test</scope>
       <type>jar</type>
@@ -21,7 +21,7 @@
 
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>any23-core</artifactId>
+      <artifactId>apache-any23-core</artifactId>
       <version>${project.version}</version>
       <scope>test</scope>
       <type>test-jar</type>
