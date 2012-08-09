@@ -279,7 +279,7 @@ public abstract class AbstractExtractorTestCase extends AbstractAny23TestBase {
      */
     protected void assertModelNotEmpty() throws RepositoryException {
         Assert.assertFalse(
-                "The model is expected to be empty." + getFailedExtractionMessage(),
+                "The model is expected to not be empty." + getFailedExtractionMessage(),
                 conn.isEmpty()
         );
     }
