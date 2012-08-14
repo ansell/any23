@@ -70,7 +70,7 @@ public class TagSoupParser {
 
     private final String encoding;
     
-    private Document result = null;
+    private volatile Document result = null;
 
     public TagSoupParser(InputStream input, String documentURI) {
         this.input = input;
@@ -95,24 +95,28 @@ public class TagSoupParser {
      */
     public Document getDOM() throws IOException {
         if (result == null) {
-            long startTime = System.currentTimeMillis();
-            try {
-                result = parse();
-            } catch (SAXException ex) {
-                // should not happen, it's a tag soup parser
-                throw new RuntimeException("Shouldn not happen, it's a tag soup parser", ex);
-            } catch (TransformerException ex) {
-                // should not happen, it's a tag soup parser
-                throw new RuntimeException("Shouldn not happen, it's a tag soup parser", ex);
-            } catch (NullPointerException ex) {
-                if (ex.getStackTrace()[0].getClassName().equals("java.io.Reader")) {
-                    throw new RuntimeException("Bug in NekoHTML, try upgrading to newer release!", ex);
-                } else {
-                    throw ex;
+            synchronized(this) {
+                long startTime = System.currentTimeMillis();
+                if(result == null) {
+                    try {
+                        result = parse();
+                    } catch (SAXException ex) {
+                        // should not happen, it's a tag soup parser
+                        throw new RuntimeException("Shouldn not happen, it's a tag soup parser", ex);
+                    } catch (TransformerException ex) {
+                        // should not happen, it's a tag soup parser
+                        throw new RuntimeException("Shouldn not happen, it's a tag soup parser", ex);
+                    } catch (NullPointerException ex) {
+                        if (ex.getStackTrace()[0].getClassName().equals("java.io.Reader")) {
+                            throw new RuntimeException("Bug in NekoHTML, try upgrading to newer release!", ex);
+                        } else {
+                            throw ex;
+                        }
+                    } finally {
+                        long elapsed = System.currentTimeMillis() - startTime;
+                        logger.debug("Parsed " + documentURI + " with NekoHTML, " + elapsed + "ms");
+                    }
                 }
-            } finally {
-                long elapsed = System.currentTimeMillis() - startTime;
-                logger.debug("Parsed " + documentURI + " with NekoHTML, " + elapsed + "ms");
             }
         }
         result.setDocumentURI(documentURI);
