@@ -22,6 +22,7 @@ import org.apache.any23.rdf.RDFUtils;
 import org.apache.any23.vocab.FOAF;
 import org.apache.any23.vocab.HLISTING;
 import org.apache.any23.vocab.SINDICE;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openrdf.model.Resource;
 import org.openrdf.model.vocabulary.RDF;
@@ -149,6 +150,7 @@ public class HListingExtractorTest extends AbstractExtractorTestCase {
         assertContains(vHLISTING.itemPhoto,  RDFUtils.uri(baseURI.stringValue() + "pic.jpg"));
     }
 
+    @Ignore
     @Test
     public void testKelkoo() throws RepositoryException {
         assertExtract("/microformats/hlisting/kelkoo.html");
