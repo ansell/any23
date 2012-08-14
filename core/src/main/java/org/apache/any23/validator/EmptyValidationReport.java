@@ -32,15 +32,15 @@ public class EmptyValidationReport implements ValidationReport {
 
     private static final EmptyValidationReport INSTANCE = new EmptyValidationReport();
 
-    private static final List<Issue> EMPTY_ISSUES = Collections.emptyList();
-    private static final List<RuleActivation> EMPTY_RULE_ACTIVATIONS = Collections.emptyList();
-    private static final List<Error> EMPTY_ERRORS = Collections.emptyList();
+    private final List<Issue> EMPTY_ISSUES = Collections.emptyList();
+    private final List<RuleActivation> EMPTY_RULE_ACTIVATIONS = Collections.emptyList();
+    private final List<Error> EMPTY_ERRORS = Collections.emptyList();
 
     public static EmptyValidationReport getInstance() {
         return INSTANCE; 
     }
 
-    private EmptyValidationReport() {}
+    public EmptyValidationReport() {}
 
     public List<Issue> getIssues() {
         return EMPTY_ISSUES;

@@ -300,7 +300,7 @@ public class SingleDocumentExtraction {
         return new SingleDocumentExtractionReport(
                 documentReport == null
                         ?
-                EmptyValidationReport.getInstance() : documentReport.getReport(),
+                new EmptyValidationReport() : documentReport.getReport(),
                 extractorToIssues
         );
     }
@@ -547,7 +547,7 @@ public class SingleDocumentExtraction {
             if(extractionParameters.isValidate()) {
                 documentReport = tagSoupParser.getValidatedDOM( extractionParameters.isFix() );
             } else {
-                documentReport = new DocumentReport( EmptyValidationReport.getInstance(), tagSoupParser.getDOM() );
+                documentReport = new DocumentReport( new EmptyValidationReport(), tagSoupParser.getDOM() );
             }
             tagSoupDOMRelatedParameters = extractionParameters;
         }

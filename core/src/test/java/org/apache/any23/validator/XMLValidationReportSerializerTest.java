@@ -54,7 +54,7 @@ public class XMLValidationReportSerializerTest {
 
     @Test
     public void testSerializeEmptyReport() throws SerializationException {
-        ValidationReport emptyReport = EmptyValidationReport.getInstance();
+        ValidationReport emptyReport = new EmptyValidationReport();
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         serializer.serialize(emptyReport, baos);
 
