@@ -98,9 +98,9 @@ public class SingleDocumentExtraction {
 
     private MIMEType detectedMIMEType = null;
 
-    private DocumentReport documentReport = null;
+    private volatile DocumentReport documentReport = null;
 
-    private ExtractionParameters tagSoupDOMRelatedParameters = null;
+    private volatile ExtractionParameters tagSoupDOMRelatedParameters = null;
 
     private String parserEncoding = null;
 
