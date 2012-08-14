@@ -453,6 +453,7 @@ public class SingleDocumentExtraction {
         );
         final ExtractionResultImpl extractionResult = new ExtractionResultImpl(extractionContext, extractor, output);
         try {
+            // FIXME: Remove the following hard-coded cases
             if (extractor instanceof BlindExtractor) {
                 final BlindExtractor blindExtractor = (BlindExtractor) extractor;
                 blindExtractor.run(extractionParameters, extractionContext, documentURI, extractionResult);
@@ -467,11 +468,11 @@ public class SingleDocumentExtraction {
                 );
             } else if (extractor instanceof TagSoupDOMExtractor) {
                 final TagSoupDOMExtractor tagSoupDOMExtractor = (TagSoupDOMExtractor) extractor;
-                final DocumentReport documentReport = getTagSoupDOM(extractionParameters);
+                final DocumentReport nextDocumentReport = getTagSoupDOM(extractionParameters);
                 tagSoupDOMExtractor.run(
                         extractionParameters,
                         extractionContext,
-                        documentReport.getDocument(),
+                        nextDocumentReport.getDocument(),
                         extractionResult
                 );
             } else {
