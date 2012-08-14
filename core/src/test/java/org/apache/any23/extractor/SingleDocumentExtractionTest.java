@@ -78,11 +78,11 @@ public class SingleDocumentExtractionTest extends AbstractAny23TestBase {
 
     private RepositoryConnection conn;
 
-    RepositoryWriter repositoryWriter;
+    private RepositoryWriter repositoryWriter;
 
-    ByteArrayOutputStream baos;
+    private ByteArrayOutputStream baos;
 
-    RDFXMLWriter rdfxmlWriter;
+    private RDFXMLWriter rdfxmlWriter;
 
     @Before
     public void setUp() throws Exception {
