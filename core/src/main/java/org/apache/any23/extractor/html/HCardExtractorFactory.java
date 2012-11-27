@@ -17,8 +17,8 @@ import org.kohsuke.MetaInfServices;
  *
  */
 @MetaInfServices(ExtractorFactory.class)
-public class HCardExtractorFactory extends SimpleExtractorFactory<HCalendarExtractor> implements
-        ExtractorFactory<HCalendarExtractor> {
+public class HCardExtractorFactory extends SimpleExtractorFactory<HCardExtractor> implements
+        ExtractorFactory<HCardExtractor> {
 
     public static final String NAME = "html-mf-hcard";
     
@@ -35,8 +35,8 @@ public class HCardExtractorFactory extends SimpleExtractorFactory<HCalendarExtra
     }
     
     @Override
-    public HCalendarExtractor createExtractor() {
-        return new HCalendarExtractor();
+    public HCardExtractor createExtractor() {
+        return new HCardExtractor();
     }
 
     public static ExtractorDescription getDescriptionInstance() {
