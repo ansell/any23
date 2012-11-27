@@ -34,7 +34,7 @@ import org.kohsuke.MetaInfServices;
 public class HTMLScraperPlugin implements ExtractorPlugin {
 
     public ExtractorFactory getExtractorFactory() {
-        return HTMLScraperExtractor.factory;
+        return new HTMLScraperExtractorFactory();
     }
 
 }
