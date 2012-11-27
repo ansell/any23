@@ -88,7 +88,7 @@ public class ExtractorRegistryImpl extends info.aduna.lang.service.ServiceRegist
                 instance.register(LicenseExtractor.factory);
                 instance.register(TitleExtractor.factory);
                 instance.register(XFNExtractor.factory);
-                instance.register(ICBMExtractor.factory);
+                //instance.register(ICBMExtractor.factory);
                 //instance.register(AdrExtractor.factory);
                 //instance.register(GeoExtractor.factory);
                 //instance.register(HCalendarExtractor.factory);
