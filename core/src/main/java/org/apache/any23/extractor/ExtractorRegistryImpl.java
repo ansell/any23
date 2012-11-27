@@ -100,7 +100,7 @@ public class ExtractorRegistryImpl extends info.aduna.lang.service.ServiceRegist
                 instance.register(SpeciesExtractor.factory);
                 instance.register(TurtleHTMLExtractor.factory);
                 instance.register(MicrodataExtractor.factory);
-                instance.register(CSVExtractor.factory);
+                //instance.register(CSVExtractor.factory);
                 
                 if(conf.getFlagProperty("any23.extraction.rdfa.programmatic")) {
                     instance.register(RDFa11Extractor.factory);
