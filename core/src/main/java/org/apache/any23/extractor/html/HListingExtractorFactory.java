@@ -17,8 +17,8 @@ import org.kohsuke.MetaInfServices;
  *
  */
 @MetaInfServices(ExtractorFactory.class)
-public class HListingExtractorFactory extends SimpleExtractorFactory<HCardExtractor> implements
-        ExtractorFactory<HCardExtractor> {
+public class HListingExtractorFactory extends SimpleExtractorFactory<HListingExtractor> implements
+        ExtractorFactory<HListingExtractor> {
 
     public static final String NAME = "html-mf-hlisting";
     
@@ -35,8 +35,8 @@ public class HListingExtractorFactory extends SimpleExtractorFactory<HCardExtrac
     }
     
     @Override
-    public HCardExtractor createExtractor() {
-        return new HCardExtractor();
+    public HListingExtractor createExtractor() {
+        return new HListingExtractor();
     }
 
     public static ExtractorDescription getDescriptionInstance() {
