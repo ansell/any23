@@ -35,17 +35,6 @@ import java.util.Arrays;
  */
 public class TriXExtractor extends BaseRDFExtractor {
 
-    public final static ExtractorFactory<TriXExtractor> factory =
-            SimpleExtractorFactory.create(
-                    "rdf-trix",
-                    null,
-                    Arrays.asList(
-                            "application/trix"
-                    ),
-                    "example-trix.trx",
-                    TriXExtractor.class
-            );
-
     /**
      * Constructor, allows to specify the validation and error handling policies.
      *
@@ -66,7 +55,7 @@ public class TriXExtractor extends BaseRDFExtractor {
     }
 
     public ExtractorDescription getDescription() {
-        return factory;
+        return TriXExtractorFactory.getDescriptionInstance();
     }
 
     @Override
