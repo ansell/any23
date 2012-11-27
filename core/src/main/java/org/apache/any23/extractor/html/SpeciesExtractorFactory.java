@@ -17,8 +17,8 @@ import org.kohsuke.MetaInfServices;
  *
  */
 @MetaInfServices(ExtractorFactory.class)
-public class SpeciesExtractorFactory extends SimpleExtractorFactory<LicenseExtractor> implements
-        ExtractorFactory<LicenseExtractor> {
+public class SpeciesExtractorFactory extends SimpleExtractorFactory<SpeciesExtractor> implements
+        ExtractorFactory<SpeciesExtractor> {
 
     public static final String NAME = "html-mf-species";
     
@@ -35,8 +35,8 @@ public class SpeciesExtractorFactory extends SimpleExtractorFactory<LicenseExtra
     }
     
     @Override
-    public LicenseExtractor createExtractor() {
-        return new LicenseExtractor();
+    public SpeciesExtractor createExtractor() {
+        return new SpeciesExtractor();
     }
 
     public static ExtractorDescription getDescriptionInstance() {
