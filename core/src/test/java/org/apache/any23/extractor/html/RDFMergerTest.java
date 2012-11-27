@@ -523,7 +523,7 @@ public class RDFMergerTest extends AbstractExtractorTestCase {
         extractHCardAndRelated(filename);
         InputStream input = new BufferedInputStream(this.getClass().getResourceAsStream(filename));
         Document document = new TagSoupParser(input, baseURI.stringValue()).getDOM();
-        HReviewExtractor hReviewExtractor = HReviewExtractor.factory.createExtractor();
+        HReviewExtractor hReviewExtractor = new HReviewExtractorFactory().createExtractor();
         ExtractionContext hreviewExtractionContext = new ExtractionContext(
                 hReviewExtractor.getDescription().getExtractorName(), baseURI
         );
