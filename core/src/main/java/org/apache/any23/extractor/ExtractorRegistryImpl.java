@@ -103,7 +103,8 @@ public class ExtractorRegistryImpl extends info.aduna.lang.service.ServiceRegist
                 //instance.register(CSVExtractor.factory);
                 
                 if(conf.getFlagProperty("any23.extraction.rdfa.programmatic")) {
-                    instance.register(RDFa11Extractor.factory);
+                    // FIXME: Unregister RDFaExtractor if flag is not set
+                    //instance.register(RDFa11Extractor.factory);
                 } else {
                     // FIXME: Unregister RDFaExtractor if flag is set
                     //instance.register(RDFaExtractor.factory);
