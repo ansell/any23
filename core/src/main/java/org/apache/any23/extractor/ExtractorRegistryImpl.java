@@ -38,9 +38,7 @@ import org.apache.any23.extractor.html.XFNExtractor;
 import org.apache.any23.extractor.microdata.MicrodataExtractor;
 import org.apache.any23.extractor.rdf.NQuadsExtractor;
 import org.apache.any23.extractor.rdf.NTriplesExtractor;
-import org.apache.any23.extractor.rdf.RDFXMLExtractor;
 import org.apache.any23.extractor.rdf.TriXExtractor;
-import org.apache.any23.extractor.rdf.TurtleExtractor;
 import org.apache.any23.extractor.rdfa.RDFa11Extractor;
 import org.apache.any23.extractor.rdfa.RDFaExtractor;
 
@@ -54,7 +52,11 @@ import java.util.Map;
  *  Singleton class acting as a register for all the various
  *  {@link Extractor}.
  */
-public class ExtractorRegistryImpl implements ExtractorRegistry {
+public class ExtractorRegistryImpl extends info.aduna.lang.service.ServiceRegistry<String, ExtractorFactory> implements ExtractorRegistry {
+
+    protected ExtractorRegistryImpl() {
+        super(ExtractorFactory.class);
+    }
 
     /**
      * The instance.
@@ -66,7 +68,7 @@ public class ExtractorRegistryImpl implements ExtractorRegistry {
      * registered {@link Extractor}.
      */
     private Map<String, ExtractorFactory<?>> factories = new HashMap<String, ExtractorFactory<?>>();
-
+    
     /**
      * @return returns the {@link ExtractorRegistry} instance.
      */
@@ -78,15 +80,10 @@ public class ExtractorRegistryImpl implements ExtractorRegistry {
                 instance = new ExtractorRegistryImpl();
                 // FIXME: Remove these hardcoded links to the extractor factories by turning them into SPI interfaces
                 //instance.register(RDFXMLExtractor.factory);
-                instance.register(TurtleExtractor.factory);
+                //instance.register(TurtleExtractor.factory);
                 instance.register(NTriplesExtractor.factory);
                 instance.register(NQuadsExtractor.factory);
                 instance.register(TriXExtractor.factory);
-                if(conf.getFlagProperty("any23.extraction.rdfa.programmatic")) {
-                    instance.register(RDFa11Extractor.factory);
-                } else {
-                    instance.register(RDFaExtractor.factory);
-                }
                 instance.register(HeadLinkExtractor.factory);
                 instance.register(LicenseExtractor.factory);
                 instance.register(TitleExtractor.factory);
@@ -104,6 +101,12 @@ public class ExtractorRegistryImpl implements ExtractorRegistry {
                 instance.register(TurtleHTMLExtractor.factory);
                 instance.register(MicrodataExtractor.factory);
                 instance.register(CSVExtractor.factory);
+                
+                if(conf.getFlagProperty("any23.extraction.rdfa.programmatic")) {
+                    instance.register(RDFa11Extractor.factory);
+                } else {
+                    instance.register(RDFaExtractor.factory);
+                }
                 if(conf.getFlagProperty("any23.extraction.head.meta")) {
                     instance.register(HTMLMetaExtractor.factory);
                 }
@@ -182,6 +185,11 @@ public class ExtractorRegistryImpl implements ExtractorRegistry {
         List<String> result = new ArrayList<String>(factories.keySet());
         Collections.sort(result);
         return result;
+    }
+
+    @Override
+    protected String getKey(ExtractorFactory service) {
+        return service.getExtractorName();
     }
 
 }
