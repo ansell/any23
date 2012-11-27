@@ -81,7 +81,7 @@ public class ExtractorRegistryImpl extends info.aduna.lang.service.ServiceRegist
                 // FIXME: Remove these hardcoded links to the extractor factories by turning them into SPI interfaces
                 //instance.register(RDFXMLExtractor.factory);
                 //instance.register(TurtleExtractor.factory);
-                instance.register(NTriplesExtractor.factory);
+                //instance.register(NTriplesExtractor.factory);
                 //instance.register(NQuadsExtractor.factory);
                 //instance.register(TriXExtractor.factory);
                 instance.register(HeadLinkExtractor.factory);
