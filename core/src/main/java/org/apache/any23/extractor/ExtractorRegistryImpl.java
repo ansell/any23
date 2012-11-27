@@ -18,35 +18,10 @@
 package org.apache.any23.extractor;
 
 import org.apache.any23.configuration.DefaultConfiguration;
-import org.apache.any23.extractor.csv.CSVExtractor;
-import org.apache.any23.extractor.html.AdrExtractor;
-import org.apache.any23.extractor.html.GeoExtractor;
-import org.apache.any23.extractor.html.HCalendarExtractor;
-import org.apache.any23.extractor.html.HCardExtractor;
-import org.apache.any23.extractor.html.HListingExtractor;
-import org.apache.any23.extractor.html.HRecipeExtractor;
-import org.apache.any23.extractor.html.HResumeExtractor;
-import org.apache.any23.extractor.html.HReviewExtractor;
-import org.apache.any23.extractor.html.HTMLMetaExtractor;
-import org.apache.any23.extractor.html.HeadLinkExtractor;
-import org.apache.any23.extractor.html.ICBMExtractor;
-import org.apache.any23.extractor.html.LicenseExtractor;
-import org.apache.any23.extractor.html.SpeciesExtractor;
-import org.apache.any23.extractor.html.TitleExtractor;
-import org.apache.any23.extractor.html.TurtleHTMLExtractor;
-import org.apache.any23.extractor.html.XFNExtractor;
-import org.apache.any23.extractor.microdata.MicrodataExtractor;
-import org.apache.any23.extractor.rdf.NQuadsExtractor;
-import org.apache.any23.extractor.rdf.NTriplesExtractor;
-import org.apache.any23.extractor.rdf.TriXExtractor;
-import org.apache.any23.extractor.rdfa.RDFa11Extractor;
-import org.apache.any23.extractor.rdfa.RDFaExtractor;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  *  Singleton class acting as a register for all the various
