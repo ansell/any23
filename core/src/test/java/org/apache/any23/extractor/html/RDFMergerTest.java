@@ -436,7 +436,7 @@ public class RDFMergerTest extends AbstractExtractorTestCase {
         InputStream input = new BufferedInputStream(this.getClass().getResourceAsStream(filename));
         
         Document document = new TagSoupParser(input, baseURI.stringValue()).getDOM();
-        HCardExtractor hCardExtractor = HCardExtractor.factory.createExtractor();
+        HCardExtractor hCardExtractor = new HCardExtractorFactory().createExtractor();
         ExtractionContext hcExtractionContext = new ExtractionContext(
                 hCardExtractor.getDescription().getExtractorName(),
                 baseURI
@@ -473,7 +473,7 @@ public class RDFMergerTest extends AbstractExtractorTestCase {
         InputStream input = new BufferedInputStream(this.getClass().getResourceAsStream(filename));
 
         Document document = new TagSoupParser(input, baseURI.stringValue()).getDOM();
-        HCardExtractor hCardExtractor = HCardExtractor.factory.createExtractor();
+        HCardExtractor hCardExtractor = new HCardExtractorFactory().createExtractor();
         ExtractionContext hCardExtractionContext = new ExtractionContext(
                 hCardExtractor.getDescription().getExtractorName(), baseURI
         );
@@ -487,7 +487,7 @@ public class RDFMergerTest extends AbstractExtractorTestCase {
                 )
         );
 
-        GeoExtractor geoExtractor = GeoExtractor.factory.createExtractor();
+        GeoExtractor geoExtractor = new GeoExtractorFactory().createExtractor();
         ExtractionContext geoExtractionContext = new ExtractionContext(
                 geoExtractor.getDescription().getExtractorName(), baseURI
         );
@@ -502,7 +502,7 @@ public class RDFMergerTest extends AbstractExtractorTestCase {
                 )
         );
 
-        AdrExtractor adrExtractor = AdrExtractor.factory.createExtractor();
+        AdrExtractor adrExtractor = new AdrExtractorFactory().createExtractor();
         ExtractionContext adrExtractionContext = new ExtractionContext(
                 adrExtractor.getDescription().getExtractorName(), baseURI
         );
