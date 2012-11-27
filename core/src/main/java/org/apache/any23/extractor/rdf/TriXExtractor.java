@@ -54,6 +54,7 @@ public class TriXExtractor extends BaseRDFExtractor {
         this(true, true);
     }
 
+    @Override
     public ExtractorDescription getDescription() {
         return TriXExtractorFactory.getDescriptionInstance();
     }

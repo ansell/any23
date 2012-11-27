@@ -49,6 +49,7 @@ public class TurtleExtractor extends BaseRDFExtractor {
         this(false, false);
     }
 
+    @Override
     public ExtractorDescription getDescription() {
         return TurtleExtractorFactory.getDescriptionInstance();
     }

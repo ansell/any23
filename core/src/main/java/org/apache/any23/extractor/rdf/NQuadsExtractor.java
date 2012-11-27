@@ -38,6 +38,7 @@ public class NQuadsExtractor extends BaseRDFExtractor {
         this(false, false);
     }
 
+    @Override
     public ExtractorDescription getDescription() {
         return NQuadsExtractorFactory.getDescriptionInstance();
     }
