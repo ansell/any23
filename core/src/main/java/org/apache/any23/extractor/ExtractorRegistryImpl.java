@@ -97,7 +97,7 @@ public class ExtractorRegistryImpl extends info.aduna.lang.service.ServiceRegist
                 //instance.register(HResumeExtractor.factory);
                 //instance.register(HReviewExtractor.factory);
                 //instance.register(HRecipeExtractor.factory);
-                instance.register(SpeciesExtractor.factory);
+                //instance.register(SpeciesExtractor.factory);
                 instance.register(TurtleHTMLExtractor.factory);
                 instance.register(MicrodataExtractor.factory);
                 //instance.register(CSVExtractor.factory);

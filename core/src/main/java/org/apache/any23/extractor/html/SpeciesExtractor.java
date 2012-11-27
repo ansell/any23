@@ -56,15 +56,6 @@ public class SpeciesExtractor extends EntityBasedMicroformatExtractor {
             "class",
     };
 
-    public final static ExtractorFactory<SpeciesExtractor> factory =
-            SimpleExtractorFactory.create(
-                    "html-mf-species",
-                    PopularPrefixes.createSubset("rdf", "wo"),
-                    Arrays.asList("text/html;q=0.1", "application/xhtml+xml;q=0.1"),
-                    "example-mf-species.html",
-                    SpeciesExtractor.class
-            );
-
     /**
      * Returns the description of this extractor.
      *
@@ -72,7 +63,7 @@ public class SpeciesExtractor extends EntityBasedMicroformatExtractor {
      */
     @Override
     public ExtractorDescription getDescription() {
-        return factory;
+        return SpeciesExtractorFactory.getDescriptionInstance();
     }
 
     /**
