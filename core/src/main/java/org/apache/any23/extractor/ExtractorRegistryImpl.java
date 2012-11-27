@@ -77,7 +77,7 @@ public class ExtractorRegistryImpl implements ExtractorRegistry {
             if (instance == null) {
                 instance = new ExtractorRegistryImpl();
                 // FIXME: Remove these hardcoded links to the extractor factories by turning them into SPI interfaces
-                instance.register(RDFXMLExtractor.factory);
+                //instance.register(RDFXMLExtractor.factory);
                 instance.register(TurtleExtractor.factory);
                 instance.register(NTriplesExtractor.factory);
                 instance.register(NQuadsExtractor.factory);
