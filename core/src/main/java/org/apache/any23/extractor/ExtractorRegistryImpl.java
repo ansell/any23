@@ -64,12 +64,6 @@ public class ExtractorRegistryImpl extends info.aduna.lang.service.ServiceRegist
     private static ExtractorRegistry instance = null;
 
     /**
-     * maps containing the related {@link ExtractorFactory} for each
-     * registered {@link Extractor}.
-     */
-    private Map<String, ExtractorFactory<?>> factories = new HashMap<String, ExtractorFactory<?>>();
-    
-    /**
      * @return returns the {@link ExtractorRegistry} instance.
      */
     public static ExtractorRegistry getInstance() {
@@ -126,11 +120,7 @@ public class ExtractorRegistryImpl extends info.aduna.lang.service.ServiceRegist
      *         with a that already exists in the registry.
      */
     public void register(ExtractorFactory<?> factory) {
-        if (factories.containsKey(factory.getExtractorName())) {
-            throw new IllegalArgumentException(String.format("Extractor name clash: %s",
-                    factory.getExtractorName()));
-        }
-        factories.put(factory.getExtractorName(), factory);
+        this.add(factory);
     }
 
     /**
@@ -143,10 +133,11 @@ public class ExtractorRegistryImpl extends info.aduna.lang.service.ServiceRegist
      * {@link ExtractorFactory} associated to the provided name.
      */
     public ExtractorFactory<?> getFactory(String name) {
-        if (!factories.containsKey(name)) {
+        ExtractorFactory<?> result = this.get(name);
+        if (result == null) {
             throw new IllegalArgumentException("Unregistered extractor name: " + name);
         }
-        return factories.get(name);
+        return result;
     }
 
     /**
@@ -178,14 +169,14 @@ public class ExtractorRegistryImpl extends info.aduna.lang.service.ServiceRegist
      * associated to the provided name.
      */
     public boolean isRegisteredName(String name) {
-        return factories.containsKey(name);
+        return this.has(name);
     }
 
     /**
      * Returns the names of all registered extractors, sorted alphabetically.
      */
     public List<String> getAllNames() {
-        List<String> result = new ArrayList<String>(factories.keySet());
+        List<String> result = new ArrayList<String>(this.getKeys());
         Collections.sort(result);
         return result;
     }
