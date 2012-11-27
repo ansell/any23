@@ -451,7 +451,7 @@ public class RDFMergerTest extends AbstractExtractorTestCase {
                         new RepositoryWriter(getConnection())
                 )
         );
-        XFNExtractor xfnExtractor = XFNExtractor.factory.createExtractor();
+        XFNExtractor xfnExtractor = new XFNExtractorFactory().createExtractor();
         ExtractionContext xfnExtractionContext = new ExtractionContext(
                 xfnExtractor.getDescription().getExtractorName(),
                 baseURI
