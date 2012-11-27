@@ -75,7 +75,7 @@ public class HeadLinkExtractor implements TagSoupDOMExtractor {
             if (title != null && !"".equals(title)) {
                 out.writeTriple(
                         href,
-                        factory.getPrefixes().expand("dcterms:title"),
+                        getDescription().getPrefixes().expand("dcterms:title"),
                         vf.createLiteral(title)
                 );
             }
@@ -83,22 +83,16 @@ public class HeadLinkExtractor implements TagSoupDOMExtractor {
             if (type != null && !"".equals(type)) {
                 out.writeTriple(
                         href,
-                        factory.getPrefixes().expand("dcterms:format"),
+                        getDescription().getPrefixes().expand("dcterms:format"),
                         vf.createLiteral(type)
                 );
             }
         }
     }
 
+    @Override
     public ExtractorDescription getDescription() {
-        return factory;
+        return HeadLinkExtractorFactory.getDescriptionInstance();
     }
 
-    public final static ExtractorFactory<HeadLinkExtractor> factory =
-            SimpleExtractorFactory.create(
-                    "html-head-links",
-                    PopularPrefixes.createSubset("xhtml", "dcterms"),
-                    Arrays.asList("text/html;q=0.05", "application/xhtml+xml;q=0.05"),
-                    "example-head-link.html",
-                    HeadLinkExtractor.class);
 }
