@@ -18,6 +18,9 @@
 package org.apache.any23.extractor;
 
 import org.apache.any23.configuration.DefaultConfiguration;
+import org.apache.any23.extractor.html.HTMLMetaExtractorFactory;
+import org.apache.any23.extractor.rdfa.RDFa11ExtractorFactory;
+import org.apache.any23.extractor.rdfa.RDFaExtractorFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -72,13 +75,16 @@ public class ExtractorRegistryImpl extends info.aduna.lang.service.ServiceRegist
                 //instance.register(CSVExtractor.factory);
                 
                 if(conf.getFlagProperty("any23.extraction.rdfa.programmatic")) {
+                    instance.unregister(RDFaExtractorFactory.NAME);
                     // FIXME: Unregister RDFaExtractor if flag is not set
                     //instance.register(RDFa11Extractor.factory);
                 } else {
+                    instance.unregister(RDFa11ExtractorFactory.NAME);
                     // FIXME: Unregister RDFaExtractor if flag is set
                     //instance.register(RDFaExtractor.factory);
                 }
-                if(conf.getFlagProperty("any23.extraction.head.meta")) {
+                if(!conf.getFlagProperty("any23.extraction.head.meta")) {
+                    instance.unregister(HTMLMetaExtractorFactory.NAME);
                     // FIXME: Unregister HTMLMetaExtractor if this flag is not set
                     //instance.register(HTMLMetaExtractor.factory);
                 }
@@ -94,10 +100,23 @@ public class ExtractorRegistryImpl extends info.aduna.lang.service.ServiceRegist
      * @throws IllegalArgumentException if trying to register a {@link ExtractorFactory}
      *         with a that already exists in the registry.
      */
+    @Override
     public void register(ExtractorFactory<?> factory) {
         this.add(factory);
     }
-
+    
+    /**
+     * Unregisters the {@link ExtractorFactory} with the given name.
+     * 
+     * @param name The name of the ExtractorFactory to unregister.
+     */
+    @Override
+    public void unregister(String name) {
+        if(this.has(name)) {
+            this.remove(this.get(name));
+        }
+    }
+    
     /**
      *
      * Retrieves a {@link ExtractorFactory} given its name
@@ -107,6 +126,7 @@ public class ExtractorRegistryImpl extends info.aduna.lang.service.ServiceRegist
      * @throws IllegalArgumentException if there is not a
      * {@link ExtractorFactory} associated to the provided name.
      */
+    @Override
     public ExtractorFactory<?> getFactory(String name) {
         ExtractorFactory<?> result = this.get(name);
         if (result == null) {
@@ -119,6 +139,7 @@ public class ExtractorRegistryImpl extends info.aduna.lang.service.ServiceRegist
      * @return an {@link ExtractorGroup} with all the registered
      * {@link Extractor}.
      */
+    @Override
     public ExtractorGroup getExtractorGroup() {
         return getExtractorGroup(getAllNames());
     }
@@ -129,6 +150,7 @@ public class ExtractorRegistryImpl extends info.aduna.lang.service.ServiceRegist
      * @param names a {@link java.util.List} containing the names of the desired {@link ExtractorFactory}.
      * @return the extraction group.
      */
+    @Override
     public ExtractorGroup getExtractorGroup(List<String> names) {
         List<ExtractorFactory<?>> members = new ArrayList<ExtractorFactory<?>>(names.size());
         for (String name : names) {
@@ -143,6 +165,7 @@ public class ExtractorRegistryImpl extends info.aduna.lang.service.ServiceRegist
      * @return <code>true</code> if is there a {@link ExtractorFactory}
      * associated to the provided name.
      */
+    @Override
     public boolean isRegisteredName(String name) {
         return this.has(name);
     }
@@ -150,6 +173,7 @@ public class ExtractorRegistryImpl extends info.aduna.lang.service.ServiceRegist
     /**
      * Returns the names of all registered extractors, sorted alphabetically.
      */
+    @Override
     public List<String> getAllNames() {
         List<String> result = new ArrayList<String>(this.getKeys());
         Collections.sort(result);
