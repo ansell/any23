@@ -33,7 +33,7 @@ import org.kohsuke.MetaInfServices;
 public class ExcelPlugin implements ExtractorPlugin {
 
     public ExtractorFactory getExtractorFactory() {
-        return ExcelExtractor.factory;
+        return new ExcelExtractorFactory();
     }
 
 }
