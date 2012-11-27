@@ -108,7 +108,8 @@ public class ExtractorRegistryImpl extends info.aduna.lang.service.ServiceRegist
                     instance.register(RDFaExtractor.factory);
                 }
                 if(conf.getFlagProperty("any23.extraction.head.meta")) {
-                    instance.register(HTMLMetaExtractor.factory);
+                    // FIXME: Unregister HTMLMetaExtractor if this flag is not set
+                    //instance.register(HTMLMetaExtractor.factory);
                 }
             }
         }
