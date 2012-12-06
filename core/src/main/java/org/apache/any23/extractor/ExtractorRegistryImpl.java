@@ -32,7 +32,10 @@ import java.util.List;
  */
 public class ExtractorRegistryImpl extends info.aduna.lang.service.ServiceRegistry<String, ExtractorFactory> implements ExtractorRegistry {
 
-    protected ExtractorRegistryImpl() {
+    /**
+     * Public constructor for ExtractorRegistryImpl. Should normally call getInstance.
+     */
+    public ExtractorRegistryImpl() {
         super(ExtractorFactory.class);
     }
 
