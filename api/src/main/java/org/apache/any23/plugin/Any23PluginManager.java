@@ -52,11 +52,6 @@ public class Any23PluginManager {
     public static final String CLI_PACKAGE = Tool.class.getPackage().getName();
 
     /**
-     * Any23 Plugins package.
-     */
-    public static final String PLUGINS_PACKAGE = ExtractorPlugin.class.getPackage().getName();
-
-    /**
      * Property where look for plugins.
      */
     public static final String PLUGIN_DIRS_PROPERTY = "any23.plugin.dirs";
