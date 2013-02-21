@@ -42,8 +42,8 @@ public class HReviewAggregateExtractorFactory extends SimpleExtractorFactory<HRe
     
     public HReviewAggregateExtractorFactory() {
         super(
-                HReviewExtractorFactory.NAME, 
-                HReviewExtractorFactory.PREFIXES,
+                HReviewAggregateExtractorFactory.NAME, 
+                HReviewAggregateExtractorFactory.PREFIXES,
                 Arrays.asList("text/html;q=0.1",
                         "application/xhtml+xml;q=0.1"),
                         "example-mf-hreview-aggregate.html");
