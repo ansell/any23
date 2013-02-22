@@ -18,7 +18,6 @@
 package org.apache.any23.extractor;
 
 import junit.framework.Assert;
-import org.apache.any23.extractor.html.TitleExtractor;
 import org.apache.any23.rdf.RDFUtils;
 import org.apache.any23.writer.TripleHandler;
 import org.apache.any23.writer.TripleHandlerException;
@@ -48,7 +47,7 @@ public class ExtractionResultImplTest {
 
     @Before
     public void setUp() {
-        extractor = new TitleExtractor();
+        extractor = ExtractorRegistryImpl.getInstance().getFactory("html-head-title").createExtractor();
         mockTripleHandler = Mockito.mock(TripleHandler.class);
         extractionResult  = new ExtractionResultImpl(
                 new ExtractionContext("test-extractor-name", TEST_URI),

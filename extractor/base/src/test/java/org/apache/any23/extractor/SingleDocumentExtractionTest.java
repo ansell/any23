@@ -28,9 +28,10 @@ import org.apache.any23.vocab.Review;
 import org.apache.any23.vocab.SINDICE;
 import org.apache.any23.vocab.VCard;
 import org.apache.any23.writer.CompositeTripleHandler;
-import org.apache.any23.writer.RDFXMLWriter;
 import org.apache.any23.writer.RepositoryWriter;
+import org.apache.any23.writer.TripleHandler;
 import org.apache.any23.writer.TripleHandlerException;
+import org.apache.any23.writer.WriterFactoryRegistry;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -82,7 +83,7 @@ public class SingleDocumentExtractionTest extends AbstractAny23TestBase {
 
     ByteArrayOutputStream baos;
 
-    RDFXMLWriter rdfxmlWriter;
+    TripleHandler rdfxmlWriter;
 
     @Before
     public void setUp() throws Exception {
@@ -231,7 +232,7 @@ public class SingleDocumentExtractionTest extends AbstractAny23TestBase {
 
     private SingleDocumentExtraction getInstance(String file) throws FileNotFoundException, IOException {
         baos = new ByteArrayOutputStream();
-        rdfxmlWriter = new RDFXMLWriter(baos);
+        rdfxmlWriter = WriterFactoryRegistry.getInstance().getWriterInstanceByIdentifier("rdfxml", baos);
         repositoryWriter = new RepositoryWriter(conn);
 
         final CompositeTripleHandler cth = new CompositeTripleHandler();

@@ -21,7 +21,7 @@ import org.apache.any23.source.MemCopyFactory;
 import org.apache.any23.source.StringDocumentSource;
 import org.apache.any23.writer.TripleHandler;
 import org.apache.any23.writer.TripleHandlerException;
-import org.apache.any23.writer.TurtleWriter;
+import org.apache.any23.writer.WriterFactoryRegistry;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -80,7 +80,7 @@ public class ExampleInputOutput {
             return null;
         }
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        TripleHandler writer = new TurtleWriter(out);
+        TripleHandler writer = WriterFactoryRegistry.getInstance().getWriterInstanceByIdentifier("turtle", out);
         new SingleDocumentExtraction(
                 new StringDocumentSource(getExampleInput(), getExampleURI()),
                 factory,
