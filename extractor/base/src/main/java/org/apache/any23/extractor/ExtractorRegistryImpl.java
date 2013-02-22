@@ -18,9 +18,6 @@
 package org.apache.any23.extractor;
 
 import org.apache.any23.configuration.DefaultConfiguration;
-import org.apache.any23.extractor.html.HTMLMetaExtractorFactory;
-import org.apache.any23.extractor.rdfa.RDFa11ExtractorFactory;
-import org.apache.any23.extractor.rdfa.RDFaExtractorFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -78,16 +75,16 @@ public class ExtractorRegistryImpl extends info.aduna.lang.service.ServiceRegist
                 //instance.register(CSVExtractor.factory);
                 
                 if(conf.getFlagProperty("any23.extraction.rdfa.programmatic")) {
-                    instance.unregister(RDFaExtractorFactory.NAME);
+                    instance.unregister("html-rdfa");
                     // FIXME: Unregister RDFaExtractor if flag is not set
                     //instance.register(RDFa11Extractor.factory);
                 } else {
-                    instance.unregister(RDFa11ExtractorFactory.NAME);
+                    instance.unregister("html-rdfa11");
                     // FIXME: Unregister RDFaExtractor if flag is set
                     //instance.register(RDFaExtractor.factory);
                 }
                 if(!conf.getFlagProperty("any23.extraction.head.meta")) {
-                    instance.unregister(HTMLMetaExtractorFactory.NAME);
+                    instance.unregister("html-head-meta");
                     // FIXME: Unregister HTMLMetaExtractor if this flag is not set
                     //instance.register(HTMLMetaExtractor.factory);
                 }
