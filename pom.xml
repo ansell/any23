@@ -237,8 +237,8 @@
     <implementation.build>${scmBranch}@r${buildNumber}</implementation.build>
     <implementation.build.tstamp>${maven.build.timestamp}</implementation.build.tstamp>
     <slf4j.logger.version>1.7.5</slf4j.logger.version>
-    <sesame.version>2.7.14</sesame.version>
-    <semargl.version>0.6.1</semargl.version>
+    <sesame.version>2.7.16</sesame.version>
+    <semargl.version>0.7</semargl.version>
     <latest.stable.released>1.1</latest.stable.released>
     <form.tracker.id>UA-59636188-1</form.tracker.id>
 
