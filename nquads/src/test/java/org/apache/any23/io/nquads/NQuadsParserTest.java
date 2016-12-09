@@ -28,6 +28,7 @@ import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.model.impl.URIImpl;
+import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.rio.ParseLocationListener;
 import org.openrdf.rio.RDFHandler;
 import org.openrdf.rio.RDFHandlerException;
@@ -203,8 +204,8 @@ public class NQuadsParserTest {
         Assert.assertTrue(statement.getObject() instanceof Literal);
         Literal object = (Literal) statement.getObject();
         Assert.assertEquals("2010-05-02", object.stringValue());
-        Assert.assertEquals("en", object.getLanguage());
-        Assert.assertNull("en", object.getDatatype());
+        Assert.assertEquals("en", object.getLanguage().get());
+        Assert.assertEquals(RDF.LANGSTRING, object.getDatatype());
         Assert.assertEquals("http://sin.siteserv.org/def/", statement.getContext().stringValue());
     }
 
@@ -231,7 +232,7 @@ public class NQuadsParserTest {
         Assert.assertTrue(statement.getObject() instanceof Literal);
         Literal object = (Literal) statement.getObject();
         Assert.assertEquals("2010", object.stringValue());
-        Assert.assertNull(object.getLanguage());
+        Assert.assertFalse(object.getLanguage().isPresent());
         Assert.assertEquals("http://www.w3.org/2001/XMLSchema#integer", object.getDatatype().toString());
         Assert.assertEquals("http://sin.siteserv.org/def/", statement.getContext().stringValue());
     }
@@ -526,7 +527,7 @@ public class NQuadsParserTest {
         Assert.assertTrue(statement.getObject() instanceof Literal);
         Literal object = (Literal) statement.getObject();
         Assert.assertEquals("2010", object.stringValue());
-        Assert.assertNull(object.getLanguage());
+        Assert.assertFalse(object.getLanguage().isPresent());
         Assert.assertEquals("http://www.w3.org/2001/XMLSchema#integer", object.getDatatype().toString());
         Assert.assertNull(statement.getContext());
     }
