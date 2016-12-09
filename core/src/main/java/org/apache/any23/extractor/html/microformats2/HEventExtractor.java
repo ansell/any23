@@ -26,7 +26,7 @@ import org.apache.any23.vocab.HEvent;
 import org.apache.any23.vocab.VCard;
 import org.openrdf.model.BNode;
 import org.openrdf.model.Resource;
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
 import org.openrdf.model.vocabulary.RDF;
 import org.w3c.dom.Node;
 import org.apache.any23.extractor.html.HTMLDocument;
@@ -133,7 +133,7 @@ public class HEventExtractor extends EntityBasedMicroformatExtractor {
     }
 
     private void mapFieldWithProperty(HTMLDocument fragment, BNode recipe, String fieldClass,
-                                      URI property) {
+                                      IRI property) {
         HTMLDocument.TextField title = fragment.getSingularTextField(fieldClass);
         conditionallyAddStringProperty(
                 title.source(), recipe, property, title.value()

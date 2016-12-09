@@ -24,6 +24,7 @@ import org.apache.any23.extractor.html.EntityBasedMicroformatExtractor;
 import org.apache.any23.extractor.html.HTMLDocument;
 import org.apache.any23.vocab.HProduct;
 import org.openrdf.model.BNode;
+import org.openrdf.model.IRI;
 import org.openrdf.model.Resource;
 import org.openrdf.model.URI;
 import org.openrdf.model.vocabulary.RDF;
@@ -85,7 +86,7 @@ public class HProductExtractor extends EntityBasedMicroformatExtractor {
     }
 
     private void mapFieldWithProperty(HTMLDocument fragment, BNode product, String fieldClass,
-                                      URI property) {
+                                      IRI property) {
         HTMLDocument.TextField title = fragment.getSingularTextField(fieldClass);
         conditionallyAddStringProperty(
                 title.source(), product, property, title.value()

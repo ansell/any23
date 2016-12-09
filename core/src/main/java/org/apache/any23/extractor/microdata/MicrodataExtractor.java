@@ -28,9 +28,9 @@ import org.apache.any23.extractor.html.DomUtils;
 import org.apache.any23.rdf.RDFUtils;
 import org.apache.any23.vocab.DCTerms;
 import org.apache.any23.vocab.XHTML;
+import org.openrdf.model.IRI;
 import org.openrdf.model.Literal;
 import org.openrdf.model.Resource;
-import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.model.vocabulary.XMLSchema;
@@ -57,7 +57,7 @@ import java.util.Set;
  */
 public class MicrodataExtractor implements Extractor.TagSoupDOMExtractor {
 
-    private static final URI MICRODATA_ITEM
+    private static final IRI MICRODATA_ITEM
             = RDFUtils.uri("http://www.w3.org/1999/xhtml/microdata#item");
 
     private String documentLanguage;
@@ -105,7 +105,7 @@ public class MicrodataExtractor implements Extractor.TagSoupDOMExtractor {
         /**
          * 5.2.6
          */
-        final URI documentURI = extractionContext.getDocumentURI();
+        final IRI documentURI = extractionContext.getDocumentURI();
         final Map<ItemScope, Resource> mappings = new HashMap<ItemScope, Resource>();
         for (ItemScope itemScope : itemScopes) {
             Resource subject = processType(itemScope, documentURI, out, mappings);
@@ -173,7 +173,7 @@ public class MicrodataExtractor implements Extractor.TagSoupDOMExtractor {
      * @param documentURI Document current {@link URI}.
      * @param out         a valid not <code>null</code> {@link ExtractionResult}
      */
-    private void processTitle(Document in, URI documentURI, ExtractionResult out) {
+    private void processTitle(Document in, IRI documentURI, ExtractionResult out) {
         NodeList titles = in.getElementsByTagName("title");
         // just one title is allowed.
         if (titles.getLength() == 1) {
@@ -203,7 +203,7 @@ public class MicrodataExtractor implements Extractor.TagSoupDOMExtractor {
      * @param documentURI Document current {@link URI}.
      * @param out         a valid not <code>null</code> {@link ExtractionResult}
      */
-    private void processHREFElements(Document in, URI documentURI, ExtractionResult out) {
+    private void processHREFElements(Document in, IRI documentURI, ExtractionResult out) {
         NodeList anchors = in.getElementsByTagName("a");
         for (int i = 0; i < anchors.getLength(); i++) {
             processHREFElement(anchors.item(i), documentURI, out);
@@ -226,7 +226,7 @@ public class MicrodataExtractor implements Extractor.TagSoupDOMExtractor {
      * @param documentURI Document current {@link URI}.
      * @param out         a valid not <code>null</code> {@link ExtractionResult}
      */
-    private void processHREFElement(Node item, URI documentURI, ExtractionResult out) {
+    private void processHREFElement(Node item, IRI documentURI, ExtractionResult out) {
         Node rel = item.getAttributes().getNamedItem("rel");
         if (rel == null) {
             return;
@@ -269,7 +269,7 @@ public class MicrodataExtractor implements Extractor.TagSoupDOMExtractor {
             tokensWithNoDuplicates.add(relToken.toLowerCase());
         }
         for (String token : tokensWithNoDuplicates) {
-            URI predicate;
+            IRI predicate;
             if (isAbsoluteURL(token)) {
                 predicate = RDFUtils.uri(token);
             } else {
@@ -291,7 +291,7 @@ public class MicrodataExtractor implements Extractor.TagSoupDOMExtractor {
      * @param documentURI Document current {@link URI}.
      * @param out         a valid not <code>null</code> {@link ExtractionResult}
      */
-    private void processMetaElements(Document in, URI documentURI, ExtractionResult out) {
+    private void processMetaElements(Document in, IRI documentURI, ExtractionResult out) {
         NodeList metas = in.getElementsByTagName("meta");
         for (int i = 0; i < metas.getLength(); i++) {
             Node meta = metas.item(i);
@@ -330,10 +330,10 @@ public class MicrodataExtractor implements Extractor.TagSoupDOMExtractor {
      * @param out
      */
     private void processMetaElement(
-            URI uri,
+            IRI uri,
             String content,
             String language,
-            URI documentURI,
+            IRI documentURI,
             ExtractionResult out
     ) {
         if (content.contains(":")) {
@@ -368,7 +368,7 @@ public class MicrodataExtractor implements Extractor.TagSoupDOMExtractor {
             String name,
             String content,
             String language,
-            URI documentURI,
+            IRI documentURI,
             ExtractionResult out) {
         Literal subject;
         if (language == null) {
@@ -392,7 +392,7 @@ public class MicrodataExtractor implements Extractor.TagSoupDOMExtractor {
      * @param documentURI
      * @param out
      */
-    private void processCiteElements(Document in, URI documentURI, ExtractionResult out) {
+    private void processCiteElements(Document in, IRI documentURI, ExtractionResult out) {
         NodeList blockQuotes = in.getElementsByTagName("blockquote");
         for (int i = 0; i < blockQuotes.getLength(); i++) {
             processCiteElement(blockQuotes.item(i), documentURI, out);
@@ -403,7 +403,7 @@ public class MicrodataExtractor implements Extractor.TagSoupDOMExtractor {
         }
     }
 
-    private void processCiteElement(Node item, URI documentURI, ExtractionResult out) {
+    private void processCiteElement(Node item, IRI documentURI, ExtractionResult out) {
         if (item.getAttributes().getNamedItem("cite") != null) {
             out.writeTriple(
                     documentURI,
@@ -427,7 +427,7 @@ public class MicrodataExtractor implements Extractor.TagSoupDOMExtractor {
      */
     private Resource processType(
             ItemScope itemScope,
-            URI documentURI, ExtractionResult out,
+            IRI documentURI, ExtractionResult out,
             Map<ItemScope, Resource> mappings
     ) throws ExtractionException {
         Resource subject;
@@ -477,11 +477,11 @@ public class MicrodataExtractor implements Extractor.TagSoupDOMExtractor {
             String propName,
             ItemProp itemProp,
             String itemScopeType,
-            URI documentURI,
+            IRI documentURI,
             Map<ItemScope, Resource> mappings,
             ExtractionResult out
     ) throws MalformedURLException, ExtractionException {
-        URI predicate;
+        IRI predicate;
         if (!isAbsoluteURL(propName) && itemScopeType.equals("") && isStrict) {
             return;
         } else if (!isAbsoluteURL(propName) && itemScopeType.equals("") && !isStrict) {

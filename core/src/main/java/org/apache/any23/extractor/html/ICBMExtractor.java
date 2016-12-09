@@ -25,6 +25,7 @@ import org.apache.any23.extractor.ExtractorDescription;
 import org.apache.any23.rdf.Any23ValueFactoryWrapper;
 import org.apache.any23.extractor.Extractor.TagSoupDOMExtractor;
 import org.openrdf.model.BNode;
+import org.openrdf.model.IRI;
 import org.openrdf.model.URI;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.ValueFactoryImpl;
@@ -70,7 +71,7 @@ public class ICBMExtractor implements TagSoupDOMExtractor {
         out.writeTriple(point, expand("geo:long"), factory.createLiteral(Float.toString(lon)));
     }
 
-    private URI expand(String curie) {
+    private IRI expand(String curie) {
         return getDescription().getPrefixes().expand(curie);
     }
 

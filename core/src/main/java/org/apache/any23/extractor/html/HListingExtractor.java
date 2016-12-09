@@ -24,8 +24,8 @@ import org.apache.any23.extractor.TagSoupExtractionResult;
 import org.apache.any23.vocab.FOAF;
 import org.apache.any23.vocab.HListing;
 import org.openrdf.model.BNode;
+import org.openrdf.model.IRI;
 import org.openrdf.model.Resource;
-import org.openrdf.model.URI;
 import org.openrdf.model.vocabulary.RDF;
 import org.w3c.dom.Node;
 
@@ -143,7 +143,7 @@ public class HListingExtractor extends EntityBasedMicroformatExtractor {
                     String value = node.getNodeValue();
                     // do not use conditionallyAdd, it won't work cause of evaluation rules
                     if (!(null == value || "".equals(value))) {
-                        URI property = hLISTING.getPropertyCamelCase(klass);
+                        IRI property = hLISTING.getPropertyCamelCase(klass);
                         conditionallyAddLiteralProperty(
                                 node,
                                 blankItem, property, valueFactory.createLiteral(value)

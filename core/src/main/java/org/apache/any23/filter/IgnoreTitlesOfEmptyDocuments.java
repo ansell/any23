@@ -23,7 +23,7 @@ import org.apache.any23.extractor.html.TitleExtractorFactory;
 import org.apache.any23.writer.TripleHandler;
 import org.apache.any23.writer.TripleHandlerException;
 import org.openrdf.model.Resource;
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
 import org.openrdf.model.Value;
 
 /**
@@ -43,7 +43,7 @@ public class IgnoreTitlesOfEmptyDocuments implements TripleHandler {
         blocker = new ExtractionContextBlocker(wrapped);
     }
 
-    public void startDocument(URI documentURI) throws TripleHandlerException {
+    public void startDocument(IRI documentURI) throws TripleHandlerException {
         blocker.startDocument(documentURI);
     }
 
@@ -54,7 +54,7 @@ public class IgnoreTitlesOfEmptyDocuments implements TripleHandler {
         }
     }
 
-    public void receiveTriple(Resource s, URI p, Value o, URI g, ExtractionContext context)
+    public void receiveTriple(Resource s, IRI p, Value o, IRI g, ExtractionContext context)
     throws TripleHandlerException {
         if (!isTitleContext(context)) {
             blocker.unblockDocument();
@@ -79,7 +79,7 @@ public class IgnoreTitlesOfEmptyDocuments implements TripleHandler {
         return context.getExtractorName().equals(TitleExtractorFactory.NAME);
     }
 
-    public void endDocument(URI documentURI) throws TripleHandlerException {
+    public void endDocument(IRI documentURI) throws TripleHandlerException {
         blocker.endDocument(documentURI);
     }
 

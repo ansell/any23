@@ -25,7 +25,7 @@ import org.apache.any23.extractor.ExtractorDescription;
 import org.apache.any23.extractor.IssueReport;
 import org.apache.any23.vocab.XHTML;
 import org.apache.any23.extractor.Extractor.TagSoupDOMExtractor;
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
@@ -50,7 +50,7 @@ public class LicenseExtractor implements TagSoupDOMExtractor {
             ExtractionResult out
     ) throws IOException, ExtractionException {
         HTMLDocument document = new HTMLDocument(in);
-        final URI documentURI = extractionContext.getDocumentURI();
+        final IRI documentURI = extractionContext.getDocumentURI();
         for (Node node : DomUtils.findAll(in, "//A[@rel='license']/@href")) {
             String link = node.getNodeValue();
             if ("".equals(link)) {

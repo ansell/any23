@@ -26,7 +26,7 @@ import org.apache.any23.extractor.html.HTMLDocument;
 import org.apache.any23.vocab.HEntry;
 import org.apache.any23.vocab.VCard;
 import org.openrdf.model.BNode;
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
 import org.openrdf.model.vocabulary.RDF;
 import org.w3c.dom.Node;
 import org.openrdf.model.Resource;
@@ -117,7 +117,7 @@ public class HEntryExtractor extends EntityBasedMicroformatExtractor {
     }
 
     private void mapFieldWithProperty(HTMLDocument fragment, BNode entry, String fieldClass,
-                                      URI property) {
+                                      IRI property) {
         HTMLDocument.TextField title = fragment.getSingularTextField(fieldClass);
         conditionallyAddStringProperty(
                 title.source(), entry, property, title.value()

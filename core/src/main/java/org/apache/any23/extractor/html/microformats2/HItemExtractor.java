@@ -23,7 +23,7 @@ import org.apache.any23.extractor.ExtractorDescription;
 import org.apache.any23.extractor.TagSoupExtractionResult;
 import org.apache.any23.vocab.HItem;
 import org.openrdf.model.BNode;
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
 import org.openrdf.model.vocabulary.RDF;
 import org.w3c.dom.Node;
 import org.apache.any23.extractor.html.EntityBasedMicroformatExtractor;
@@ -73,7 +73,7 @@ public class HItemExtractor extends EntityBasedMicroformatExtractor {
         return true;
     }
 
-    private void mapFieldWithProperty(HTMLDocument fragment, BNode item, String fieldClass, URI property) {
+    private void mapFieldWithProperty(HTMLDocument fragment, BNode item, String fieldClass, IRI property) {
         HTMLDocument.TextField title = fragment.getSingularTextField(fieldClass);
         conditionallyAddStringProperty(
                 title.source(),item, property, title.value()

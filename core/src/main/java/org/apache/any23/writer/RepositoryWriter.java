@@ -18,6 +18,7 @@
 package org.apache.any23.writer;
 
 import org.apache.any23.extractor.ExtractionContext;
+import org.openrdf.model.IRI;
 import org.openrdf.model.Resource;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
@@ -43,7 +44,7 @@ public class RepositoryWriter implements TripleHandler {
         this.overrideContext = overrideContext;
     }
 
-    public void startDocument(URI documentURI) throws TripleHandlerException {
+    public void startDocument(IRI documentURI) throws TripleHandlerException {
         // ignore
     }
 
@@ -53,9 +54,9 @@ public class RepositoryWriter implements TripleHandler {
 
     public void receiveTriple(
             Resource s,
-            URI p,
+            IRI p,
             Value o,
-            URI g,
+            IRI g,
           ExtractionContext context
     ) throws TripleHandlerException {
         try {
@@ -92,7 +93,7 @@ public class RepositoryWriter implements TripleHandler {
         // ignore
     }
 
-    public void endDocument(URI documentURI) throws TripleHandlerException {
+    public void endDocument(IRI documentURI) throws TripleHandlerException {
         // ignore
     }
 

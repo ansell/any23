@@ -270,6 +270,11 @@ public class Any23ValueFactoryWrapper implements ValueFactory {
     }
 
 	@Override
+	public Literal createLiteral(BigInteger arg0) {
+		return wrappedFactory.createLiteral(arg0);
+	}
+	
+	@Override
 	public Literal createLiteral(BigDecimal arg0) {
 		return wrappedFactory.createLiteral(arg0);
 	}

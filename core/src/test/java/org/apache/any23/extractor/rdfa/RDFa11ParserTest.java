@@ -104,7 +104,7 @@ public class RDFa11ParserTest {
         div.setAttribute("xmlns:dc"  , "http://purl.org/dc/terms/");
         div.setAttribute("xmlns:fake", "http://fake.org/");
         final RDFa11Parser parser = new RDFa11Parser();
-        parser.updateURIMapping(div);
+        parser.updateIRIMapping(div);
         Assert.assertEquals("http://purl.org/dc/terms/", parser.getMapping("dc").toString());
         Assert.assertEquals("http://fake.org/", parser.getMapping("fake").toString());
     }

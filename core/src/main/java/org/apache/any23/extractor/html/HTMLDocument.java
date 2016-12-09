@@ -20,6 +20,7 @@ package org.apache.any23.extractor.html;
 import org.apache.any23.extractor.ExtractionException;
 import org.apache.any23.rdf.Any23ValueFactoryWrapper;
 import org.apache.any23.rdf.RDFUtils;
+import org.openrdf.model.IRI;
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.ValueFactoryImpl;
 import org.slf4j.Logger;
@@ -183,7 +184,7 @@ public class HTMLDocument {
      * @return An absolute URI, or null if the URI is not fixable
      * @throws org.apache.any23.extractor.ExtractionException If the base URI is invalid
      */
-    public URI resolveURI(String uri) throws ExtractionException {
+    public IRI resolveURI(String uri) throws ExtractionException {
         return valueFactory.resolveURI(uri, getBaseURI());
     }
 

@@ -27,7 +27,7 @@ import org.apache.any23.vocab.VCard;
 import org.apache.commons.lang.StringUtils;
 import org.openrdf.model.BNode;
 import org.openrdf.model.Resource;
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
 import org.openrdf.model.vocabulary.RDF;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -182,10 +182,10 @@ public class HCardExtractor extends EntityBasedMicroformatExtractor {
     }
 
     private boolean addTel(Resource card, String type, String value) {
-        URI tel = super.fixLink(value, "tel");
-        URI composed = vCARD.getProperty(type + "Tel", null);
+        IRI tel = super.fixLink(value, "tel");
+        IRI composed = vCARD.getProperty(type + "Tel", null);
         if (composed == null) {
-            URI simple = vCARD.getProperty(type, null);
+            IRI simple = vCARD.getProperty(type, null);
             if (simple == null) {
                 return conditionallyAddResourceProperty(card, vCARD.tel, tel);
             }
@@ -194,7 +194,7 @@ public class HCardExtractor extends EntityBasedMicroformatExtractor {
         return conditionallyAddResourceProperty(card, composed, tel);
     }
 
-    private boolean addSubMicroformat(String className, Resource resource, URI property) {
+    private boolean addSubMicroformat(String className, Resource resource, IRI property) {
         List<Node> nodes = fragment.findAllByClassName(className);
         if (nodes.isEmpty()) return false;
         for (Node node : nodes) {
@@ -206,7 +206,7 @@ public class HCardExtractor extends EntityBasedMicroformatExtractor {
         return true;
     }
 
-    private boolean addStringProperty(String className, Resource resource, URI property) {
+    private boolean addStringProperty(String className, Resource resource, IRI property) {
         final HTMLDocument.TextField textField = fragment.getSingularTextField(className);
         return conditionallyAddStringProperty(
                 textField.source(),
@@ -222,7 +222,7 @@ public class HCardExtractor extends EntityBasedMicroformatExtractor {
      * @param property
      * @return <code>true</code> if the multi property has been added, <code>false</code> otherwise.
      */
-    private boolean addStringMultiProperty(String className, Resource resource, URI property) {
+    private boolean addStringMultiProperty(String className, Resource resource, IRI property) {
         HTMLDocument.TextField[] fields = fragment.getPluralTextField(className);
         boolean found = false;
         for(HTMLDocument.TextField field : fields) {

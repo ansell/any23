@@ -20,6 +20,7 @@ package org.apache.any23.vocab;
 import org.apache.any23.rdf.RDFUtils;
 import org.apache.any23.util.DiscoveryUtils;
 import org.apache.any23.util.StringUtils;
+import org.openrdf.model.IRI;
 import org.openrdf.model.URI;
 import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.model.vocabulary.RDFS;
@@ -56,21 +57,21 @@ public class RDFSchemaUtils {
      * @throws RDFHandlerException if there is an error handling the RDF
      */
     public static void serializeVocabulary(
-            URI namespace,
-            URI[] classes,
-            URI[] properties,
-            Map<URI,String> comments,
+    		IRI namespace,
+    		IRI[] classes,
+    		IRI[] properties,
+            Map<IRI,String> comments,
             RDFWriter writer
     ) throws RDFHandlerException {
         writer.startRDF();
-        for(URI clazz : classes) {
+        for(IRI clazz : classes) {
             writer.handleStatement( RDFUtils.quad(clazz, RDF.TYPE, RDFS.CLASS, namespace) );
             writer.handleStatement( RDFUtils.quad(clazz, RDFS.MEMBER, namespace, namespace) );
             final String comment = comments.get(clazz);
             if(comment != null)
                 writer.handleStatement( RDFUtils.quad(clazz, RDFS.COMMENT, RDFUtils.literal(comment), namespace) );
         }
-        for(URI property : properties) {
+        for(IRI property : properties) {
             writer.handleStatement(RDFUtils.quad(property, RDF.TYPE, RDF.PROPERTY, namespace));
             writer.handleStatement(RDFUtils.quad(property, RDFS.MEMBER, namespace, namespace));
             final String comment = comments.get(property);

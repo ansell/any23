@@ -18,9 +18,9 @@
 package org.apache.any23.extractor.rdf;
 
 import org.apache.any23.extractor.ExtractionResult;
+import org.openrdf.model.IRI;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
-import org.openrdf.model.URI;
 import org.openrdf.rio.RDFHandler;
 import org.openrdf.rio.RDFHandlerException;
 
@@ -49,8 +49,8 @@ public class RDFHandlerAdapter implements RDFHandler {
     public void handleStatement(Statement stmt) {
         if(stmt != null) {
             final Resource context = stmt.getContext();
-            if(context instanceof URI) {
-                target.writeTriple(stmt.getSubject(), stmt.getPredicate(), stmt.getObject(), (URI) context);
+            if(context instanceof IRI) {
+                target.writeTriple(stmt.getSubject(), stmt.getPredicate(), stmt.getObject(), (IRI) context);
             } else {
                 target.writeTriple(stmt.getSubject(), stmt.getPredicate(), stmt.getObject());
             }

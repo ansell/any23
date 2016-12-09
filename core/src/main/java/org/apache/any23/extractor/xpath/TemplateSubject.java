@@ -19,6 +19,7 @@ package org.apache.any23.extractor.xpath;
 
 import org.openrdf.model.Resource;
 import org.openrdf.model.impl.BNodeImpl;
+import org.openrdf.model.impl.SimpleValueFactory;
 import org.openrdf.model.impl.URIImpl;
 
 /**
@@ -61,9 +62,9 @@ public class TemplateSubject extends Term<Resource> {
     protected Resource getValueInternal(String value) {
         switch (type) {
             case uri:
-                return new URIImpl(value);
+                return SimpleValueFactory.getInstance().createIRI(value);
             case bnode:
-                return new BNodeImpl(value);
+                return SimpleValueFactory.getInstance().createBNode(value);
             default:
                 throw new IllegalStateException();
         }

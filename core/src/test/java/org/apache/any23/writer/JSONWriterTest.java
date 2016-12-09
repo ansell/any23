@@ -19,10 +19,8 @@ package org.apache.any23.writer;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.openrdf.model.URI;
-import org.openrdf.model.impl.BNodeImpl;
-import org.openrdf.model.impl.LiteralImpl;
-import org.openrdf.model.impl.URIImpl;
+import org.openrdf.model.IRI;
+import org.openrdf.model.impl.SimpleValueFactory;
 
 import java.io.ByteArrayOutputStream;
 
@@ -39,26 +37,26 @@ public class JSONWriterTest {
     public void testWriting() throws TripleHandlerException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         jsonWriter = new JSONWriter(baos);
-        final URI documentURI = new URIImpl("http://fake/uri");
+        final IRI documentURI = SimpleValueFactory.getInstance().createIRI("http://fake/uri");
         jsonWriter.startDocument(documentURI);
         jsonWriter.receiveTriple(
-                new BNodeImpl("bn1"),
-                new URIImpl("http://pred/1"),
-                new URIImpl("http://value/1"),
-                new URIImpl("http://graph/1"),
+        		SimpleValueFactory.getInstance().createBNode("bn1"),
+                SimpleValueFactory.getInstance().createIRI("http://pred/1"),
+                SimpleValueFactory.getInstance().createIRI("http://value/1"),
+                SimpleValueFactory.getInstance().createIRI("http://graph/1"),
                 null
         );
         jsonWriter.receiveTriple(
-                new URIImpl("http://sub/2"),
-                new URIImpl("http://pred/2"),
-                new LiteralImpl("language literal", "en"),
-                new URIImpl("http://graph/2"),
+        		SimpleValueFactory.getInstance().createIRI("http://sub/2"),
+        		SimpleValueFactory.getInstance().createIRI("http://pred/2"),
+        		SimpleValueFactory.getInstance().createLiteral("language literal", "en"),
+                SimpleValueFactory.getInstance().createIRI("http://graph/2"),
                 null
         );
         jsonWriter.receiveTriple(
-                new URIImpl("http://sub/3"),
-                new URIImpl("http://pred/3"),
-                new LiteralImpl("123", new URIImpl("http://datatype")),
+        		SimpleValueFactory.getInstance().createIRI("http://sub/3"),
+        		SimpleValueFactory.getInstance().createIRI("http://pred/3"),
+        		SimpleValueFactory.getInstance().createLiteral("123", SimpleValueFactory.getInstance().createIRI("http://datatype")),
                 null,
                 null
         );

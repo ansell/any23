@@ -19,7 +19,7 @@ package org.apache.any23.writer;
 
 import org.apache.any23.extractor.ExtractionContext;
 import org.openrdf.model.Resource;
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
 import org.openrdf.model.Value;
 
 import java.util.Collection;
@@ -67,7 +67,7 @@ public class ReportingTripleHandler implements TripleHandler {
         return String.format("Total Documents: %d, Total Triples: %d", getTotalDocuments(), getTotalTriples());
     }
 
-    public void startDocument(URI documentURI) throws TripleHandlerException {
+    public void startDocument(IRI documentURI) throws TripleHandlerException {
         totalDocuments.incrementAndGet();
         wrapped.startDocument(documentURI);
     }
@@ -86,9 +86,9 @@ public class ReportingTripleHandler implements TripleHandler {
 
     public void receiveTriple(
             Resource s,
-            URI p,
+            IRI p,
             Value o,
-            URI g,
+            IRI g,
             ExtractionContext context
     ) throws TripleHandlerException {
         extractorNames.add(context.getExtractorName());
@@ -104,7 +104,7 @@ public class ReportingTripleHandler implements TripleHandler {
         wrapped.closeContext(context);
     }
 
-    public void endDocument(URI documentURI) throws TripleHandlerException {
+    public void endDocument(IRI documentURI) throws TripleHandlerException {
         wrapped.endDocument(documentURI);
     }
 

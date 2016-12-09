@@ -18,6 +18,7 @@
 package org.apache.any23.extractor.xpath;
 
 import org.apache.any23.extractor.ExtractionResult;
+import org.openrdf.model.IRI;
 import org.openrdf.model.Resource;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
@@ -116,10 +117,10 @@ public class QuadTemplate {
      */
     public void printOut(ExtractionResult er, Map<String,String> variableAssignment) {
         final Resource s = subject.getValue(variableAssignment);
-        final URI p      = predicate.getValue(variableAssignment);
+        final IRI p      = predicate.getValue(variableAssignment);
         final Value o    = object.getValue(variableAssignment);
         if(graph != null) {
-            final URI g = graph.getValue(variableAssignment);
+            final IRI g = graph.getValue(variableAssignment);
             er.writeTriple(s, p, o, g);
         } else {
             er.writeTriple(s, p, o);

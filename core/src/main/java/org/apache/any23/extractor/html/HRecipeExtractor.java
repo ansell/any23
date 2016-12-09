@@ -22,7 +22,7 @@ import org.apache.any23.extractor.ExtractionResult;
 import org.apache.any23.extractor.ExtractorDescription;
 import org.apache.any23.vocab.HRecipe;
 import org.openrdf.model.BNode;
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
 import org.openrdf.model.vocabulary.RDF;
 import org.w3c.dom.Node;
 
@@ -78,7 +78,7 @@ public class HRecipeExtractor extends EntityBasedMicroformatExtractor {
      * @param fieldClass
      * @param property
      */
-    private void mapFieldWithProperty(HTMLDocument fragment, BNode recipe, String fieldClass, URI property) {
+    private void mapFieldWithProperty(HTMLDocument fragment, BNode recipe, String fieldClass, IRI property) {
         HTMLDocument.TextField title = fragment.getSingularTextField(fieldClass);
         conditionallyAddStringProperty(
                 title.source(), recipe, property, title.value()

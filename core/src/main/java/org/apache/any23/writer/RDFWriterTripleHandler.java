@@ -20,7 +20,7 @@ package org.apache.any23.writer;
 import org.apache.any23.extractor.ExtractionContext;
 import org.apache.any23.rdf.RDFUtils;
 import org.openrdf.model.Resource;
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
 import org.openrdf.model.Value;
 import org.openrdf.rio.RDFHandlerException;
 import org.openrdf.rio.RDFWriter;
@@ -76,7 +76,7 @@ public abstract class RDFWriterTripleHandler implements FormatWriter, TripleHand
     }
 
     @Override
-    public void startDocument(URI documentURI) throws TripleHandlerException {
+    public void startDocument(IRI documentURI) throws TripleHandlerException {
         handleComment("OUTPUT FORMAT: " + writer.getRDFFormat());
     }
 
@@ -86,9 +86,9 @@ public abstract class RDFWriterTripleHandler implements FormatWriter, TripleHand
     }
 
     @Override
-    public void receiveTriple(Resource s, URI p, Value o, URI g, ExtractionContext context)
+    public void receiveTriple(Resource s, IRI p, Value o, IRI g, ExtractionContext context)
     throws TripleHandlerException {
-        final URI graph = g == null ? context.getDocumentURI() : g;
+        final IRI graph = g == null ? context.getDocumentURI() : g;
         try {
             writer.handleStatement(
                     RDFUtils.quad(s, p, o, graph));
@@ -129,7 +129,7 @@ public abstract class RDFWriterTripleHandler implements FormatWriter, TripleHand
     }
 
     @Override
-    public void endDocument(URI documentURI) throws TripleHandlerException {
+    public void endDocument(IRI documentURI) throws TripleHandlerException {
         // Empty.
     }
 

@@ -32,7 +32,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,11 +59,11 @@ public class JSONLDExtractorTest {
   @Test
   public void testExtractFromJSONLDDocument() 
     throws IOException, ExtractionException, TripleHandlerException {
-      final URI uri = RDFUtils.uri("http://host.com/place-example.jsonld");
+      final IRI uri = RDFUtils.uri("http://host.com/place-example.jsonld");
       extract(uri, "/org/apache/any23/extractor/rdf/place-example.jsonld");
   }
   
-  public void extract(URI uri, String filePath) 
+  public void extract(IRI uri, String filePath) 
     throws IOException, ExtractionException, TripleHandlerException {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     final TripleHandler tHandler = new RDFXMLWriter(baos);

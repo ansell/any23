@@ -20,6 +20,7 @@ package org.apache.any23.extractor.xpath;
 import org.openrdf.model.Value;
 import org.openrdf.model.impl.BNodeImpl;
 import org.openrdf.model.impl.LiteralImpl;
+import org.openrdf.model.impl.SimpleValueFactory;
 import org.openrdf.model.impl.ValueFactoryImpl;
 
 /**
@@ -27,7 +28,7 @@ import org.openrdf.model.impl.ValueFactoryImpl;
  *
  * @author Michele Mostarda (mostarda@fbk.eu)
  */
-public class TemplateObject extends Term {
+public class TemplateObject extends Term<Value> {
 
     /**
      * Supported object types.
@@ -64,7 +65,7 @@ public class TemplateObject extends Term {
         switch (type) {
             case uri:
                 try {
-                    return ValueFactoryImpl.getInstance().createURI(value);
+                    return SimpleValueFactory.getInstance().createIRI(value);
                 } catch (IllegalArgumentException iae) {
                     throw new IllegalArgumentException(
                             String.format("Expected a valid URI for object template, found '%s'", value),
@@ -72,9 +73,9 @@ public class TemplateObject extends Term {
                     );
                 }
             case bnode:
-                return new BNodeImpl(value);
+                return SimpleValueFactory.getInstance().createBNode(value);
             case literal:
-                return new LiteralImpl(value);
+                return SimpleValueFactory.getInstance().createLiteral(value);
             default:
                 throw new IllegalStateException();
         }

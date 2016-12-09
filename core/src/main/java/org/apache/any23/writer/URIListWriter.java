@@ -19,7 +19,7 @@ package org.apache.any23.writer;
 
 import org.apache.any23.extractor.ExtractionContext;
 import org.openrdf.model.Resource;
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
 import org.openrdf.model.Value;
 
 import java.io.OutputStream;
@@ -48,13 +48,13 @@ public class URIListWriter implements FormatWriter {
         this.printStream = new PrintStream(outputStream);
     }
 
-    public void startDocument(URI documentURI) throws TripleHandlerException {}
+    public void startDocument(IRI documentURI) throws TripleHandlerException {}
 
     public void openContext(ExtractionContext context) throws TripleHandlerException {
         this.extractionContext = context;
     }
 
-    public void receiveTriple(Resource s, URI p, Value o, URI g, ExtractionContext context)
+    public void receiveTriple(Resource s, IRI p, Value o, IRI g, ExtractionContext context)
             throws TripleHandlerException {
         if(!this.resources.contains(s)) {
             this.resources.add(s);
@@ -73,7 +73,7 @@ public class URIListWriter implements FormatWriter {
     public void closeContext(ExtractionContext context) throws TripleHandlerException {
     }
 
-    public void endDocument(URI documentURI) throws TripleHandlerException {
+    public void endDocument(IRI documentURI) throws TripleHandlerException {
     }
 
     public void setContentLength(long contentLength) {

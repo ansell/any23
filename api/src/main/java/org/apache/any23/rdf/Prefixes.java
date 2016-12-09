@@ -17,7 +17,9 @@
 
 package org.apache.any23.rdf;
 
+import org.openrdf.model.IRI;
 import org.openrdf.model.URI;
+import org.openrdf.model.impl.SimpleValueFactory;
 import org.openrdf.model.impl.ValueFactoryImpl;
 
 import java.util.Collections;
@@ -75,12 +77,12 @@ public class Prefixes {
         this.mappings = mappings;
     }
 
-    public URI expand(String curie) {
+    public IRI expand(String curie) {
         String prefix = parsePrefix(curie);
         if (prefix == null || !hasPrefix(prefix)) {
             return null;
         }
-        return ValueFactoryImpl.getInstance().createURI(
+        return SimpleValueFactory.getInstance().createIRI(
                 getNamespaceURIFor(prefix) + parseLocalName(curie));
     }
 
