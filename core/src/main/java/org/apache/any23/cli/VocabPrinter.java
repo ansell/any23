@@ -19,6 +19,7 @@ package org.apache.any23.cli;
 
 import org.apache.any23.vocab.RDFSchemaUtils;
 import org.openrdf.rio.RDFFormat;
+import org.openrdf.rio.RDFParserRegistry;
 
 import com.beust.jcommander.IStringConverter;
 import com.beust.jcommander.Parameter;
@@ -29,29 +30,26 @@ import com.beust.jcommander.Parameters;
  * 
  * @author Michele Mostarda (mostarda@fbk.eu)
  */
-@Parameters(commandNames = { "vocab" }, commandDescription = "Prints out the RDF Schema of the vocabularies used by Any23.")
+@Parameters(commandNames = {
+		"vocab" }, commandDescription = "Prints out the RDF Schema of the vocabularies used by Any23.")
 public class VocabPrinter implements Tool {
 
-    @Parameter(names = { "-f", "--format" }, description = "Vocabulary output format", converter = RDFFormatConverter.class)
-    private RDFFormat format = RDFFormat.NQUADS;
+	@Parameter(names = { "-f",
+			"--format" }, description = "Vocabulary output format", converter = RDFFormatConverter.class)
+	private RDFFormat format = RDFFormat.NQUADS;
 
-    public void run() throws Exception {
-        RDFSchemaUtils.serializeVocabularies(format, System.out);
-    }
+	public void run() throws Exception {
+		RDFSchemaUtils.serializeVocabularies(format, System.out);
+	}
 
-    public static final class RDFFormatConverter implements
-            IStringConverter<RDFFormat> {
+	public static final class RDFFormatConverter implements IStringConverter<RDFFormat> {
 
-        @Override
-        public RDFFormat convert(String value) {
-            try {
-                return RDFFormat.valueOf(value);
-            } catch (Throwable t) {
-                throw new IllegalArgumentException("Unknown format [" + value
-                        + "'");
-            }
-        }
+		@Override
+		public RDFFormat convert(String value) {
+			return RDFParserRegistry.getInstance().getKeys().stream().filter(k -> k.getName().equalsIgnoreCase(value))
+					.findFirst().orElseThrow(() -> new IllegalArgumentException("Unknown format [" + value + "]"));
+		}
 
-    }
+	}
 
 }

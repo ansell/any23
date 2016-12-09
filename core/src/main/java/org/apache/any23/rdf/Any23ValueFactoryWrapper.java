@@ -17,10 +17,13 @@
 
 package org.apache.any23.rdf;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Date;
 
 import org.apache.any23.extractor.IssueReport;
 import org.openrdf.model.BNode;
+import org.openrdf.model.IRI;
 import org.openrdf.model.Literal;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
@@ -138,7 +141,7 @@ public class Any23ValueFactoryWrapper implements ValueFactory {
         return wrappedFactory.createLiteral(label, language);
     }
 
-    public Literal createLiteral(String pref, URI value) {
+    public Literal createLiteral(String pref, IRI value) {
         if (pref == null) return null;
         return wrappedFactory.createLiteral(pref, value);
     }
@@ -148,26 +151,26 @@ public class Any23ValueFactoryWrapper implements ValueFactory {
         return wrappedFactory.createLiteral(date);
     }
 
-    public Statement createStatement(Resource sub, URI pre, Value obj) {
+    public Statement createStatement(Resource sub, IRI pre, Value obj) {
         if (sub == null || pre == null || obj == null) {
             return null;
         }
         return wrappedFactory.createStatement(sub, pre, obj);
     }
 
-    public Statement createStatement(Resource sub, URI pre, Value obj, Resource context) {
+    public Statement createStatement(Resource sub, IRI pre, Value obj, Resource context) {
         if (sub == null || pre == null || obj == null) return null;
         return wrappedFactory.createStatement(sub, pre, obj, context);
     }
 
     /**
-     * @param uriStr input string to create URI from.
-     * @return a valid sesame URI or null if any exception occurred
+     * @param uriStr input string to create IRI from.
+     * @return a valid sesame IRI or null if any exception occurred
      */
-    public URI createURI(String uriStr) {
+    public IRI createIRI(String uriStr) {
         if (uriStr == null) return null;
         try {
-            return wrappedFactory.createURI(RDFUtils.fixURIWithException(uriStr));
+            return wrappedFactory.createIRI(RDFUtils.fixURIWithException(uriStr));
         } catch (Exception e) {
             reportError(e);
             return null;
@@ -175,23 +178,45 @@ public class Any23ValueFactoryWrapper implements ValueFactory {
     }
 
     /**
-     * @return a valid sesame URI or null if any exception occurred
+     * @return a valid sesame IRI or null if any exception occurred
      */
-    public URI createURI(String namespace, String localName) {
+    public IRI createIRI(String namespace, String localName) {
         if (namespace == null || localName == null) return null;
-        return wrappedFactory.createURI(RDFUtils.fixURIWithException(namespace), localName);
+        return wrappedFactory.createIRI(RDFUtils.fixURIWithException(namespace), localName);
+    }
+
+    /**
+     * @param uriStr input string to create IRI from.
+     * @return a valid sesame IRI or null if any exception occurred
+     */
+    public IRI createURI(String uriStr) {
+        if (uriStr == null) return null;
+        try {
+            return wrappedFactory.createIRI(RDFUtils.fixURIWithException(uriStr));
+        } catch (Exception e) {
+            reportError(e);
+            return null;
+        }
+    }
+
+    /**
+     * @return a valid sesame IRI or null if any exception occurred
+     */
+    public IRI createURI(String namespace, String localName) {
+        if (namespace == null || localName == null) return null;
+        return wrappedFactory.createIRI(RDFUtils.fixURIWithException(namespace), localName);
     }
 
     /**
      * Fixes typical errors in URIs, and resolves relative URIs against a base URI.
      *
-     * @param uri     A URI, relative or absolute, can have typical syntax errors
-     * @param baseURI A base URI to use for resolving relative URIs
+     * @param IRI     A URI, relative or absolute, can have typical syntax errors
+     * @param baseURI A base IRI to use for resolving relative URIs
      * @return An absolute URI, sytnactically valid, or null if not fixable
      */
-    public URI resolveURI(String uri, java.net.URI baseURI) {
+    public IRI resolveURI(String uri, java.net.URI baseURI) {
         try {
-            return wrappedFactory.createURI(baseURI.resolve(RDFUtils.fixURIWithException(uri)).toString());
+            return wrappedFactory.createIRI(baseURI.resolve(RDFUtils.fixURIWithException(uri)).toString());
         } catch (IllegalArgumentException iae) {
             reportError(iae);
             return null;
@@ -199,12 +224,12 @@ public class Any23ValueFactoryWrapper implements ValueFactory {
     }
 
     /**
-     * @param uri input string to attempt fix on.
-     * @return a valid sesame URI or null if any exception occurred
+     * @param IRI input string to attempt fix on.
+     * @return a valid sesame IRI or null if any exception occurred
      */
-    public URI fixURI(String uri) {
+    public IRI fixURI(String uri) {
         try {
-            return wrappedFactory.createURI(RDFUtils.fixURIWithException(uri));
+            return wrappedFactory.createIRI(RDFUtils.fixURIWithException(uri));
         } catch (Exception e) {
             reportError(e);
             return null;
@@ -212,12 +237,12 @@ public class Any23ValueFactoryWrapper implements ValueFactory {
     }
 
     /**
-     * Helper method to conditionally add a schema to a URI unless it's there, or null if link is empty.
+     * Helper method to conditionally add a schema to a IRI unless it's there, or null if link is empty.
      * @param link string representation of the URI
      * @param defaultSchema schema to add the URI
      * @return a valid {@link org.openrdf.model.URI}
      */
-    public URI fixLink(String link, String defaultSchema) {
+    public IRI fixLink(String link, String defaultSchema) {
         if (link == null) return null;
         link = fixWhiteSpace(link);
         if ("".equals(link)) return null;
@@ -244,4 +269,8 @@ public class Any23ValueFactoryWrapper implements ValueFactory {
         }
     }
 
+	@Override
+	public Literal createLiteral(BigDecimal arg0) {
+		return wrappedFactory.createLiteral(arg0);
+	}
 }

@@ -17,7 +17,9 @@
 
 package org.apache.any23.vocab;
 
+import org.openrdf.model.IRI;
 import org.openrdf.model.URI;
+import org.openrdf.model.impl.SimpleValueFactory;
 import org.openrdf.model.impl.ValueFactoryImpl;
 
 import java.lang.annotation.Retention;
@@ -52,22 +54,22 @@ public abstract class Vocabulary {
     /**
      * Vocabulary namespace.
      */
-    private final URI namespace;
+    private final IRI namespace;
 
     /**
      * Map of vocabulary resources.
      */
-    private Map<String,URI> classes;
+    private Map<String, IRI> classes;
 
     /**
      * Map of vocabulary properties.
      */
-    private Map<String,URI> properties;
+    private Map<String, IRI> properties;
 
     /**
      * Map any resource with the relative comment.
      */
-    private Map<URI,String> resourceToCommentMap;
+    private Map<IRI, String> resourceToCommentMap;
 
     /**
      * Constructor.
@@ -76,7 +78,7 @@ public abstract class Vocabulary {
      */
     public Vocabulary(String namespace) {
         try {
-        this.namespace =  ValueFactoryImpl.getInstance().createURI(namespace);
+            this.namespace =  SimpleValueFactory.getInstance().createIRI(namespace);
         } catch (Exception e) {
             throw new IllegalArgumentException("Invalid namespace '" + namespace + "'", e);
         }
@@ -85,7 +87,7 @@ public abstract class Vocabulary {
     /**
      * @return the namespace associated to this vocabulary.
      */
-    public URI getNamespace() {
+    public IRI getNamespace() {
         return namespace;
     }
 
@@ -95,8 +97,8 @@ public abstract class Vocabulary {
      * @param name class name.
      * @return the URI associated to such resource.
      */
-    public URI getClass(String name) {
-        URI res = classes.get(name);
+    public IRI getClass(String name) {
+    	IRI res = classes.get(name);
         if (null == res) {
             throw new IllegalArgumentException("Unknown resource name '" + name + "'");
         }
@@ -109,8 +111,8 @@ public abstract class Vocabulary {
      * @param name property name.
      * @return the URI associated to such property.
      */
-    public URI getProperty(String name) {
-        URI prop = properties.get(name);
+    public IRI getProperty(String name) {
+    	IRI prop = properties.get(name);
         if (null == prop) {
             throw new IllegalArgumentException("Unknown property name '" + name + "'");
         }
@@ -125,8 +127,8 @@ public abstract class Vocabulary {
      * @param defaultValue the default value if property name not found.
      * @return the URI associated to such property.
      */
-    public URI getProperty(String name, URI defaultValue) {
-        URI prop = properties.get(name);
+    public IRI getProperty(String name, IRI defaultValue) {
+    	IRI prop = properties.get(name);
         if (null == prop) {
             return defaultValue;
         }
@@ -141,7 +143,7 @@ public abstract class Vocabulary {
      * @param property property name.
      * @return property URI.
      */
-    public URI getPropertyCamelCase(String property) {
+    public IRI getPropertyCamelCase(String property) {
         String[] names = property.split("\\W");
         String camelCase = names[0];
         for (int i = 1; i < names.length; i++) {
@@ -154,23 +156,23 @@ public abstract class Vocabulary {
     /**
      * @return the list of all defined classes.
      */
-    public URI[] getClasses() {
+    public IRI[] getClasses() {
         if(classes == null) {
-            return new URI[0];
+            return new IRI[0];
         }
-        final Collection<URI> uris = classes.values();
-        return uris.toArray( new URI[ uris.size() ] );
+        final Collection<IRI> uris = classes.values();
+        return uris.toArray( new IRI[ uris.size() ] );
     }
 
     /**
      * @return the list of all defined properties.
      */
-    public URI[] getProperties() {
+    public IRI[] getProperties() {
         if(properties == null) {
-            return new URI[0];
+            return new IRI[0];
         }
-        final Collection<URI> uris = properties.values();
-        return uris.toArray( new URI[ uris.size() ] );
+        final Collection<IRI> uris = properties.values();
+        return uris.toArray( new IRI[ uris.size() ] );
     }
 
     /**
@@ -178,7 +180,7 @@ public abstract class Vocabulary {
      *
      * @return unmodifiable list of comments.
      */
-    public Map<URI,String> getComments() {
+    public Map<IRI, String> getComments() {
         fillResourceToCommentMap();
         return Collections.unmodifiableMap(resourceToCommentMap);
     }
@@ -190,19 +192,19 @@ public abstract class Vocabulary {
      * @return the human readable comment associated to the
      *         given resource.
      */
-    public String getCommentFor(URI resource) {
+    public String getCommentFor(IRI resource) {
         fillResourceToCommentMap();
         return resourceToCommentMap.get(resource);
     }
     
     /**
-     * Creates a URI.
+     * Creates a IRI.
      *
-     * @param uriStr the URI string
-     * @return the URI instance.
+     * @param uriStr the IRI string
+     * @return the IRI instance.
      */
-    protected URI createURI(String uriStr) {
-        return ValueFactoryImpl.getInstance().createURI(uriStr);
+    protected IRI createIRI(String uriStr) {
+        return SimpleValueFactory.getInstance().createIRI(uriStr);
     }
 
     /**
@@ -212,10 +214,10 @@ public abstract class Vocabulary {
      * @param resource name of the resource.
      * @return the created resource URI.
      */
-    protected URI createClass(String namespace, String resource) {
-        URI res = createURI(namespace, resource);
+    protected IRI createClass(String namespace, String resource) {
+    	IRI res = createIRI(namespace, resource);
         if(classes == null) {
-            classes = new HashMap<String, URI>(10);
+            classes = new HashMap<String, IRI>(10);
         }
         classes.put(resource, res);
         return res;
@@ -228,10 +230,10 @@ public abstract class Vocabulary {
      * @param property name of the property.
      * @return the created property URI.
      */
-    protected URI createProperty(String namespace, String property) {
-        URI res = createURI(namespace, property);
+    protected IRI createProperty(String namespace, String property) {
+    	IRI res = createIRI(namespace, property);
         if(properties == null) {
-            properties = new HashMap<String, URI>(10);
+            properties = new HashMap<String, IRI>(10);
         }
         properties.put(property, res);
         return res;
@@ -244,19 +246,19 @@ public abstract class Vocabulary {
      * @param localName
      * @return
      */
-    private URI createURI(String namespace, String localName) {
-        return ValueFactoryImpl.getInstance().createURI(namespace, localName);
+    private IRI createIRI(String namespace, String localName) {
+        return SimpleValueFactory.getInstance().createIRI(namespace, localName);
     }
 
     private void fillResourceToCommentMap() {
         if(resourceToCommentMap != null) return;
-        final Map<URI,String> newMap = new HashMap<URI, String>();
+        final Map<IRI, String> newMap = new HashMap<IRI, String>();
         for (Field field : this.getClass().getFields()) {
             try {
                 final Object value = field.get(this);
-                if(value instanceof URI) {
+                if(value instanceof IRI) {
                     final Comment comment = field.getAnnotation(Comment.class);
-                    if(comment != null) newMap.put((URI) value, comment.value());
+                    if(comment != null) newMap.put((IRI) value, comment.value());
                 }
             } catch (IllegalAccessException iae) {
                 throw new RuntimeException("Error while creating resource to comment map.", iae);

@@ -23,6 +23,7 @@ import org.apache.any23.extractor.rdfa.RDFaExtractorFactory;
 import org.apache.any23.vocab.XHTML;
 import org.apache.any23.writer.TripleHandler;
 import org.apache.any23.writer.TripleHandlerException;
+import org.openrdf.model.IRI;
 import org.openrdf.model.Resource;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
@@ -59,7 +60,7 @@ public class IgnoreAccidentalRDFa implements TripleHandler {
         this(wrapped, false);
     }
 
-    public void startDocument(URI documentURI) throws TripleHandlerException {
+    public void startDocument(IRI documentURI) throws TripleHandlerException {
         blocker.startDocument(documentURI);
     }
 
@@ -70,7 +71,7 @@ public class IgnoreAccidentalRDFa implements TripleHandler {
         }
     }
 
-    public void receiveTriple(Resource s, URI p, Value o, URI g, ExtractionContext context)
+    public void receiveTriple(Resource s, IRI p, Value o, IRI g, ExtractionContext context)
     throws TripleHandlerException {
         // Suppress stylesheet triples.
         if(alwaysSuppressCSSTriples && p.stringValue().equals(vXHTML.stylesheet.stringValue())) {
@@ -99,7 +100,7 @@ public class IgnoreAccidentalRDFa implements TripleHandler {
         return context.getExtractorName().equals(RDFaExtractorFactory.NAME);
     }
 
-    public void endDocument(URI documentURI) throws TripleHandlerException {
+    public void endDocument(IRI documentURI) throws TripleHandlerException {
         blocker.endDocument(documentURI);
     }
 

@@ -26,6 +26,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.openrdf.model.IRI;
 import org.openrdf.model.URI;
 
 import java.io.ByteArrayOutputStream;
@@ -40,7 +41,7 @@ import java.io.PrintStream;
  */
 public class ExtractionResultImplTest {
 
-    private static final URI TEST_URI = RDFUtils.uri("http://host/test/service");
+    private static final IRI TEST_URI = RDFUtils.uri("http://host/test/service");
 
     private ExtractionResultImpl extractionResult;
     private Extractor extractor;

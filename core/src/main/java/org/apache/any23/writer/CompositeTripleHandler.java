@@ -18,6 +18,7 @@
 package org.apache.any23.writer;
 
 import org.apache.any23.extractor.ExtractionContext;
+import org.openrdf.model.IRI;
 import org.openrdf.model.Resource;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
@@ -65,7 +66,7 @@ public class CompositeTripleHandler implements TripleHandler {
         return children;
     }
 
-    public void startDocument(URI documentURI) throws TripleHandlerException {
+    public void startDocument(IRI documentURI) throws TripleHandlerException {
         for (TripleHandler handler : children) {
             handler.startDocument(documentURI);
         }
@@ -83,7 +84,7 @@ public class CompositeTripleHandler implements TripleHandler {
         }
     }
 
-    public void receiveTriple(Resource s, URI p, Value o, URI g, ExtractionContext context)
+    public void receiveTriple(Resource s, IRI p, Value o, IRI g, ExtractionContext context)
     throws TripleHandlerException {
         for (TripleHandler handler : children) {
             handler.receiveTriple(s, p, o, g, context);
@@ -103,7 +104,7 @@ public class CompositeTripleHandler implements TripleHandler {
         }
     }
 
-    public void endDocument(URI documentURI) throws TripleHandlerException {
+    public void endDocument(IRI documentURI) throws TripleHandlerException {
         for (TripleHandler handler : children) {
             handler.endDocument(documentURI);
         }

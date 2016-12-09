@@ -116,7 +116,7 @@ public class ExtractorRegistryImpl extends info.aduna.lang.service.ServiceRegist
     @Override
     public void unregister(String name) {
         if(this.has(name)) {
-            this.remove(this.get(name));
+            this.remove(this.get(name).get());
         }
     }
     
@@ -131,11 +131,7 @@ public class ExtractorRegistryImpl extends info.aduna.lang.service.ServiceRegist
      */
     @Override
     public ExtractorFactory<?> getFactory(String name) {
-        ExtractorFactory<?> result = this.get(name);
-        if (result == null) {
-            throw new IllegalArgumentException("Unregistered extractor name: " + name);
-        }
-        return result;
+        return this.get(name).orElseThrow(() -> new IllegalArgumentException("Unregistered extractor name: " + name));
     }
 
     /**

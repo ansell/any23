@@ -22,6 +22,7 @@ import org.apache.any23.extractor.example.ExampleExtractor;
 import org.apache.any23.rdf.RDFUtils;
 import org.apache.any23.writer.CountingTripleHandler;
 import org.junit.Test;
+import org.openrdf.model.IRI;
 import org.openrdf.model.URI;
 
 /**
@@ -30,7 +31,7 @@ import org.openrdf.model.URI;
 public class ExtractionAPITest {
 
     private static final String exampleDoc = "http://example.com/";
-    private static final URI uri           = RDFUtils.uri(exampleDoc);
+    private static final IRI uri           = RDFUtils.uri(exampleDoc);
 
     @Test
     public void testDirectInstantiation() throws Exception {

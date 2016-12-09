@@ -24,6 +24,7 @@ import org.apache.any23.rdf.RDFUtils;
 import org.apache.any23.writer.TripleHandlerException;
 import org.junit.Before;
 import org.junit.Test;
+import org.openrdf.model.IRI;
 import org.openrdf.model.URI;
 
 /**
@@ -31,10 +32,10 @@ import org.openrdf.model.URI;
  */
 public class ExtractionContextBlockerTest {
 
-    private final static URI docURI = RDFUtils.uri("http://example.com/doc");
-    private final static URI s = (URI) RDFUtils.toValue("ex:s");
-    private final static URI p = (URI) RDFUtils.toValue("ex:p");
-    private final static URI o = (URI) RDFUtils.toValue("ex:o");
+    private final static IRI docURI = RDFUtils.uri("http://example.com/doc");
+    private final static IRI s = (IRI) RDFUtils.toValue("ex:s");
+    private final static IRI p = (IRI) RDFUtils.toValue("ex:p");
+    private final static IRI o = (IRI) RDFUtils.toValue("ex:o");
     private ExtractionContextBlocker blocker;
     private MockTripleHandler handler;
 

@@ -572,14 +572,14 @@ public class NQuadsParserTest {
 
     private class TestParseLocationListener implements ParseLocationListener {
 
-        private int lastRow, lastCol;
+        private long lastRow, lastCol;
 
-        public void parseLocationUpdate(int r, int c) {
+        public void parseLocationUpdate(long r, long c) {
             lastRow = r;
             lastCol = c;
         }
 
-        private void assertListener(int row, int col) {
+        private void assertListener(long row, long col) {
             Assert.assertEquals("Unexpected last row", row , lastRow);
             // Column numbers are not supported by the Rio NQuadsParser currently
             //Assert.assertEquals("Unexpected last col", col , lastCol);

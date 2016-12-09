@@ -17,7 +17,7 @@
 
 package org.apache.any23.vocab;
 
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
 
 public class ReviewAggregate extends Vocabulary {
     private static ReviewAggregate instance;
@@ -37,34 +37,34 @@ public class ReviewAggregate extends Vocabulary {
     /**
      * The namespace of the vocabulary as a URI.
      */
-    public final URI NAMESPACE = createURI(NS);
+    public final IRI NAMESPACE = createIRI(NS);
     
     /**
      * Number of usefulness votes (integer).
      */
-    public final URI votes = createProperty("votes");
+    public final IRI votes = createProperty("votes");
     
     /**
      * Number of usefulness reviews (integer).
      */
-    public final URI count = createProperty("count");
+    public final IRI count = createProperty("count");
     
     /**
      * Optional
      */
-    public final URI average = createProperty("average");
+    public final IRI average = createProperty("average");
     
-    public final URI worst = createProperty("worst");
+    public final IRI worst = createProperty("worst");
     
-    public final URI best = createProperty("best");
+    public final IRI best = createProperty("best");
 
     
      /**
      * An agg review of a work.
      */
-    public final URI ReviewAggregate = createProperty("ReviewAggregate");
+    public final IRI ReviewAggregate = createProperty("ReviewAggregate");
 
-    private URI createProperty(String localName) {
+    private IRI createProperty(String localName) {
         return createProperty(NS, localName);
     }
     

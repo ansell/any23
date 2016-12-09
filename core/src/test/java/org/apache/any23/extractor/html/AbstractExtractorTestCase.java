@@ -30,6 +30,7 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.openrdf.model.BNode;
+import org.openrdf.model.IRI;
 import org.openrdf.model.Literal;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
@@ -63,7 +64,7 @@ public abstract class AbstractExtractorTestCase extends AbstractAny23TestBase {
 	/**
 	 * Base test document.
 	 */
-	protected static URI baseURI = RDFUtils.uri("http://bob.example.com/"); // TODO:
+	protected static IRI baseURI = RDFUtils.uri("http://bob.example.com/"); // TODO:
 																			// change
 																			// base
 																			// URI
@@ -443,7 +444,7 @@ public abstract class AbstractExtractorTestCase extends AbstractAny23TestBase {
 	 *            expected matches.
 	 * @throws RepositoryException
 	 */
-	protected void assertStatementsSize(Resource s, URI p, Value o, int expected)
+	protected void assertStatementsSize(Resource s, IRI p, Value o, int expected)
 			throws RDFHandlerException, RepositoryException {
 		int statementsSize = getStatementsSize(s, p, o);
 		if (statementsSize != expected) {
@@ -466,7 +467,7 @@ public abstract class AbstractExtractorTestCase extends AbstractAny23TestBase {
 	 *            expected matches.
 	 * @throws RepositoryException
 	 */
-	protected void assertStatementsSize(URI p, Value o, int expected)
+	protected void assertStatementsSize(IRI p, Value o, int expected)
 			throws RDFHandlerException, RepositoryException {
 		assertStatementsSize(null, p, o, expected);
 	}
@@ -483,7 +484,7 @@ public abstract class AbstractExtractorTestCase extends AbstractAny23TestBase {
 	 *            expected matches.
 	 * @throws RepositoryException
 	 */
-	protected void assertStatementsSize(URI p, String o, int expected)
+	protected void assertStatementsSize(IRI p, String o, int expected)
 			throws RDFHandlerException, RepositoryException {
 		assertStatementsSize(p, o == null ? null : RDFUtils.literal(o),
 				expected);

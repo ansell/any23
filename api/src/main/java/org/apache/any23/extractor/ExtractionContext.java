@@ -17,7 +17,7 @@
 
 package org.apache.any23.extractor;
 
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
 
 /**
  * This class provides the context for the processing of
@@ -35,7 +35,7 @@ public class ExtractionContext {
     /**
      * URI of the document.
      */
-    private final URI documentURI;
+    private final IRI documentURI;
 
     /**
      * The document default language.
@@ -47,7 +47,7 @@ public class ExtractionContext {
      */
     private final String uniqueID;
 
-    public ExtractionContext(String extractorName, URI documentURI, String defaultLanguage, String localID) {
+    public ExtractionContext(String extractorName, IRI documentURI, String defaultLanguage, String localID) {
         checkNotNull(extractorName  , "extractor name");
         checkNotNull(documentURI    , "document URI");
         this.extractorName   = extractorName;
@@ -58,11 +58,11 @@ public class ExtractionContext {
                 (localID == null ? "" : localID) + ":" + documentURI;
     }
 
-    public ExtractionContext(String extractorName, URI documentURI, String defaultLanguage) {
+    public ExtractionContext(String extractorName, IRI documentURI, String defaultLanguage) {
         this(extractorName, documentURI, defaultLanguage, ROOT_EXTRACTION_RESULT_ID);
     }
 
-    public ExtractionContext(String extractorName, URI documentURI) {
+    public ExtractionContext(String extractorName, IRI documentURI) {
         this(extractorName, documentURI, null);
     }
 
@@ -79,7 +79,7 @@ public class ExtractionContext {
         return extractorName;
     }
 
-    public URI getDocumentURI() {
+    public IRI getDocumentURI() {
         return documentURI;
     }
 

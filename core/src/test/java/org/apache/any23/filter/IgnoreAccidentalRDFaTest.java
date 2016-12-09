@@ -22,10 +22,12 @@ import org.apache.any23.writer.TripleHandler;
 import org.apache.any23.writer.TripleHandlerException;
 import org.junit.Test;
 import org.mockito.verification.VerificationMode;
+import org.openrdf.model.IRI;
 import org.openrdf.model.Resource;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.model.ValueFactory;
+import org.openrdf.model.impl.SimpleValueFactory;
 import org.openrdf.model.impl.ValueFactoryImpl;
 
 import static org.mockito.Matchers.any;
@@ -56,18 +58,18 @@ public class IgnoreAccidentalRDFaTest {
     throws TripleHandlerException {
         final String DOCUMENT_URI = "http://an.html.page";
         final TripleHandler mockTripleHandler = mock(TripleHandler.class);
-        final ValueFactory valueFactory = new ValueFactoryImpl();
+        final ValueFactory valueFactory = SimpleValueFactory.getInstance();
         ExtractionContext extractionContext = new ExtractionContext(
                 "test-extractor",
-                valueFactory.createURI(DOCUMENT_URI)
+                valueFactory.createIRI(DOCUMENT_URI)
         );
         final IgnoreAccidentalRDFa ignoreAccidentalRDFa = new IgnoreAccidentalRDFa(mockTripleHandler, true);
         ignoreAccidentalRDFa.openContext(extractionContext);
         ignoreAccidentalRDFa.receiveTriple(
-                valueFactory.createURI(DOCUMENT_URI),
-                valueFactory.createURI(predicate),
-                valueFactory.createURI("http://www.myedu.com/modules/20110519065453/profile.css"),
-                valueFactory.createURI(DOCUMENT_URI),
+                valueFactory.createIRI(DOCUMENT_URI),
+                valueFactory.createIRI(predicate),
+                valueFactory.createIRI("http://www.myedu.com/modules/20110519065453/profile.css"),
+                valueFactory.createIRI(DOCUMENT_URI),
                 extractionContext
         );
         ignoreAccidentalRDFa.close();
@@ -77,9 +79,9 @@ public class IgnoreAccidentalRDFaTest {
                 verificationMode
         ).receiveTriple(
                 (Resource) any(),
-                (URI) any(),
+                (IRI) any(),
                 (Value) any(),
-                (URI) any(),
+                (IRI) any(),
                 (ExtractionContext) any()
         );
     }

@@ -43,6 +43,7 @@ import org.apache.any23.extractor.Extractor.BlindExtractor;
 import org.apache.any23.extractor.Extractor.ContentExtractor;
 import org.apache.any23.extractor.Extractor.TagSoupDOMExtractor;
 import org.openrdf.model.BNode;
+import org.openrdf.model.IRI;
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.URIImpl;
 import org.openrdf.model.impl.ValueFactoryImpl;
@@ -80,7 +81,7 @@ public class SingleDocumentExtraction {
 
     private final DocumentSource in;
 
-    private URI documentURI;
+    private IRI documentURI;
     
     private final ExtractorGroup extractors;
 

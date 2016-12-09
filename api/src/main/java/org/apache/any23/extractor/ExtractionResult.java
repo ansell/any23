@@ -17,8 +17,8 @@
 
 package org.apache.any23.extractor;
 
+import org.openrdf.model.IRI;
 import org.openrdf.model.Resource;
-import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 
 /**
@@ -35,7 +35,7 @@ public interface ExtractionResult extends IssueReport {
      * @param o object
      * @param g graph
      */
-    void writeTriple(Resource s, URI p, Value o, URI g);
+    void writeTriple(Resource s, IRI p, Value o, IRI g);
 
     /**
      * Write a triple.
@@ -45,7 +45,7 @@ public interface ExtractionResult extends IssueReport {
      * @param p predicate
      * @param o object
      */
-    void writeTriple(Resource s, URI p, Value o);
+    void writeTriple(Resource s, IRI p, Value o);
 
     /**
      * Write a namespace.

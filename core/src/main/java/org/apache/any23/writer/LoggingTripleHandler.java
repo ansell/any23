@@ -18,6 +18,7 @@
 package org.apache.any23.writer;
 
 import org.apache.any23.extractor.ExtractionContext;
+import org.openrdf.model.IRI;
 import org.openrdf.model.Resource;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
@@ -55,7 +56,7 @@ public class LoggingTripleHandler implements TripleHandler {
         printHeader(destination);
     }
 
-    public void startDocument(URI documentURI) throws TripleHandlerException {
+    public void startDocument(IRI documentURI) throws TripleHandlerException {
         underlyingHandler.startDocument(documentURI);
         startTime = System.currentTimeMillis();
     }
@@ -74,7 +75,7 @@ public class LoggingTripleHandler implements TripleHandler {
         underlyingHandler.openContext(context);
     }
 
-    public void receiveTriple(Resource s, URI p, Value o, URI g, ExtractionContext context)
+    public void receiveTriple(Resource s, IRI p, Value o, IRI g, ExtractionContext context)
     throws TripleHandlerException {
         underlyingHandler.receiveTriple(s, p, o, g, context);
         Integer i = contextTripleMap.get(context.getExtractorName());
@@ -87,7 +88,7 @@ public class LoggingTripleHandler implements TripleHandler {
         underlyingHandler.receiveNamespace(prefix, uri, context);
     }
 
-    public void endDocument(URI documentURI) throws TripleHandlerException {
+    public void endDocument(IRI documentURI) throws TripleHandlerException {
         underlyingHandler.endDocument(documentURI);
         long elapsedTime = System.currentTimeMillis() - startTime;
         boolean success = true;

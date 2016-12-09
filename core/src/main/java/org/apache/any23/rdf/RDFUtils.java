@@ -19,19 +19,19 @@ package org.apache.any23.rdf;
 
 import org.apache.any23.util.MathUtils;
 import org.openrdf.model.BNode;
+import org.openrdf.model.IRI;
 import org.openrdf.model.Literal;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
-import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.model.ValueFactory;
-import org.openrdf.model.impl.URIImpl;
-import org.openrdf.model.impl.ValueFactoryImpl;
+import org.openrdf.model.impl.SimpleValueFactory;
 import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFHandlerException;
 import org.openrdf.rio.RDFParseException;
 import org.openrdf.rio.RDFParser;
+import org.openrdf.rio.RDFParserRegistry;
 import org.openrdf.rio.RDFWriter;
 import org.openrdf.rio.Rio;
 import org.openrdf.rio.helpers.StatementCollector;
@@ -59,7 +59,7 @@ import java.util.GregorianCalendar;
  */
 public class RDFUtils {
 
-    private static final ValueFactory valueFactory = ValueFactoryImpl.getInstance();
+    private static final ValueFactory valueFactory = SimpleValueFactory.getInstance();
 
     /**
      * Fixes typical errors in an absolute URI, such as unescaped spaces.
@@ -171,8 +171,8 @@ public class RDFUtils {
      * @param uri string representation of the {@link URI}
      * @return a valid {@link URI}
      */
-    public static URI uri(String uri) {
-        return valueFactory.createURI(uri);
+    public static IRI uri(String uri) {
+        return valueFactory.createIRI(uri);
     }
 
     /**
@@ -181,8 +181,8 @@ public class RDFUtils {
      * @param localName a local name to associate with the namespace
      * @return a valid {@link URI}
      */
-    public static URI uri(String namespace, String localName) {
-        return valueFactory.createURI(namespace, localName);
+    public static IRI uri(String namespace, String localName) {
+        return valueFactory.createIRI(namespace, localName);
     }
 
     /**
@@ -275,7 +275,7 @@ public class RDFUtils {
      * @param datatype the datatype to associate with the namespace.
      * @return valid {@link org.openrdf.model.Literal}
      */
-    public static Literal literal(String s, URI datatype) {
+    public static Literal literal(String s, IRI datatype) {
         return valueFactory.createLiteral(s, datatype);
     }
 
@@ -315,7 +315,7 @@ public class RDFUtils {
      * @param o object {@link org.openrdf.model.Value}
      * @return valid {@link org.openrdf.model.Statement}
      */
-    public static Statement triple(Resource s, URI p, Value o) {
+    public static Statement triple(Resource s, IRI p, Value o) {
         return valueFactory.createStatement(s, p, o);
     }
 
@@ -328,7 +328,7 @@ public class RDFUtils {
      * @return a statement instance.
      */
     public static Statement triple(String s, String p, String o) {
-        return valueFactory.createStatement((Resource) toValue(s), (URI) toValue(p), toValue(o));
+        return valueFactory.createStatement((Resource) toValue(s), (IRI) toValue(p), toValue(o));
     }
 
     /**
@@ -339,7 +339,7 @@ public class RDFUtils {
      * @param g quad resource
      * @return a statement instance.
      */
-    public static Statement quad(Resource s, URI p, Value o, Resource g) {
+    public static Statement quad(Resource s, IRI p, Value o, Resource g) {
         return valueFactory.createStatement(s, p, o, g);
     }
 
@@ -352,7 +352,7 @@ public class RDFUtils {
      * @return a statement instance.
      */
     public static Statement quad(String s, String p, String o, String g) {
-        return valueFactory.createStatement((Resource) toValue(s), (URI) toValue(p), toValue(o), (Resource) toValue(g));
+        return valueFactory.createStatement((Resource) toValue(s), (IRI) toValue(p), toValue(o), (Resource) toValue(g));
     }
 
     /**
@@ -379,7 +379,7 @@ public class RDFUtils {
      * @see org.openrdf.rio.RDFFormat#values()
      */
     public static Collection<RDFFormat> getFormats() {
-        return RDFFormat.values();
+        return RDFParserRegistry.getInstance().getKeys();
     }
 
     /**
@@ -426,7 +426,7 @@ public class RDFUtils {
      */
     public static RDFFormat getFormatByExtension(String ext) {
         if( ! ext.startsWith(".") ) ext = "." + ext;
-        return Rio.getParserFormatForFileName(ext);
+        return Rio.getParserFormatForFileName(ext).orElse(null);
     }
 
     /**
@@ -512,7 +512,7 @@ public class RDFUtils {
      */
     public static boolean isAbsoluteURI(String href) {
         try {
-            new URIImpl(href.trim());
+            valueFactory.createIRI(href.trim());
             new java.net.URI(href.trim());
             return true;
         } catch (IllegalArgumentException e) {

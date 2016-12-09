@@ -22,6 +22,7 @@ import org.apache.any23.rdf.Prefixes;
 import org.apache.any23.writer.TripleHandler;
 import org.apache.any23.writer.TripleHandlerException;
 import org.openrdf.model.BNode;
+import org.openrdf.model.IRI;
 import org.openrdf.model.Resource;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
@@ -152,7 +153,7 @@ public class ExtractionResultImpl implements TagSoupExtractionResult {
         return context;
     }
 
-    public void writeTriple(Resource s, URI p, Value o, URI g) {
+    public void writeTriple(Resource s, IRI p, Value o, IRI g) {
         if (s == null || p == null || o == null) return;
         // Check for misconstructed literals or BNodes, Sesame does not catch this.
         if (s.stringValue() == null || p.stringValue() == null || o.stringValue() == null) {
@@ -169,7 +170,7 @@ public class ExtractionResultImpl implements TagSoupExtractionResult {
         }
     }
 
-    public void writeTriple(Resource s, URI p, Value o) {
+    public void writeTriple(Resource s, IRI p, Value o) {
         writeTriple(s, p, o, null);
     }
 
@@ -185,7 +186,7 @@ public class ExtractionResultImpl implements TagSoupExtractionResult {
         }
     }
 
-    public void notifyIssue(IssueLevel level, String msg, int row, int col) {
+    public void notifyIssue(IssueLevel level, String msg, long row, long col) {
         issues.add(new Issue(level, msg, row, col));
     }
 

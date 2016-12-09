@@ -17,7 +17,7 @@
 
 package org.apache.any23.extractor.html;
 
-import junit.framework.Assert;
+import static org.junit.Assert.*;
 import org.apache.any23.extractor.ExtractionException;
 import org.apache.any23.extractor.ExtractorFactory;
 import org.apache.any23.rdf.RDFUtils;
@@ -26,7 +26,7 @@ import org.apache.any23.vocab.SINDICE;
 import org.junit.Test;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
 import org.openrdf.model.Value;
 import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.repository.RepositoryException;
@@ -46,10 +46,10 @@ public class HCalendarExtractorTest extends AbstractExtractorTestCase {
 	private static final ICAL vICAL = ICAL.getInstance();
 	private static final SINDICE vSINDICE = SINDICE.getInstance();
 
-	private final static URI vcal = vICAL.Vcalendar;
-	private final static URI vevent = vICAL.Vevent;
-	private final static URI vjournal = vICAL.Vjournal;
-	private final static URI vtodo = vICAL.Vtodo;
+	private final static IRI vcal = vICAL.Vcalendar;
+	private final static IRI vevent = vICAL.Vevent;
+	private final static IRI vjournal = vICAL.Vjournal;
+	private final static IRI vtodo = vICAL.Vtodo;
 
 	protected ExtractorFactory<?> getExtractorFactory() {
 		return new HCalendarExtractorFactory();
@@ -412,9 +412,9 @@ public class HCalendarExtractorTest extends AbstractExtractorTestCase {
 	private Resource getExactlyOneComponent(Resource r) throws Exception {
 		RepositoryResult<Statement> result = getStatements(null, RDF.TYPE, r);
 		try {
-			Assert.assertTrue(result.hasNext());
+			assertTrue(result.hasNext());
 			Resource sub = result.next().getSubject();
-			Assert.assertFalse(result.hasNext());
+			assertFalse(result.hasNext());
 			return sub;
 		} finally {
 			result.close();

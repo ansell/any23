@@ -21,6 +21,7 @@ import org.apache.any23.extractor.IssueReport;
 import org.apache.any23.extractor.ExtractionResult;
 import org.apache.any23.extractor.html.DomUtils;
 import org.apache.any23.rdf.RDFUtils;
+import org.openrdf.model.IRI;
 import org.openrdf.model.Literal;
 import org.openrdf.model.Resource;
 import org.openrdf.model.URI;
@@ -889,7 +890,7 @@ public class RDFa11Parser {
             return null;
         }
         final Resource curieOrURI = resolveCURIEOrURI(datatype, true);
-        return RDFUtils.literal(getNodeContent(node), curieOrURI instanceof URI ? (URI) curieOrURI : null);
+        return RDFUtils.literal(getNodeContent(node), curieOrURI instanceof IRI ? (IRI) curieOrURI : null);
     }
 
     private void pushMappings(Node sourceNode, List<PrefixMap> prefixMapList) {

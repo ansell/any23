@@ -18,8 +18,8 @@
 package org.apache.any23.writer;
 
 import org.apache.any23.extractor.ExtractionContext;
+import org.openrdf.model.IRI;
 import org.openrdf.model.Resource;
-import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 
 /**
@@ -27,7 +27,7 @@ import org.openrdf.model.Value;
  */
 public interface TripleHandler {
 
-    void startDocument(URI documentURI) throws TripleHandlerException;
+    void startDocument(IRI documentURI) throws TripleHandlerException;
 
     /**
      * Informs the handler that a new context has been established.
@@ -50,7 +50,7 @@ public interface TripleHandler {
      * @param context extraction context.
      * @throws TripleHandlerException if there is an error receiving the triple.
      */
-    void receiveTriple(Resource s, URI p, Value o, URI g, ExtractionContext context) throws TripleHandlerException;
+    void receiveTriple(Resource s, IRI p, Value o, IRI g, ExtractionContext context) throws TripleHandlerException;
 
     /**
      * Invoked with a currently open context, notifies the detection of a
@@ -83,7 +83,7 @@ public interface TripleHandler {
      * @param documentURI document URI.
      * @throws TripleHandlerException if there is an error ending the document.
      */
-    void endDocument(URI documentURI) throws TripleHandlerException;
+    void endDocument(IRI documentURI) throws TripleHandlerException;
 
     /**
      * Sets the length of the content to be processed.

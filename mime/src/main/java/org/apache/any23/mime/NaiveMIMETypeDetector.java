@@ -63,7 +63,7 @@ public class NaiveMIMETypeDetector implements MIMETypeDetector {
             return mimeTypeFromMetadata;
         }
 
-        final RDFFormat parserFormatForFileName = Rio.getParserFormatForFileName(fileName);
+        final RDFFormat parserFormatForFileName = Rio.getParserFormatForFileName(fileName).orElse(null);
         if (parserFormatForFileName != null) {
             return MIMEType.parse(parserFormatForFileName.getDefaultMIMEType());
         }
